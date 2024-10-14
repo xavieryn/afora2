@@ -31,7 +31,6 @@
     "firebase": "^10.14.0",
     "firebase-admin": "^12.6.0",
     "framer-motion": "^11.11.8",
-    "liveblocks": "^0.0.3",
     "lucide-react": "^0.451.0",
     "next": "14.2.15",
     "next-themes": "^0.3.0",
@@ -43,8 +42,7 @@
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.3",
     "tailwindcss-animate": "^1.0.7",
-    "vaul": "^1.0.0",
-    "yjs": "^13.6.19"
+    "vaul": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
