@@ -1,7 +1,9 @@
 'use server'
 import { adminDb } from "@/firebase-admin";
-import liveblocks from "@/lib/liveblocks";
 import { auth } from "@clerk/nextjs/server";
+
+// IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
+
 
 export async function createNewDocument() {
     auth().protect();
@@ -43,7 +45,6 @@ export async function deleteDocument(roomId: string){
             batch.delete(doc.ref);
         })
 
-        await liveblocks.deleteRoom(roomId);
 
         return { success:true }
     } catch (error) {

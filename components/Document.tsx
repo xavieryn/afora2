@@ -7,11 +7,8 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Editor from "./Editor";
-import useOwner from "@/lib/useOwner";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
-import ManageUsers from "./ManageUsers";
-import Avatars from "./Avatars";
 
 // NICE SHADCN STUFF
 // DIALOG IS VERY NICE
@@ -22,7 +19,6 @@ function Document({ id }: { id: string }) {
     const [isUpdating, startTransition] = useTransition();
     // const [data, loading, error] = useDocumentData(doc(db, "documents", id));
     const [data] = useDocumentData(doc(db, "documents", id));
-    const isOwner = useOwner();
 
     useEffect(() => {
         if (data) {
@@ -52,20 +48,13 @@ function Document({ id }: { id: string }) {
                     <Button disabled={isUpdating} type="submit">{isUpdating ? "Updating..." : "Update"}</Button>
                     {/* if */}
                     {/* is owner && inviteuser, delete comment */}
-                    {isOwner && (
-                        <>
-                            <InviteUser />
-
-                            <DeleteDocument />
-                        </>
-                    )}
+                    
+                    
                 </form>
             </div>
             <div className="flex max-w-6xl mx-auto justify-between items-center mb-3">
                 {/* Manage Users */}
-                <ManageUsers />
                 {/* Avatars */}
-                <Avatars />
 
 
             </div>
