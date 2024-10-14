@@ -3,7 +3,11 @@
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
 import Link from "next/link";
+import { Settings } from "lucide-react";
+
+
 function Header() {
+
   const { user } = useUser();
 
   return (
@@ -22,10 +26,12 @@ function Header() {
         </SignedOut>
 
         <SignedIn>
-          {/* <Link href={href} className={`border p-2 rounded-md ${isActive ? "bg-gray-300 font-bold border-black" : "border-gray-400"}`}>
-            <p className="truncate">{data?.title}</p>
-          </Link> */}
-          <UserButton />
+          <div className="flex gap-2">
+            <Link href={'/setting'} >
+              <p className="truncate"><Settings /></p>
+            </Link>
+            <UserButton />
+          </div>
         </SignedIn>
       </div>
 

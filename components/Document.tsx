@@ -59,7 +59,6 @@ function Document({ id }: { id: string }) {
             </div>
             <hr className='pb-10' />
             <Editor />
-            {/* Collaborative Editor */}
         </div>
     )
 }
