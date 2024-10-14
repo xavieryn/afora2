@@ -3,7 +3,6 @@
 import * as Y from "yjs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { useState, useTransition } from "react";
 
 import {
@@ -48,7 +47,7 @@ function TranslateDocument({ doc }: { doc: Y.Doc }) {
   const [isOpen, setIsOpen] = useState(false);
   const [language, setLanguage] = useState<string>("");
   const [summary, setSummary] = useState("");
-  const [question, setQuestion] = useState("");
+  // const [question, setQuestion] = useState("");
   const [isPending, startTransition] = useTransition();
 
 
@@ -98,7 +97,7 @@ function TranslateDocument({ doc }: { doc: Y.Doc }) {
             </DialogDescription>
 
             <hr className="mt-5" />
-            {question && <p className="mt-5 text-gray-500">Q: {question}</p>}
+            {/* {question && <p className="mt-5 text-gray-500">Q: {question}</p>} */}
           </DialogHeader>
 
 
