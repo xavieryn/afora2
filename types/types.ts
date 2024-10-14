@@ -4,4 +4,8 @@ export type User = {
     lastName: string;
     email: string;
     image: string;
+    unsafeMetadata: {
+        demographic?: string;  // Use optional chaining here
+        gender?: string;
+    };
 }

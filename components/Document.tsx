@@ -56,7 +56,6 @@ function Document({ id }: { id: string }) {
                 {/* Manage Users */}
                 {/* Avatars */}
 
-
             </div>
             <hr className='pb-10' />
             <Editor />
