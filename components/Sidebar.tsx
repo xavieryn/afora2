@@ -6,7 +6,6 @@ import { useCollection } from "react-firebase-hooks/firestore"
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -26,7 +25,8 @@ interface RoomDocument extends DocumentData {
 
 function Sidebar() {
   const { user } = useUser()
-  const [data, loading, error] = useCollection(
+  // const [data, loading, error] = useCollection(
+    const [data] = useCollection(
     user &&
     query(
       (collectionGroup(db, 'rooms')),

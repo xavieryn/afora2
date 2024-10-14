@@ -3,10 +3,8 @@
 
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -14,7 +12,7 @@ import {
 import { FormEvent, useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { deleteDocument } from "@/actions/actions";
+import {  inviteUserToDocument } from "@/actions/actions";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
 
@@ -33,14 +31,14 @@ function InviteUser() {
         if (!roomId) return;
 
         startTransition(async () => {
-            const { success } = await deleteDocument(roomId);
+            const { success } = await inviteUserToDocument(roomId, email);
 
             if (success) {
                 setIsOpen(false);
                 router.replace("/");
                 toast.success("User added to room successfully")
             } else {
-                toast.error("Failed to Delete Room ")
+                toast.error("Failed to add user to room!")
             }
         })
     }
@@ -57,7 +55,7 @@ function InviteUser() {
                             Enter the email of the user you want to invite.
                         </DialogDescription>
                     </DialogHeader>
-                   <form onSubmit={handleInvite}>
+                   <form onSubmit={handleInvite} className="flex gap-2">
                     <Input
                     type="email"
                     placeholder="Email"

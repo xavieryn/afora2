@@ -10,6 +10,8 @@ import Editor from "./Editor";
 import useOwner from "@/lib/useOwner";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
+import ManageUsers from "./ManageUsers";
+import Avatars from "./Avatars";
 
 // NICE SHADCN STUFF
 // DIALOG IS VERY NICE
@@ -18,7 +20,8 @@ function Document({ id }: { id: string }) {
 
     const [input, setInput] = useState("");
     const [isUpdating, startTransition] = useTransition();
-    const [data, loading, error] = useDocumentData(doc(db, "documents", id));
+    // const [data, loading, error] = useDocumentData(doc(db, "documents", id));
+    const [data] = useDocumentData(doc(db, "documents", id));
     const isOwner = useOwner();
 
     useEffect(() => {
@@ -51,22 +54,23 @@ function Document({ id }: { id: string }) {
                     {/* is owner && inviteuser, delete comment */}
                     {isOwner && (
                         <>
-                        <InviteUser/>
+                            <InviteUser />
 
-                        <DeleteDocument/>
+                            <DeleteDocument />
                         </>
                     )}
                 </form>
             </div>
-            <div>
+            <div className="flex max-w-6xl mx-auto justify-between items-center mb-3">
                 {/* Manage Users */}
-
+                <ManageUsers />
                 {/* Avatars */}
+                <Avatars />
 
 
             </div>
-            <hr  className='pb-10'/>
-            <Editor/>
+            <hr className='pb-10' />
+            <Editor />
             {/* Collaborative Editor */}
         </div>
     )
