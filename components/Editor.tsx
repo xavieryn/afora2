@@ -17,7 +17,7 @@ import TranslateDocument from "./TranslateDocument";
 
 type EditorProps = {
     doc: Y.Doc;
-    provider: any;
+    provider: LiveblocksYjsProvider;
     darkMode: boolean;
 }
 function BlockNote({doc, provider, darkMode}: EditorProps) {
@@ -46,7 +46,7 @@ function BlockNote({doc, provider, darkMode}: EditorProps) {
 function Editor() {
     const room = useRoom();
     const [doc, setDoc] = useState<Y.Doc>();
-    const[provider, setProvider] = useState<LiveblocksYjsProvider>();
+    const[provider, setProvider] = useState<LiveblocksYjsProvider | undefined>();
     const [darkMode, setDarkMode] = useState(false);
 
     useEffect(()=> {
@@ -68,7 +68,7 @@ function Editor() {
     const style = `hover:text-white ${
         darkMode
         ? "text-gray-300 bg-gray-700 hover:bg-gray-100 hover:text-gray-700"
-        : "text-gray700 bg-gray-200 hover:bg-gray-300 hover: text-gray-700"
+        : "text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-700"
     }`
   return (
     <div className="max-w-6xl mx-auto">
