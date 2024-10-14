@@ -2,6 +2,7 @@
 
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
+import Link from "next/link";
 function Header() {
   const { user } = useUser();
 
@@ -13,14 +14,17 @@ function Header() {
         </h1>
       )}
       {/* Breadcrumbs*/}
-      <Breadcrumbs/>
-      
+      <Breadcrumbs />
+
       <div>
         <SignedOut>
           <SignInButton />
         </SignedOut>
 
         <SignedIn>
+          {/* <Link href={href} className={`border p-2 rounded-md ${isActive ? "bg-gray-300 font-bold border-black" : "border-gray-400"}`}>
+            <p className="truncate">{data?.title}</p>
+          </Link> */}
           <UserButton />
         </SignedIn>
       </div>
