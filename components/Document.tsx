@@ -48,8 +48,8 @@ function Document({ id }: { id: string }) {
                     <Button disabled={isUpdating} type="submit">{isUpdating ? "Updating..." : "Update"}</Button>
                     {/* if */}
                     {/* is owner && inviteuser, delete comment */}
-                    
-                    
+
+
                 </form>
             </div>
             <div className="flex max-w-6xl mx-auto justify-between items-center mb-3">
