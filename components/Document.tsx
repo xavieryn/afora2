@@ -3,22 +3,34 @@
 import { FormEvent, useEffect, useState, useTransition } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { doc, updateDoc } from "firebase/firestore";
+import { addDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Editor from "./Editor";
+import { useForm } from "react-hook-form";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
 
 // NICE SHADCN STUFF
 // DIALOG IS VERY NICE
-
+type AddProjectInputs = {
+    Title: string;
+    CreatedBy: string;
+  }
+  
 function Document({ id }: { id: string }) {
 
     const [input, setInput] = useState("");
     const [isUpdating, startTransition] = useTransition();
     // const [data, loading, error] = useDocumentData(doc(db, "documents", id));
     const [data] = useDocumentData(doc(db, "documents", id));
+
+    const {
+        register: registerAddProject,
+        handleSubmit: handleSubmitAddProject,
+        formState: { errors: errorsAddProject },
+        reset: resetAddProject
+      } = useForm<AddProjectInputs>();
 
     useEffect(() => {
         if (data) {
@@ -37,6 +49,28 @@ function Document({ id }: { id: string }) {
             })
         }
     }
+
+    const onAddProject = async (data: AddProjectInputs) => {
+        try {
+          const docRef = await addDoc(colRef, {
+            title: data.Title,
+            createdBy: data.CreatedBy,
+          });
+          console.log("Project added successfully with ID:", docRef.id);
+          resetAddProject();
+    
+          // Fetch projects again to update the list
+          const snapshot = await getDocs(colRef);
+          const updatedprojects = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          } as Project));
+          setprojects(updatedprojects);
+        } catch (error) {
+          console.error("Error adding project:", error);
+        }
+      };
+
     return (
         <div className="flex-1 h-full bg-white p-5">
             <div >

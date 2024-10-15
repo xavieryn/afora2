@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 import Unsafe from "./Unsafe";
 import { useUser } from "@clerk/nextjs";
+import Kanban from "./Kanban";
 
 
 
@@ -18,15 +19,18 @@ function Editor() {
 
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div >
             <div className="flex items-center gap-2 justify-end mb-10">
 
+                <div className="mr-10">
+                    {/* Dark Mode */}
+                    <Button className={style} onClick={() => setDarkMode(!darkMode)}>
+                        {darkMode ? <SunIcon /> : <MoonIcon />}
+                    </Button>
+                </div>
 
-                {/* Dark Mode */}
-                <Button className={style} onClick={() => setDarkMode(!darkMode)}>
-                    {darkMode ? <SunIcon /> : <MoonIcon />}
-                </Button>
             </div>
+            <Kanban />
 
         </div>
     )
