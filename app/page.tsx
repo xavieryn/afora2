@@ -1,18 +1,29 @@
+import HomeSignedIn from "@/components/HomeSignedIn";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowLeftCircle } from "lucide-react";
 
 export default function Home() {
+
+
   return (
     <main className="flex min-h-screen bg-gray-100">
       <SignedIn>
-        <div className="flex animate-pulse space-x-2 flex-row">
-          <ArrowLeftCircle className="w-12 h-12 text-purple-800" />
-          <h1 className="font-bold text-2xl text-gray-800">Get started with creating a New Document</h1>
+        <div className="flex flex-col flex-1">
+          <div className="flex animate-pulse space-x-2 flex-row">
+            <ArrowLeftCircle className="w-12 h-12 text-purple-800" />
+            <h1 className="font-bold text-2xl text-gray-800">Get started with creating a New Document</h1>
+          </div>
+          <div>
+            <HomeSignedIn />
+
+          </div>
         </div>
+
       </SignedIn>
 
-      <div className="flex-1 flex items-center justify-center">
-        <SignedOut>
+      <SignedOut>
+        <div className="flex-1 flex items-center justify-center">
+
           <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
             <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
               Welcome to Afora
@@ -28,8 +39,9 @@ export default function Home() {
               </SignInButton>
             </div>
           </div>
-        </SignedOut>
-      </div>
+        </div>
+
+      </SignedOut>
     </main>
   );
 }
