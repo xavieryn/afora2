@@ -50,27 +50,6 @@ function Document({ id }: { id: string }) {
         }
     }
 
-    const onAddProject = async (data: AddProjectInputs) => {
-        try {
-          const docRef = await addDoc(colRef, {
-            title: data.Title,
-            createdBy: data.CreatedBy,
-          });
-          console.log("Project added successfully with ID:", docRef.id);
-          resetAddProject();
-    
-          // Fetch projects again to update the list
-          const snapshot = await getDocs(colRef);
-          const updatedprojects = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          } as Project));
-          setprojects(updatedprojects);
-        } catch (error) {
-          console.error("Error adding project:", error);
-        }
-      };
-
     return (
         <div className="flex-1 h-full bg-white p-5">
             <div >
