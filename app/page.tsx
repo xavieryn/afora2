@@ -6,7 +6,7 @@ export default function Home() {
 
 
   return (
-    <main className="flex min-h-screen bg-gray-100">
+    <main className="flex bg-gray-100">
       <SignedIn>
         <div className="flex flex-col flex-1">
           <div className="flex animate-pulse space-x-2 flex-row">

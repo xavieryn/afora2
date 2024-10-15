@@ -8,7 +8,7 @@ function DocumentPage( {params: {id}}: {
     }
 } ) {
   return (
-    <div className="flex flex-col flex-1 min-h-screen">
+    <div className="flex flex-col flex-1">
         <Document id={id}/>
     </div>
   )
