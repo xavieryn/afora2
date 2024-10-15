@@ -1,8 +1,6 @@
 import { useUser } from '@clerk/nextjs'
-import { useState } from 'react'
-import { Button } from './ui/button'
 import { useForm, SubmitHandler } from "react-hook-form"
-
+import { Button } from './ui/button'
 import {
     Select,
     SelectContent,
@@ -19,21 +17,44 @@ type Inputs = {
 export default function Unsafe() {
     const { user } = useUser()
     const genders = ['Male', 'Female', 'Other']
-    const demographics = ['Middle/High School Student', 'College Student', 'Profesional', 'Personal']
+    const demographics = ['Middle/High School Student', 'College Student', 'Professional', 'Personal']
 
     const {
-        register,
         handleSubmit,
         formState: { errors },
         setValue,
-    } = useForm<Inputs>()
+        watch,
+    } = useForm<Inputs>({
+        defaultValues: {
+            gender: user?.unsafeMetadata?.gender as string || '',
+            demographic: user?.unsafeMetadata?.demographic as string || '',
+        }
+    })
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        const currentGender = user?.unsafeMetadata?.gender;
+        const currentDemographic = user?.unsafeMetadata?.demographic;
+
+        // Create an object with fields that have changed
+        const updatedMetadata: Partial<Inputs> = {};
+        if (data.gender && data.gender !== currentGender) {
+            updatedMetadata.gender = data.gender;
+        }
+        if (data.demographic && data.demographic !== currentDemographic) {
+            updatedMetadata.demographic = data.demographic;
+        }
+
+        // If there are no changes, don't update
+        if (Object.keys(updatedMetadata).length === 0) {
+            console.log("No changes detected");
+            return;
+        }
+
         try {
             await user?.update({
                 unsafeMetadata: {
-                    demographic: data.demographic,
-                    gender: data.gender,
+                    ...user.unsafeMetadata,
+                    ...updatedMetadata, // Update only the changed fields
                 }
             })
             console.log("User updated successfully")
@@ -43,13 +64,16 @@ export default function Unsafe() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className='m-2'>
-                    <p>What is your gender?</p>
-                    <Select onValueChange={(value) => setValue('gender', value)}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Gender" />
+        <div className="p-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div>
+                    <p className="mb-2">Gender</p>
+                    <Select
+                        onValueChange={(value) => setValue('gender', value)}
+                        defaultValue={user?.unsafeMetadata?.gender as string}
+                    >
+                        <SelectTrigger className="w-full max-w-xs">
+                            <SelectValue placeholder={user?.unsafeMetadata?.gender as string || "Select Gender"} />
                         </SelectTrigger>
                         <SelectContent>
                             {genders.map((g) => (
@@ -57,14 +81,17 @@ export default function Unsafe() {
                             ))}
                         </SelectContent>
                     </Select>
-                    {errors.gender && <span>{errors.gender.message}</span>}
+                    {errors.gender && <span className="text-red-500 text-sm">{errors.gender.message}</span>}
                 </div>
 
-                <div className='m-2'>
-                    <p>What demographic best fits you?</p>
-                    <Select onValueChange={(value) => setValue('demographic', value)}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Demographic" />
+                <div>
+                    <p className="mb-2">Demographic</p>
+                    <Select
+                        onValueChange={(value) => setValue('demographic', value)}
+                        defaultValue={user?.unsafeMetadata?.demographic as string}
+                    >
+                        <SelectTrigger className="w-full max-w-xs">
+                            <SelectValue placeholder={user?.unsafeMetadata?.demographic as string || "Select Demographic"} />
                         </SelectTrigger>
                         <SelectContent>
                             {demographics.map((demographic) => (
@@ -72,11 +99,10 @@ export default function Unsafe() {
                             ))}
                         </SelectContent>
                     </Select>
+                    {errors.demographic && <span className="text-red-500 text-sm">{errors.demographic.message}</span>}
                 </div>
 
-                {errors.demographic && <span>{errors.demographic.message}</span>}
-
-                <Button type="submit" className='gap-2 pt-2'>Submit</Button>
+                <Button type="submit">Submit</Button>
             </form>
         </div>
     )

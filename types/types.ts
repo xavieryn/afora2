@@ -3,7 +3,8 @@ export type User = {
     firstName: string;
     lastName: string;
     email: string;
-    image: string;
+    emailAddresses: string;
+    imageUrl: string;
     unsafeMetadata: {
         demographic?: string;  // Use optional chaining here
         gender?: string;
