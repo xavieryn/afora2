@@ -6,10 +6,11 @@ import { MoonIcon, SunIcon } from "lucide-react";
 import Unsafe from "./Unsafe";
 import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
+import Test from "./Test";
 
 
 
-function Editor() {
+function Editor(  { id } : { id:string}) {
 
     const [darkMode, setDarkMode] = useState(false); // THIS DOES NOT WORK FOR NOW
     const style = `hover:text-white ${darkMode
@@ -30,7 +31,9 @@ function Editor() {
                 </div>
 
             </div>
-            <Kanban />
+            <Test id={id}/>
+
+            <Kanban id={id} />
 
         </div>
     )

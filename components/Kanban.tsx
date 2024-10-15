@@ -6,22 +6,35 @@ import React, {
   useState,
   DragEvent,
   FormEvent,
+  useEffect,
 } from "react";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+import { doc } from "firebase/firestore";
+import { db } from "@/firebase";
 
-function Kanban() {
+function Kanban( { id } : { id:string}) {
   return (
     <div className="  w-full">
-      <Board />
+      <Board id={id} />
     </div>
   )
 }
 
-const Board = () => {
+const Board = ( { id } : { id:string }) => {
+
   // GRAB FROM THE ACTUAL DB
+  const [data] = useDocumentData(doc(db, "documents", id));
+  console.log(data)
   const [cards, setCards] = useState(DEFAULT_CARDS);
+
+//   useEffect(() => {
+//     if (data) {
+//         setCards(data);
+//     }
+// }, [data]);
 
   // THIS WILL BE AN ACTUAL MAP FUNCTION
   return (
@@ -111,7 +124,7 @@ const Column = ({
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
 
-      setCards(copy);
+      setCards(copy); // NEED TO WORK HERE
     }
   };
 
@@ -191,9 +204,8 @@ const Column = ({
         onDrop={handleDragEnd}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        className={`h-full w-full transition-colors ${
-          active ? "bg-neutral-800/50" : "bg-neutral-800/0"
-        }`}
+        className={`h-full w-full transition-colors ${active ? "bg-neutral-800/50" : "bg-neutral-800/0"
+          }`}
       >
         {filteredCards.map((c) => {
           return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
@@ -270,11 +282,10 @@ const BurnBarrel = ({
       onDrop={handleDragEnd}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
-      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
-        active
+      className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active
           ? "border-red-800 bg-red-800/20 text-red-500"
           : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
-      }`}
+        }`}
     >
       {active ? <FaFire className="animate-bounce" /> : <FiTrash />}
     </div>

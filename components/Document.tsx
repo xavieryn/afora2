@@ -71,7 +71,7 @@ function Document({ id }: { id: string }) {
 
             </div>
             <hr className='pb-10' />
-            <Editor />
+            <Editor id={id}/>
         </div>
     )
 }
