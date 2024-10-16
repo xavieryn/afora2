@@ -50,7 +50,7 @@ function Editor(  { id } : { id:string}) {
     const { tasks, loading: tasksLoading, error: tasksError } = useTasksSubcollection(id);
   
       // FEED THESE TASKS INTO THE KANBAN!!!!!!!
-    console.log(tasks)
+    //console.log(tasks)
     if (dataLoading || tasksLoading) return <div>Loading...</div>;
     if (dataError) return <div>Error loading document: {dataError.message}</div>;
     if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>;

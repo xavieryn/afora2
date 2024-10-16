@@ -12,8 +12,9 @@ import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { doc } from "firebase/firestore";
+import { addDoc, collection, doc } from "firebase/firestore";
 import { db } from "@/firebase";
+import { usePathname } from "next/navigation";
 
 interface Task {
   id: string;
@@ -60,6 +61,7 @@ const Board = ( { tasks } : { tasks:Task[] }) => {
         setCards={setCards}
       />
       <Column
+      
         title="In progress"
         column="doing"
         headingColor="text-blue-200"
@@ -197,6 +199,7 @@ const Column = ({
   };
 
   const filteredCards = cards.filter((c) => c.column === column);
+  
 
   return (
     <div className="w-56 shrink-0">
@@ -217,7 +220,7 @@ const Column = ({
           return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
         })}
         <DropIndicator beforeId={null} column={column} />
-        <AddCard column={column} setCards={setCards} />
+        <AddCard column={column} setCards={setCards}/>
       </div>
     </div>
   );
@@ -306,21 +309,31 @@ type AddCardProps = {
 const AddCard = ({ column, setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const path = usePathname();
+  const segments = path.split("/");
+  //console.log(segments);
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();  // prevents rerendering the screen
 
     if (!text.trim().length) return;
-
+    
+    const id =   Math.random().toString();
     const newCard = {
       column,
       title: text.trim(),
-      id: Math.random().toString(),
+      id: id,
     };
 
     setCards((pv) => [...pv, newCard]);
+    console.log(segments[-1]);
+    console.log("segments: ", segments)
     // THIS NEEDS TO GET APPENDED TO FIRESTORE DOC 
-
+    const docRef = await addDoc(collection(db, "documents", segments[segments.length-1], "tasks"), {
+      column,
+      title: text.trim(),
+      id: id
+    })
+    console.log("Document written with ID: ", docRef.id);
     setAdding(false);
   };
 
