@@ -15,20 +15,26 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "@/firebase";
 
-function Kanban( { id } : { id:string}) {
+interface Task {
+  id: string;
+  title: string;
+  column: string
+  // Add other fields as necessary
+}
+
+
+function Kanban( { tasks } : { tasks: Task[] }) {
   return (
     <div className="  w-full">
-      <Board id={id} />
+      <Board tasks={tasks} />
     </div>
   )
 }
 
-const Board = ( { id } : { id:string }) => {
+const Board = ( { tasks } : { tasks:Task[] }) => {
 
   // GRAB FROM THE ACTUAL DB
-  const [data] = useDocumentData(doc(db, "documents", id));
-  console.log(data)
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState(tasks);
 
 //   useEffect(() => {
 //     if (data) {
@@ -75,9 +81,9 @@ const Board = ( { id } : { id:string }) => {
 type ColumnProps = {
   title: string;
   headingColor: string;
-  cards: CardType[];
+  cards: Task[];
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const Column = ({
@@ -217,7 +223,7 @@ const Column = ({
   );
 };
 
-type CardProps = CardType & {
+type CardProps = Task & {
   handleDragStart: Function;
 };
 
@@ -256,7 +262,7 @@ const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
 const BurnBarrel = ({
   setCards,
 }: {
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 }) => {
   const [active, setActive] = useState(false);
 
@@ -294,7 +300,7 @@ const BurnBarrel = ({
 
 type AddCardProps = {
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const AddCard = ({ column, setCards }: AddCardProps) => {
