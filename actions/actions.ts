@@ -40,7 +40,7 @@ export async function deleteDocument(roomId: string) {
             .get();
 
         const batch = adminDb.batch();
-        // delete the room reference in teh user's collection for every user in the room
+        // delete the room reference in the user's collection for every user in the room
         query.docs.forEach((doc) => {
             batch.delete(doc.ref);
         })

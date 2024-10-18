@@ -18,6 +18,7 @@ import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 
 function JoinDocumentButton() {
+  const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const [projCode, setProjCode] = useState('');
@@ -32,6 +33,7 @@ function JoinDocumentButton() {
         : { success: false, message: 'user does not exist' };
       if (success) {
         console.log('Successfully joined');
+        setIsOpen(false);
         router.push(`/doc/${projCode}`);
         toast.success('Successfully joined!');
       } else {
@@ -41,7 +43,7 @@ function JoinDocumentButton() {
     })
   }
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button disabled={isPending}>
           {isPending ? "Loading..." : "Join Document"}

@@ -7,10 +7,12 @@ import Unsafe from "./Unsafe";
 import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
 import Test from "./Test";
+import DeleteDocument from "./DeleteDocument";
+import InviteUser from "./InviteUser";
 
 
 
-function Editor(  { id } : { id:string}) {
+function Editor({ id }: { id: string }) {
 
     const [darkMode, setDarkMode] = useState(false); // THIS DOES NOT WORK FOR NOW
     const style = `hover:text-white ${darkMode
@@ -30,8 +32,11 @@ function Editor(  { id } : { id:string}) {
                     </Button>
                 </div>
 
+                <DeleteDocument />
+                <InviteUser />
+
             </div>
-            <Test id={id}/>
+            <Test id={id} />
 
             {/* <Kanban id={id} /> */}
 
