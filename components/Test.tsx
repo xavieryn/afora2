@@ -1,12 +1,6 @@
-import { collection, query, orderBy, doc } from 'firebase/firestore';
+import { collection, query, orderBy, doc, DocumentData } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/firebase'; // Adjust this import path
-
-interface Task {
-  id: string;
-  title: string;
-  // Add other fields as necessary
-}
 
 export const useTasksSubcollection = (documentId: string) => {
   const [snapshot, loading, error] = useCollection(
@@ -23,16 +17,13 @@ export const useTasksSubcollection = (documentId: string) => {
 
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
-
-interface DocumentData {
-  title: string;
-  // Add other fields as necessary
-}
+import { Task } from '@/types/types';
 
 const Test: React.FC<{ id: string }> = ({ id }) => {
   const [data, dataLoading, dataError] = useDocumentData(doc(db, "documents", id));
   const { tasks, loading: tasksLoading, error: tasksError } = useTasksSubcollection(id);
-
+  
+  const docData = data as DocumentData;
     // FEED THESE TASKS INTO THE KANBAN!!!!!!!
   // console.log(tasks)
   if (dataLoading || tasksLoading) return <div>Loading...</div>;
@@ -41,7 +32,14 @@ const Test: React.FC<{ id: string }> = ({ id }) => {
 
   return (
     <div>
-      <h1>Document: {(data as DocumentData)?.title}</h1>
+      <h1>Document: {docData?.title}</h1>
+      <h2>Admins: </h2>
+      <ul>
+        {docData?.admins?.map((admin: string, index: number) => (
+          <li key={index}>{admin}</li>
+        ))}
+      </ul>
+
       <h2>Tasks:</h2>
       <ul>
         {tasks.map(task => (

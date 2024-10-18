@@ -9,10 +9,13 @@ export async function createNewDocument() {
     auth().protect();
 
     const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
 
     const docCollectionRef = adminDb.collection("documents");
     const docRef = await docCollectionRef.add({
-        title: "New Doc"
+        title: "New Doc",
+        admins: [userId],
+        members: []
     })
 
     await adminDb.collection('users').doc(sessionClaims?.email!).collection
