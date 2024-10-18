@@ -39,6 +39,12 @@ const Test: React.FC<{ id: string }> = ({ id }) => {
           <li key={index}>{admin}</li>
         ))}
       </ul>
+      <h2>Members: </h2>
+      <ul>
+        {docData?.members?.map((member: string, index: number) => (
+          <li key={index}>{member}</li>
+        ))}
+      </ul>
 
       <h2>Tasks:</h2>
       <ul>

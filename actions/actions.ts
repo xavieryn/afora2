@@ -18,9 +18,9 @@ export async function createNewDocument() {
         members: []
     })
 
-    await adminDb.collection('users').doc(sessionClaims?.email!).collection
+    await adminDb.collection('users').doc(userId).collection
         ('rooms').doc(docRef.id).set({
-            userId: sessionClaims?.email!,
+            userId: userId,
             role: "owner",
             createdAt: new Date(),
             roomId: docRef.id
@@ -30,7 +30,7 @@ export async function createNewDocument() {
 
 
 export async function deleteDocument(roomId: string) {
-    auth().protect(); // ensure the user is authenticated
+    // auth().protect(); // ensure the user is authenticated
 
     console.log("deleteDocument", roomId);
 
