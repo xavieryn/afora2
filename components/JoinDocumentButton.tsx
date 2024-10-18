@@ -29,7 +29,7 @@ function JoinDocumentButton() {
 
     startTransition(async () => {
       const { success, message } = (user && user.id && user.primaryEmailAddress)
-        ? await inviteUserToDocument(projCode, user.primaryEmailAddress.emailAddress)
+        ? await inviteUserToDocument(projCode, user.primaryEmailAddress.emailAddress, 'editor')
         : { success: false, message: 'user does not exist' };
       if (success) {
         console.log('Successfully joined');

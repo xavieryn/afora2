@@ -56,7 +56,7 @@ export async function deleteDocument(roomId: string) {
     }
 }
 
-export async function inviteUserToDocument(roomId: string, email: string) {
+export async function inviteUserToDocument(roomId: string, email: string, access: string) {
     // TODO: this seems to lead to refresh/redirect of pages regardless of success or not
     // auth().protect();
 
@@ -64,7 +64,7 @@ export async function inviteUserToDocument(roomId: string, email: string) {
 
     try {
         roomId = roomId.trim();
-        if(!roomId){
+        if (!roomId) {
             throw new Error('Doccument id cannot be empty');
         }
 
@@ -78,14 +78,15 @@ export async function inviteUserToDocument(roomId: string, email: string) {
         // Check if the user is already a member of the document
         const documentData = docSnapshot.data();
         const members = documentData?.members || [];
+        const admins = documentData?.admins || [];
 
-        if (members.includes(email)) {
+        if (members.includes(email) || admins.includes(email)) {
             throw new Error(`You are already a member of the document`);
         }
 
         // Add the user to the document's members array
         await adminDb.collection("documents").doc(roomId).set(
-            { members: [...members, email] }, // append the new email to the members array
+            (access === 'editor') ? { members: [...members, email] } : { admins: [...admins, email] }, // append the new email to the corresponding array
             { merge: true } // use merge to only update the members field without overwriting the document
         );
 
@@ -96,7 +97,7 @@ export async function inviteUserToDocument(roomId: string, email: string) {
             .doc(roomId)
             .set({
                 userId: email,
-                role: "editor",
+                role: access,
                 createdAt: new Date(),
                 roomId,
             })

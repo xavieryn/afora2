@@ -11,10 +11,20 @@ import {
 import { FormEvent, useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import {  inviteUserToDocument } from "@/actions/actions";
+import { inviteUserToDocument } from "@/actions/actions";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
-
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { access_roles } from "@/constants";
+import { ChevronRight } from "lucide-react";
 
 
 function InviteUser() {
@@ -23,6 +33,7 @@ function InviteUser() {
     const [email, setEmail] = useState("");
     const pathname = usePathname();
     const router = useRouter();
+    const [access, setAccess] = useState(access_roles[0]);
 
     const handleInvite = async (e: FormEvent) => {
         e.preventDefault();
@@ -30,7 +41,7 @@ function InviteUser() {
         if (!roomId) return;
 
         startTransition(async () => {
-            const { success } = await inviteUserToDocument(roomId, email);
+            const { success } = await inviteUserToDocument(roomId, email, access);
 
             if (success) {
                 setIsOpen(false);
@@ -54,18 +65,39 @@ function InviteUser() {
                             Enter the email of the user you want to invite.
                         </DialogDescription>
                     </DialogHeader>
-                   <form onSubmit={handleInvite} className="flex gap-2">
-                    <Input
-                    type="email"
-                    placeholder="Email"
-                    className="w-full"
-                    value={email}
-                    onChange={(e)=> setEmail(e.target.value)}/>
-                    <Button type="submit" disabled={!email || isPending}>
-                        {isPending ? "Inviting" : "Invite"}
-                    </Button>
-                    
-                   </form>
+                    <form onSubmit={handleInvite} className="flex gap-2">
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            className="w-full"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)} />
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline">
+                                    <ChevronRight className="h-4 w-4" />{access}
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-25">
+                                <DropdownMenuLabel>Invite As</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuRadioGroup value={access} onValueChange={setAccess}>
+                                    {access_roles.map((role) => (
+                                        <DropdownMenuRadioItem key={role} value={role}>
+                                            {role}
+                                        </DropdownMenuRadioItem>
+                                    ))}
+                                </DropdownMenuRadioGroup>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+
+                        <Button type="submit" disabled={!email || isPending}>
+                            {isPending ? "Inviting" : "Invite"}
+                        </Button>
+
+
+                    </form>
                 </DialogContent>
             </Dialog>
         </div>
