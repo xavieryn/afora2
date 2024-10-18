@@ -45,7 +45,7 @@ function InviteUser() {
 
             if (success) {
                 setIsOpen(false);
-                router.replace("/");
+                // router.replace("/");
                 toast.success("User added to room successfully")
             } else {
                 toast.error("Failed to add user to room!")
