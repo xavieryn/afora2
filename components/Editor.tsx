@@ -33,7 +33,7 @@ function Editor(  { id } : { id:string}) {
             </div>
             <Test id={id}/>
 
-            <Kanban id={id} />
+            {/* <Kanban id={id} /> */}
 
         </div>
     )
