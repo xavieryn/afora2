@@ -44,7 +44,7 @@ function Document({ id }: { id: string }) {
         if (input.trim()) {
             startTransition(async () => {
                 await updateDoc(doc(db, "documents", id), {
-                    title: input,
+                    title: input
                 })
             })
         }

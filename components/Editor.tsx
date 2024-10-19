@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
-import Unsafe from "./Unsafe";
 import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
+import DeleteDocument from "./DeleteDocument";
+import InviteUser from "./InviteUser";
 
 
 
-function Editor(  { id } : { id:string}) {
+function Editor({ id }: { id: string }) {
 
     const [darkMode, setDarkMode] = useState(false); // THIS DOES NOT WORK FOR NOW
     const style = `hover:text-white ${darkMode
@@ -28,6 +29,9 @@ function Editor(  { id } : { id:string}) {
                         {darkMode ? <SunIcon /> : <MoonIcon />}
                     </Button>
                 </div>
+
+                <DeleteDocument />
+                <InviteUser />
 
             </div>
 

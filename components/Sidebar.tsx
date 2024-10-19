@@ -15,6 +15,7 @@ import { collectionGroup, DocumentData, query, where } from "firebase/firestore"
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
+import JoinDocumentButton from "./JoinDocumentButton";
 
 interface RoomDocument extends DocumentData {
   createdAt: string;
@@ -26,7 +27,7 @@ interface RoomDocument extends DocumentData {
 function Sidebar() {
   const { user } = useUser()
   // const [data, loading, error] = useCollection(
-    const [data] = useCollection(
+  const [data] = useCollection(
     user &&
     query(
       (collectionGroup(db, 'rooms')),
@@ -72,8 +73,9 @@ function Sidebar() {
   }, [data])
   const menuOptions = (
     <>
-      <NewDocumentButton />
       <div className="flex py-4 flex-col space-y-4 md:max-w-36">
+        <NewDocumentButton />
+        <JoinDocumentButton />
         {/* my documents */}
         {groupedData.owner.length === 0 ? (
           <h2 className="text-gray-500 font-semibold text-sm">
