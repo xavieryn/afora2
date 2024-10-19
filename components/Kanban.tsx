@@ -12,29 +12,39 @@ import { FiPlus, FiTrash } from "react-icons/fi";
 import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { doc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/firebase";
+import { usePathname, useRouter } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { adminDb } from "@/firebase-admin";
+import { deleteTask } from "@/actions/actions";
 
-function Kanban( { id } : { id:string}) {
+interface Task {
+  id: string;
+  title: string;
+  column: string
+  // Add other fields as necessary
+}
+
+
+function Kanban({ tasks }: { tasks: Task[] }) {
   return (
     <div className="  w-full">
-      <Board id={id} />
+      <Board tasks={tasks} />
     </div>
   )
 }
 
-const Board = ( { id } : { id:string }) => {
+const Board = ({ tasks }: { tasks: Task[] }) => {
 
   // GRAB FROM THE ACTUAL DB
-  const [data] = useDocumentData(doc(db, "documents", id));
-  console.log(data)
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState(tasks);
 
-//   useEffect(() => {
-//     if (data) {
-//         setCards(data);
-//     }
-// }, [data]);
+  //   useEffect(() => {
+  //     if (data) {
+  //         setCards(data);
+  //     }
+  // }, [data]);
 
   // THIS WILL BE AN ACTUAL MAP FUNCTION
   return (
@@ -54,6 +64,7 @@ const Board = ( { id } : { id:string }) => {
         setCards={setCards}
       />
       <Column
+
         title="In progress"
         column="doing"
         headingColor="text-blue-200"
@@ -75,9 +86,9 @@ const Board = ( { id } : { id:string }) => {
 type ColumnProps = {
   title: string;
   headingColor: string;
-  cards: CardType[];
+  cards: Task[];
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const Column = ({
@@ -88,14 +99,14 @@ const Column = ({
   setCards,
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
+  const path = usePathname();
 
   const handleDragStart = (e: DragEvent, card: CardType) => {
     e.dataTransfer.setData("cardId", card.id);
   };
 
-  const handleDragEnd = (e: DragEvent) => {
+  const handleDragEnd = async (e: DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId");
-
     setActive(false);
     clearHighlights();
 
@@ -123,8 +134,20 @@ const Column = ({
 
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
+      const segments = path.split("/");
+      const id = segments[segments.length - 1]
+      try {
+        const cardRef = doc(db, "documents", id, "tasks", cardId);
+        await updateDoc(cardRef, {
+          column: column,
+          // Add any other fields that need updating
+        });
+        // The local state will be updated automatically by the onSnapshot listener
+      } catch (error) {
+        console.error("Error updating card: ", error);
+      }
 
-      setCards(copy); // NEED TO WORK HERE
+      setCards(copy);
     }
   };
 
@@ -192,6 +215,7 @@ const Column = ({
 
   const filteredCards = cards.filter((c) => c.column === column);
 
+
   return (
     <div className="w-56 shrink-0">
       <div className="mb-3 flex items-center justify-between">
@@ -217,7 +241,7 @@ const Column = ({
   );
 };
 
-type CardProps = CardType & {
+type CardProps = Task & {
   handleDragStart: Function;
 };
 
@@ -256,9 +280,11 @@ const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
 const BurnBarrel = ({
   setCards,
 }: {
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 }) => {
   const [active, setActive] = useState(false);
+
+  const pathname = usePathname();
 
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();  // prevents rerendering the screen
@@ -270,11 +296,14 @@ const BurnBarrel = ({
   };
 
   const handleDragEnd = (e: DragEvent) => {
+
     const cardId = e.dataTransfer.getData("cardId");
-
     setCards((pv) => pv.filter((c) => c.id !== cardId));
-
     setActive(false);
+    const roomId = pathname.split("/").pop();
+    if (!roomId) return;
+
+    deleteTask(roomId, cardId);
   };
 
   return (
@@ -283,8 +312,8 @@ const BurnBarrel = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active
-          ? "border-red-800 bg-red-800/20 text-red-500"
-          : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
+        ? "border-red-800 bg-red-800/20 text-red-500"
+        : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
         }`}
     >
       {active ? <FaFire className="animate-bounce" /> : <FiTrash />}
@@ -294,30 +323,53 @@ const BurnBarrel = ({
 
 type AddCardProps = {
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const AddCard = ({ column, setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
+  const path = usePathname();
+  const segments = path.split("/");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();  // prevents rerendering the screen
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();  // prevents rerendering the screen
 
-    if (!text.trim().length) return;
+  if (!text.trim().length) return;
 
+  try {
+    const documentId = segments[segments.length - 1];
+    
+    // Add the new task to Firestore
+    const docRef = await addDoc(collection(db, "documents", documentId, "tasks"), {
+      column,
+      title: text.trim(),
+      createdAt: serverTimestamp(),
+    });
+
+    // Get the auto-generated ID
+    const newTaskId = docRef.id;
+
+    // Update the document with its own ID
+    await updateDoc(docRef, {
+      id: newTaskId
+    });
+
+    // Update the local state
     const newCard = {
       column,
       title: text.trim(),
-      id: Math.random().toString(),
+      id: newTaskId,
     };
-
     setCards((pv) => [...pv, newCard]);
-    // THIS NEEDS TO GET APPENDED TO FIRESTORE DOC 
 
+    console.log("New task added and updated with ID: ", newTaskId);
     setAdding(false);
-  };
-
+  } catch (error) {
+    console.error("Error adding new task: ", error);
+    // Handle the error appropriately (e.g., show an error message to the user)
+  }
+};
   return (
     <>
       {adding ? (
@@ -327,7 +379,7 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
             onChange={(e) => setText(e.target.value)}
             autoFocus
             placeholder="Add new task..."
-            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm  placeholder-violet-300 focus:outline-0"
           />
           <div className="mt-1.5 flex items-center justify-end gap-1.5">
             <button

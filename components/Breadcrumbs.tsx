@@ -40,7 +40,6 @@ function Breadcrumbs() {
 
                             </BreadcrumbItem>
                         </Fragment>
-
                     )
                 })}
             </BreadcrumbList>

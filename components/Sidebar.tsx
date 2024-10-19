@@ -68,7 +68,7 @@ function Sidebar() {
       editor: [],
     }
     )
-    console.log(grouped)
+    //console.log(grouped)
     setGroupedData(grouped);
   }, [data])
   const menuOptions = (
