@@ -147,7 +147,7 @@ const Column = ({
         console.error("Error updating card: ", error);
       }
 
-      setCards(copy); // NEED TO WORK HERE
+      setCards(copy);
     }
   };
 
@@ -331,7 +331,6 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
   const [adding, setAdding] = useState(false);
   const path = usePathname();
   const segments = path.split("/");
-  //console.log(segments);
 
 const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault();  // prevents rerendering the screen
