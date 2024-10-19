@@ -48,6 +48,7 @@ export async function deleteDocument(roomId: string) {
             batch.delete(doc.ref);
         })
 
+        batch.commit();
 
         return { success: true }
     } catch (error) {
