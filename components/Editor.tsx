@@ -6,7 +6,6 @@ import { MoonIcon, SunIcon } from "lucide-react";
 import Unsafe from "./Unsafe";
 import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
-import Test from "./Test";
 
 
 
@@ -31,7 +30,6 @@ function Editor(  { id } : { id:string}) {
                 </div>
 
             </div>
-            <Test id={id}/>
 
             <Kanban id={id} />
 
