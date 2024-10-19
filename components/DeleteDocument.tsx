@@ -35,7 +35,7 @@ function DeleteDocument() {
             if (success){
                 setIsOpen(false);
                 router.replace("/");
-                toast.success("Room Delete Successfully")
+                toast.success("Room Deleted Successfully")
             } else{
                 toast.error("Failed to delete room ")
             }

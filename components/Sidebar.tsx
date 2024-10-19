@@ -84,7 +84,7 @@ function Sidebar() {
         ) : (
           <>
             <h2 className="text-gray-500 font-semibold text-sm">
-              My Documents
+              My Organizations
             </h2>
             {groupedData.owner.map((doc) => (
               <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />

@@ -5,7 +5,8 @@ import { Button } from "./ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
 import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
-
+import DeleteDocument from "./DeleteDocument";
+import InviteUser from "./InviteUser";
 import { collection, query, orderBy, doc } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/firebase'; // Adjust this import path
