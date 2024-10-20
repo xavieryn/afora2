@@ -18,6 +18,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { adminDb } from "@/firebase-admin";
 import { deleteTask } from "@/actions/actions";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 
 interface Task {
   id: string;
@@ -46,7 +51,6 @@ const Board = ({ tasks }: { tasks: Task[] }) => {
   //     }
   // }, [data]);
 
-  // THIS WILL BE AN ACTUAL MAP FUNCTION
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-12">
       <Column
@@ -101,8 +105,8 @@ const Column = ({
   const [active, setActive] = useState(false);
   const path = usePathname();
 
-  const handleDragStart = (e: DragEvent, card: CardType) => {
-    e.dataTransfer.setData("cardId", card.id);
+  const handleDragStart = (e: DragEvent, task: Task) => {
+    e.dataTransfer.setData("cardId", task.id);
   };
 
   const handleDragEnd = async (e: DragEvent) => {
@@ -232,7 +236,18 @@ const Column = ({
           }`}
       >
         {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
+          return <div  >
+            <Popover>
+
+              <PopoverTrigger>
+                <div >
+                  <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+
+                </div>
+              </PopoverTrigger>
+              <PopoverContent>Place content for the popover here.</PopoverContent>
+            </Popover>
+          </div>
         })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
@@ -332,44 +347,44 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
   const path = usePathname();
   const segments = path.split("/");
 
-const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();  // prevents rerendering the screen
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();  // prevents rerendering the screen
 
-  if (!text.trim().length) return;
+    if (!text.trim().length) return;
 
-  try {
-    const documentId = segments[segments.length - 1];
-    
-    // Add the new task to Firestore
-    const docRef = await addDoc(collection(db, "documents", documentId, "tasks"), {
-      column,
-      title: text.trim(),
-      createdAt: serverTimestamp(),
-    });
+    try {
+      const documentId = segments[segments.length - 1];
 
-    // Get the auto-generated ID
-    const newTaskId = docRef.id;
+      // Add the new task to Firestore
+      const docRef = await addDoc(collection(db, "documents", documentId, "tasks"), {
+        column,
+        title: text.trim(),
+        createdAt: serverTimestamp(),
+      });
 
-    // Update the document with its own ID
-    await updateDoc(docRef, {
-      id: newTaskId
-    });
+      // Get the auto-generated ID
+      const newTaskId = docRef.id;
 
-    // Update the local state
-    const newCard = {
-      column,
-      title: text.trim(),
-      id: newTaskId,
-    };
-    setCards((pv) => [...pv, newCard]);
+      // Update the document with its own ID
+      await updateDoc(docRef, {
+        id: newTaskId
+      });
 
-    console.log("New task added and updated with ID: ", newTaskId);
-    setAdding(false);
-  } catch (error) {
-    console.error("Error adding new task: ", error);
-    // Handle the error appropriately (e.g., show an error message to the user)
-  }
-};
+      // Update the local state
+      const newCard = {
+        column,
+        title: text.trim(),
+        id: newTaskId,
+      };
+      setCards((pv) => [...pv, newCard]);
+
+      console.log("New task added and updated with ID: ", newTaskId);
+      setAdding(false);
+    } catch (error) {
+      console.error("Error adding new task: ", error);
+      // Handle the error appropriately (e.g., show an error message to the user)
+    }
+  };
   return (
     <>
       {adding ? (
@@ -413,39 +428,4 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 
 type ColumnType = "backlog" | "todo" | "doing" | "done";
 
-type CardType = {
-  title: string;
-  id: string;
-  column: ColumnType;
-};
-
-const DEFAULT_CARDS: CardType[] = [
-  // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
-  {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
-  },
-  { title: "Postmortem for outage", id: "6", column: "todo" },
-  { title: "Sync with product on Q3 roadmap", id: "7", column: "todo" },
-
-  // DOING
-  {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    column: "doing",
-  },
-  { title: "Add logging to daily CRON", id: "9", column: "doing" },
-  // DONE
-  {
-    title: "Set up DD dashboards for Lambda listener",
-    id: "10",
-    column: "done",
-  },
-];
 
