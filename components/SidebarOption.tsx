@@ -33,6 +33,10 @@ function SidebarOption({ href, id }: {
             <Link href={basePath}>
               <p className="truncate">Board</p>
             </Link>
+            {/* ADD ONCE WE HAVE IT LABELED AS ORGANIZATIONS */}
+            {/* <Link href={`${basePath}/board`}>
+              <p className="truncate">Board</p>
+            </Link> */}
             <Link href={`${basePath}/people`}>
               <p className="truncate">People</p>
             </Link>

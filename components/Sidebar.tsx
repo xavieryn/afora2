@@ -83,7 +83,7 @@ function Sidebar() {
           </h2>
         ) : (
           <>
-            <h2 className="text-gray-500 font-semibold text-sm">
+            <h2 className="font-bold text-lg">
               My Organizations
             </h2>
             {groupedData.owner.map((doc) => (
