@@ -11,12 +11,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser } from "@clerk/nextjs";
-import { collectionGroup, DocumentData, query, where } from "firebase/firestore";
+import { collection, collectionGroup, DocumentData, query, where } from "firebase/firestore";
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
+import { adminDb } from "@/firebase-admin";
 
 interface RoomDocument extends DocumentData {
   createdAt: string;
@@ -39,14 +40,6 @@ function Sidebar() {
     user &&
     query(
       (collectionGroup(db, 'rooms')),
-      where('userId', '==', user.emailAddresses[0].toString())
-    )
-  )
-
-  const [orgs] = useCollection(
-    user &&
-    query(
-      (collectionGroup(db, 'organizations')),
       where('userId', '==', user.emailAddresses[0].toString())
     )
   )
@@ -88,38 +81,16 @@ function Sidebar() {
     setGroupedData(grouped);
   }, [data]);
 
-  const [orgData, setOrgData] = useState<{
-    owner: RoomDocument[];
-    editor: RoomDocument[];
-  }>({
-    owner: [],
-    editor: [],
-  });
+  const [orgsData] = useCollection(
+    user && user.primaryEmailAddress && collection(db, "users", user.primaryEmailAddress.toString(), "organizations"));
+  const [orgs, setOrgs] = useState<OrgDocument[]>([]);
 
-  // Processing for displaying orgs
   useEffect(() => {
-    if (!orgs) return;
-
-    const grouped = orgs.docs.reduce<{
-      orgs: OrgDocument[];
-    }>(
-      (acc, curr) => {
-        const org = curr.data() as OrgDocument;
-        acc.orgs.push({
-          id: curr.id,
-          ...org,
-        })
-        return acc;
-      }, {
-      orgs: []
-    }
-    )
-    console.log(grouped)
-
-  }, [orgData]);
-
-
-
+    if (!orgsData) return;
+    const orgsList = orgsData.docs.map((doc) => (doc.data())) as OrgDocument[];
+    setOrgs(orgsList);
+  }, [orgsData]);
+  console.log('orgData: ', orgs);
 
   const menuOptions = (
     <>
@@ -128,6 +99,24 @@ function Sidebar() {
         <NewOrgButton />
 
         <JoinDocumentButton />
+
+        {/* My Orgs */}
+        {orgs.length === 0 ? (
+          <h2 className="text-gray-500 font-semibold text-sm">
+            No Organizations Found
+          </h2>
+        ) : (
+            <>
+            <h2 className="text-gray-500 font-semibold text-sm">
+              My Organizations
+            </h2>
+            {orgs.map((org) => (
+              <a key={org.orgId} href={`/org/${org.orgId}`} className="text-blue-500 hover:underline">
+              {org.orgId}
+              </a>
+            ))}
+            </>
+        )}
 
         {/* my documents */}
         {groupedData.owner.length === 0 ? (

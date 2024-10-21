@@ -1,6 +1,6 @@
 'use server'
 import { adminDb } from "@/firebase-admin";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useUser } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 
 // IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
@@ -31,7 +31,7 @@ export async function createNewDocument() {
 
 
 export async function deleteDocument(roomId: string) {
-    // auth().protect(); // ensure the user is authenticated
+    auth().protect(); // ensure the user is authenticated
 
     console.log("deleteDocument", roomId);
 
@@ -131,16 +131,14 @@ export async function removeUserFromDocument(roomId: string, email: string) {
 }
 
 export async function createNewOrganization() {
-    // auth().protect();
-    // const { sessionClaims } = await auth();
-    // const userId = sessionClaims!.email!;
+    auth().protect();
 
     try {
-        const { user } = useUser();
-        
-        if(!(user && user.primaryEmailAddress))
+        const { sessionClaims } = await auth();
+        const userId = sessionClaims!.email!;
+        if (!userId) {
             throw new Error('Current user not authenticated or invalid email');
-        const userId = user!.primaryEmailAddress!.emailAddress;
+        }
 
         const docCollectionRef = adminDb.collection("organizations");
         const docRef = await docCollectionRef.add({
