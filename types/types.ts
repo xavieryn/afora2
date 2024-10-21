@@ -1,3 +1,5 @@
+export const access_roles: string[] = ['editor', 'admin'];
+
 export type User = {
     fullName: string;
     firstName: string;

@@ -23,8 +23,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { access_roles } from "@/constants";
 import { ChevronRight } from "lucide-react";
+import { access_roles } from "@/types/types";
 
 
 function InviteUser() {
