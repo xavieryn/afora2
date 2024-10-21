@@ -1,9 +1,10 @@
 'use server'
 import { adminDb } from "@/firebase-admin";
 import { auth } from "@clerk/nextjs/server";
+import { doc, updateDoc } from 'firebase/firestore';
 
-// IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
+import { FieldValue } from 'firebase-admin/firestore';
 
 export async function createNewDocument() {
     auth().protect();
@@ -15,19 +16,25 @@ export async function createNewDocument() {
     const docRef = await docCollectionRef.add({
         title: "New Doc",
         admins: [userId],
-        members: []
-    })
+        members: [],
+        createdAt: FieldValue.serverTimestamp()
+    });
+    const newDocId = docRef.id;
 
-    await adminDb.collection('users').doc(userId).collection
-        ('rooms').doc(docRef.id).set({
-            userId: userId,
-            role: "owner",
-            createdAt: new Date(),
-            roomId: docRef.id
-        })
-    return { docId: docRef.id }
+    // Update the document with its ID
+    await docRef.update({
+        id: newDocId
+    });
+
+    await adminDb.collection('users').doc(userId).collection('rooms').doc(newDocId).set({
+        userId: userId,
+        role: "owner",
+        createdAt: FieldValue.serverTimestamp(),
+        roomId: newDocId
+    });
+
+    return { docId: newDocId };
 }
-
 
 export async function deleteDocument(roomId: string) {
     // auth().protect(); // ensure the user is authenticated

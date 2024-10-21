@@ -26,11 +26,14 @@ function People() {
 
 
   return (
-    <div>
+    <div className="flex flex-col justify-center align-items-center">
       <p>People in this Org</p>
       {data?.members.map((people: string) => (
-        <div>
+        <div key={people}>
           {people}
+          <div>
+            asdf
+          </div>
         </div>
 
       ))}
