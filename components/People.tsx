@@ -9,7 +9,6 @@ import { useDocument } from "react-firebase-hooks/firestore"
 // pop document from next navigation 
 function People() {
   const pathname = usePathname();
-
   const roomId = pathname.split("/");
   // console.log(pathname)
   // console.log(roomId[2]);
@@ -26,14 +25,10 @@ function People() {
 
 
   return (
-    <div className="flex flex-col justify-center align-items-center">
-      <p>People in this Org</p>
+    <div>
       {data?.members.map((people: string) => (
         <div key={people}>
           {people}
-          <div>
-            asdf
-          </div>
         </div>
 
       ))}
