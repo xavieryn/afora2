@@ -167,23 +167,18 @@ export async function deleteOrg(orgId: string) {
     console.log(orgId);
     try {
         
-        console.log("works here");
+        await adminDb.collection("organizations").doc(orgId).delete();
+
         const query = await adminDb
             .collectionGroup("orgs")
             .where("orgId", "==", orgId)
             .get();
-
-        console.log("works here lsdkajglaksjdg");
-        console.log("works here2");
-
-        await adminDb.collection("organizations").doc(orgId).delete();
 
         const batch = adminDb.batch();
         // delete the organization reference in the user's collection for every user in the organization
         query.docs.forEach((doc) => {
             batch.delete(doc.ref);
         });
-
 
         await batch.commit();
 
