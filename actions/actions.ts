@@ -188,3 +188,55 @@ export async function deleteOrg(orgId: string) {
         return { success: false };
     }
 }
+
+export async function inviteUserToOrg(orgId: string, email: string, access: string) {
+    auth().protect();
+
+    console.log("inviteUserToOrg", orgId, email);
+
+    try {
+        orgId = orgId.trim();
+        if (!orgId) {
+            throw new Error('Organization id cannot be empty');
+        }
+
+        const orgSnapshot = await adminDb.collection("organizations").doc(orgId).get();
+
+        // Check if the organization exists
+        if (!orgSnapshot.exists) {
+            throw new Error(`Organization with id ${orgId} not found`);
+        }
+
+        // Check if the user is already a member of the organization
+        const organizationData = orgSnapshot.data();
+        const members = organizationData?.members || [];
+        const admins = organizationData?.admins || [];
+
+        if (members.includes(email) || admins.includes(email)) {
+            throw new Error(`User is already a member of the organization`);
+        }
+
+        // Add the user to the organization's members or admins array
+        await adminDb.collection("organizations").doc(orgId).set(
+            (access === 'admin') ? { admins: [...admins, email] } : { members: [...members, email] }, // append the new email to the corresponding array
+            { merge: true } // use merge to only update the members or admins field without overwriting the document
+        );
+
+        await adminDb
+            .collection("users")
+            .doc(email)
+            .collection("orgs")
+            .doc(orgId)
+            .set({
+                userId: email,
+                role: access,
+                createdAt: new Date(),
+                orgId,
+            });
+
+        return { success: true, message: 'User invited successfully' };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}
