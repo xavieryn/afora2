@@ -18,6 +18,7 @@ import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
 import { adminDb } from "@/firebase-admin";
+import Link from "next/link";
 
 interface RoomDocument extends DocumentData {
   createdAt: string;
@@ -82,7 +83,7 @@ function Sidebar() {
   }, [data]);
 
   const [orgsData] = useCollection(
-    user && user.primaryEmailAddress && collection(db, "users", user.primaryEmailAddress.toString(), "organizations"));
+    user && user.primaryEmailAddress && collection(db, "users", user.primaryEmailAddress.toString(), "orgs"));
   const [orgs, setOrgs] = useState<OrgDocument[]>([]);
 
   useEffect(() => {
@@ -107,14 +108,14 @@ function Sidebar() {
           </h2>
         ) : (
             <>
-            <h2 className="text-gray-500 font-semibold text-sm">
-              My Organizations
-            </h2>
-            {orgs.map((org) => (
-              <a key={org.orgId} href={`/org/${org.orgId}`} className="text-blue-500 hover:underline">
-              {org.orgId}
-              </a>
-            ))}
+              <h2 className="text-gray-500 font-semibold text-sm">
+                My Organizations
+              </h2>
+              {orgs.map((org) => (
+                <Link key={org.orgId} href={`/org/${org.orgId}`} className="text-blue-500 hover:underline">
+                  {org.orgId}
+                </Link>
+              ))}
             </>
         )}
 

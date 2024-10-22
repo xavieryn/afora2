@@ -1,7 +1,8 @@
 'use server'
+import { db } from "@/firebase";
 import { adminDb } from "@/firebase-admin";
-import { useUser } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
+import { query, collection, where, getDocs } from "firebase/firestore";
 
 // IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
@@ -148,7 +149,7 @@ export async function createNewOrganization() {
         })
 
         await adminDb.collection('users').doc(userId).collection
-            ('organizations').doc(docRef.id).set({
+            ('orgs').doc(docRef.id).set({
                 userId: userId,
                 role: "admin",
                 createdAt: new Date(),
@@ -157,5 +158,38 @@ export async function createNewOrganization() {
         return { orgId: docRef.id, success: true };
     } catch (e) {
         return { success: false, message: (e as Error).message }
+    }
+}
+
+export async function deleteOrg(orgId: string) {
+    auth().protect(); // ensure the user is authenticated
+
+    console.log(orgId);
+    try {
+        
+        console.log("works here");
+        const query = await adminDb
+            .collectionGroup("orgs")
+            .where("orgId", "==", orgId)
+            .get();
+
+        console.log("works here lsdkajglaksjdg");
+        console.log("works here2");
+
+        await adminDb.collection("organizations").doc(orgId).delete();
+
+        const batch = adminDb.batch();
+        // delete the organization reference in the user's collection for every user in the organization
+        query.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+
+
+        await batch.commit();
+
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false };
     }
 }
