@@ -24,6 +24,19 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+
 interface Task {
   id: string;
   title: string;
@@ -237,16 +250,25 @@ const Column = ({
       >
         {filteredCards.map((c) => {
           return <div  >
-            <Popover>
 
-              <PopoverTrigger>
-                <div >
-                  <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Edit Document</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Here you will be able to invite people, change the name, write a description etc
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction>Continue</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
-                </div>
-              </PopoverTrigger>
-              <PopoverContent>Place content for the popover here.</PopoverContent>
-            </Popover>
           </div>
         })}
         <DropIndicator beforeId={null} column={column} />
