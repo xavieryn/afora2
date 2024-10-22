@@ -1,3 +1,6 @@
+'use server'
+// HAS TO HAVE USE SERVER!!! OTHERWISE NOT WORKING
+// because openai blocks openai api key if used on client side to prevent leaking
 const apiRequest = require("./apiRequest");
 
 const context = "You need group the users into groups with same size based on their skill level. Match members' skill level within the group as much as possible";
@@ -48,7 +51,7 @@ const responseFormat = {
     }
 };
 
-const matching = async () => {
+export const matching = async () => {
     
     const input = "1. Alice Johnson          - Skill Level: 99\n" +
                     "2. Michael Smith          - Skill Level: 65\n" +
@@ -63,5 +66,3 @@ const matching = async () => {
     
     return await apiRequest({context, responseFormat, input});
 }
-
-module.exports = matching; // Exporting the function directly
