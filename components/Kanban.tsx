@@ -1,29 +1,9 @@
+'use client'
+
 export default Kanban
 
-import React, {
-  Dispatch,
-  SetStateAction,
-  useState,
-  DragEvent,
-  FormEvent,
-  useEffect,
-} from "react";
-import { FiPlus, FiTrash } from "react-icons/fi";
-import { motion } from "framer-motion";
-import { FaFire } from "react-icons/fa";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { addDoc, collection, doc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "@/firebase";
-import { usePathname, useRouter } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
-import { adminDb } from "@/firebase-admin";
-import { deleteTask } from "@/actions/actions";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
+import { deleteTask } from "@/actions/actions";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,7 +14,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { db } from "@/firebase";
+import { addDoc, collection, doc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import {
+  Dispatch,
+  DragEvent,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
+import { FaFire } from "react-icons/fa";
+import { FiPlus, FiTrash } from "react-icons/fi";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
 
 interface Task {
@@ -116,6 +113,9 @@ const Column = ({
   setCards,
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
+
+
+
   const path = usePathname();
 
   const handleDragStart = (e: DragEvent, task: Task) => {
@@ -232,7 +232,6 @@ const Column = ({
 
   const filteredCards = cards.filter((c) => c.column === column);
 
-
   return (
     <div className="w-56 shrink-0">
       <div className="mb-3 flex items-center justify-between">
@@ -250,24 +249,7 @@ const Column = ({
       >
         {filteredCards.map((c) => {
           return <div  >
-
-            <AlertDialog>
-              <AlertDialogTrigger>
-                <Card key={c.id} {...c} handleDragStart={handleDragStart} />
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Edit Document</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Here you will be able to invite people, change the name, write a description etc
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction>Continue</AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <Card key={c.id} {...c} handleDragStart={handleDragStart} />
 
           </div>
         })}
@@ -278,11 +260,52 @@ const Column = ({
   );
 };
 
-type CardProps = Task & {
+type CardProps = {
+  id: string;
+  title: string;
+  column: string;
   handleDragStart: Function;
 };
 
-const Card = ({ title, id, column, handleDragStart }: CardProps) => {
+const Card = ({ id, title, column, handleDragStart }: CardProps) => {
+  const [temp_title, setTitle] = useState(title);
+  const [input, setInput] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const path = usePathname();
+
+  useEffect(() => {
+    const segments = path.split("/");
+    const documentId = segments[segments.length - 1];
+
+    const unsubscribe = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+      if (doc.exists()) {
+        setTitle(doc.data().title);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [id, path]);
+
+  const updateTitle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      setIsUpdating(true);
+      const segments = path.split("/");
+      const documentId = segments[segments.length - 1];
+
+      try {
+        await updateDoc(doc(db, "documents", documentId, "tasks", id), {
+          title: input.trim()
+        });
+        setInput("");
+      } catch (error) {
+        console.error("Error updating task: ", error);
+      } finally {
+        setIsUpdating(false);
+      }
+    }
+  };
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -290,10 +313,38 @@ const Card = ({ title, id, column, handleDragStart }: CardProps) => {
         layout
         layoutId={id}
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, { title, id, column })}
+        onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
-        <p className="text-sm text-neutral-100">{title}</p>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex justify-center ">
+                <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
+                  <Input
+                    placeholder={temp_title}
+                    className="flex flex-1 space-x-2"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                  <Button disabled={isUpdating} type="submit">
+                    {isUpdating ? "Updating..." : "Update"}
+                  </Button>
+                </form>
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Here you will be able to invite people, change the name, write a description etc
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </motion.div>
     </>
   );

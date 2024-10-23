@@ -8,8 +8,8 @@ import { db } from "@/firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Editor from "./Editor";
 import { useForm } from "react-hook-form";
-import DeleteDocument from "./DeleteDocument";
-import InviteUser from "./InviteUser";
+//import DeleteDocument from "./DeleteDocument";
+//import InviteUser from "./InviteUser";
 
 // NICE SHADCN STUFF
 // DIALOG IS VERY NICE
