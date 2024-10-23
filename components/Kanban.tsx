@@ -26,7 +26,6 @@ import {
   SetStateAction,
   useEffect,
   useState,
-  useTransition,
 } from "react";
 import { FaFire } from "react-icons/fa";
 import { FiPlus, FiTrash } from "react-icons/fi";
@@ -248,7 +247,7 @@ const Column = ({
           }`}
       >
         {filteredCards.map((c) => {
-          return <div  >
+          return <div key={c.id} >
             <Card key={c.id} {...c} handleDragStart={handleDragStart} />
 
           </div>
@@ -259,13 +258,13 @@ const Column = ({
     </div>
   );
 };
+/* eslint-disable @typescript-eslint/ban-types */
 
-type CardProps = {
-  id: string;
-  title: string;
-  column: string;
+interface CardProps extends Task {
   handleDragStart: Function;
-};
+}
+/* eslint-enable @typescript-eslint/ban-types */
+
 
 const Card = ({ id, title, column, handleDragStart }: CardProps) => {
   const [temp_title, setTitle] = useState(title);
@@ -313,6 +312,7 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
         layout
         layoutId={id}
         draggable="true"
+        
         onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
