@@ -1,7 +1,7 @@
-import { currentUser } from "@clerk/nextjs/server";
+// import { currentUser } from "@clerk/nextjs/server";
 
 async function HomeSignedIn() {
-    const user = await currentUser()
+    // const user = await currentUser()
 
     return (
         <div className=" p-4 sm:p-10">

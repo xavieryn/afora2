@@ -7,16 +7,11 @@ import {  doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Editor from "./Editor";
-import { useForm } from "react-hook-form";
 //import DeleteDocument from "./DeleteDocument";
 //import InviteUser from "./InviteUser";
 
 // NICE SHADCN STUFF
 // DIALOG IS VERY NICE
-type AddProjectInputs = {
-    Title: string;
-    CreatedBy: string;
-  }
   
 function Document({ id }: { id: string }) {
 
@@ -25,12 +20,12 @@ function Document({ id }: { id: string }) {
     // const [data, loading, error] = useDocumentData(doc(db, "documents", id));
     const [data] = useDocumentData(doc(db, "documents", id));
 
-    const {
-        register: registerAddProject,
-        handleSubmit: handleSubmitAddProject,
-        formState: { errors: errorsAddProject },
-        reset: resetAddProject
-      } = useForm<AddProjectInputs>();
+    // const {
+    //     register: registerAddProject,
+    //     handleSubmit: handleSubmitAddProject,
+    //     formState: { errors: errorsAddProject },
+    //     reset: resetAddProject
+    //   } = useForm<AddProjectInputs>();
 
     useEffect(() => {
         if (data) {

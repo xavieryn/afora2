@@ -1,9 +1,9 @@
 'use client'; // taking input from client
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
@@ -34,10 +34,6 @@ export const useTasksSubcollection = (documentId: string) => {
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-interface DocumentData {
-  title: string;
-  // Add other fields as necessary
-}
 
 function Editor({ id }: { id: string }) {
 
@@ -48,6 +44,7 @@ function Editor({ id }: { id: string }) {
     }`
 
     const [data, dataLoading, dataError] = useDocumentData(doc(db, "documents", id));
+    console.log(data)
     const { tasks, loading: tasksLoading, error: tasksError } = useTasksSubcollection(id);
   
       // FEED THESE TASKS INTO THE KANBAN!!!!!!!
