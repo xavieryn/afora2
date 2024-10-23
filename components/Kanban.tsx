@@ -258,12 +258,10 @@ const Column = ({
     </div>
   );
 };
-/* eslint-disable @typescript-eslint/ban-types */
 
 interface CardProps extends Task {
   handleDragStart: Function;
 }
-/* eslint-enable @typescript-eslint/ban-types */
 
 
 const Card = ({ id, title, column, handleDragStart }: CardProps) => {
