@@ -1,7 +1,6 @@
 'use client';
 
-import Document from "@/components/Document";
-import Organization from "@/components/Organization";
+import OrganizationPage from "@/components/OrganizationPage";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -24,7 +23,7 @@ function OrgPage({ params: { id } }: {
 
   return (
     <div className="flex flex-col flex-1">
-      {isSignedIn && <Organization id={id} />}
+      {isSignedIn && <OrganizationPage id={id} />}
     </div>
   )
 }

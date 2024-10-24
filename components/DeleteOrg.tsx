@@ -30,9 +30,9 @@ function DeleteOrg() {
             const { success } = await deleteOrg(orgId);
         
             if (success) {
-                setIsOpen(false);
                 router.replace("/");
                 toast.success("Organization deleted successfully");
+                setIsOpen(false);
             } else {
                 toast.error("Failed to delete organization");
             }

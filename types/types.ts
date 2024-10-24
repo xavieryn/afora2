@@ -25,3 +25,10 @@ export type Task = {
     title: string;
     // Add other fields as necessary
 }
+
+export type Organization = {
+    title: string;
+    description: string;
+    admins: string[];
+    members: string[];
+}

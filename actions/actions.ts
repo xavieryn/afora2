@@ -131,7 +131,7 @@ export async function removeUserFromDocument(roomId: string, email: string) {
     }
 }
 
-export async function createNewOrganization() {
+export async function createNewOrganization(orgName: string, orgDescription: string) {
     auth().protect();
 
     try {
@@ -141,9 +141,17 @@ export async function createNewOrganization() {
             throw new Error('Current user not authenticated or invalid email');
         }
 
+        // Validate orgDescription for valid characters
+        const validRegex = /^[a-zA-Z0-9.,'-]+$/;
+        if (!validRegex.test(orgName)) {
+            throw new Error('Organization name contains invalid characters. Only alphanumeric characters and punctuation (.,\'-) are allowed.');
+        }
+        
+
         const docCollectionRef = adminDb.collection("organizations");
         const docRef = await docCollectionRef.add({
-            title: "New Org",
+            title: orgName,
+            description: orgDescription,
             admins: [userId],
             members: []
         })
@@ -166,7 +174,7 @@ export async function deleteOrg(orgId: string) {
 
     console.log(orgId);
     try {
-        
+
         await adminDb.collection("organizations").doc(orgId).delete();
 
         const query = await adminDb

@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
-import { adminDb } from "@/firebase-admin";
 import Link from "next/link";
 
 interface RoomDocument extends DocumentData {
@@ -91,7 +90,7 @@ function Sidebar() {
     const orgsList = orgsData.docs.map((doc) => (doc.data())) as OrgDocument[];
     setOrgs(orgsList);
   }, [orgsData]);
-  console.log('orgData: ', orgs);
+  // console.log('orgData: ', orgs);
 
   const menuOptions = (
     <>
