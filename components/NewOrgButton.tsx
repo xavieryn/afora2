@@ -24,7 +24,7 @@ function NewOrgButton() {
   const [orgName, setOrgName] = useState('');
   const [orgDescription, setOrgDescription] = useState('');
   const router = useRouter();
-  const { user } = useUser();
+  // const { user } = useUser();
 
   const handleCreateNewOrganization = () => {
     startTransition(async () => {
