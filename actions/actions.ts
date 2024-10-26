@@ -147,6 +147,8 @@ export async function createNewOrganization(orgName: string, orgDescription: str
         const validRegex = /^[a-zA-Z0-9.,'-]+$/;
         if (!validRegex.test(orgName)) {
             throw new Error('Organization name contains invalid characters. Only alphanumeric characters and punctuation (.,\'-) are allowed.');
+            // I feel like  an organization should be able to contain spaces because that is so normal
+            // Would there be a way to do this? 
         }
         
 
