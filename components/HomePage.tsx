@@ -1,7 +1,7 @@
 // import { currentUser } from "@clerk/nextjs/server";
 
 async function HomePage() {
-    const user = await currentUser()
+    // const user = await currentUser()
 
     return (
         // TODO: add home page 
