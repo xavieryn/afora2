@@ -21,6 +21,7 @@ if (getApps().length===0){
 } else{
     app = getApp();
 }
+// NOTE: this adminDb is only used for operations that require elevated priveleges. Only used in backend
 const adminDb = getFirestore(app);
 
 export {app as adminApp, adminDb}

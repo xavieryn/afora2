@@ -11,7 +11,7 @@ import {
 import { FormEvent, useState, useTransition } from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { inviteUserToDocument } from "@/actions/actions";
+import { inviteUserToOrg } from "@/actions/actions";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
 import {
@@ -26,7 +26,6 @@ import {
 import { ChevronRight } from "lucide-react";
 import { access_roles } from "@/types/types";
 
-
 function InviteUser() {
     const [isOpen, setIsOpen] = useState(false);
     const [isPending, startTransition] = useTransition();
@@ -37,21 +36,21 @@ function InviteUser() {
 
     const handleInvite = async (e: FormEvent) => {
         e.preventDefault();
-        const roomId = pathname.split("/").pop();
-        if (!roomId) return;
+        const organizationId = pathname.split("/").pop(); // Assuming organization ID is in the URL
+        if (!organizationId) return;
 
         startTransition(async () => {
-            const { success } = await inviteUserToDocument(roomId, email, access);
+            const { success } = await inviteUserToOrg(organizationId, email, access); // Updated function call
 
             if (success) {
                 setIsOpen(false);
-                // router.replace("/");
-                toast.success("User added to room successfully")
+                toast.success("User added to organization successfully")
             } else {
-                toast.error("Failed to add user to room!")
+                toast.error("Failed to add user to organization!")
             }
         })
     }
+
     return (
         <div>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -60,7 +59,7 @@ function InviteUser() {
                 </Button>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Invite a user to collaborate</DialogTitle>
+                        <DialogTitle>Invite a user to your organization</DialogTitle>
                         <DialogDescription>
                             Enter the email of the user you want to invite.
                         </DialogDescription>
@@ -95,12 +94,11 @@ function InviteUser() {
                         <Button type="submit" disabled={!email || isPending}>
                             {isPending ? "Inviting" : "Invite"}
                         </Button>
-
-
                     </form>
                 </DialogContent>
             </Dialog>
         </div>
     )
 }
+
 export default InviteUser

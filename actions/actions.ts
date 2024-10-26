@@ -1,7 +1,10 @@
 'use server'
+import { db } from "@/firebase";
 import { adminDb } from "@/firebase-admin";
 import { auth } from "@clerk/nextjs/server";
-import { doc, updateDoc } from 'firebase/firestore';
+import { query, collection, where, getDocs } from "firebase/firestore";
+
+// IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
 
 import { FieldValue } from 'firebase-admin/firestore';
@@ -16,28 +19,21 @@ export async function createNewDocument() {
     const docRef = await docCollectionRef.add({
         title: "New Doc",
         admins: [userId],
-        members: [],
-        createdAt: FieldValue.serverTimestamp()
-    });
-    const newDocId = docRef.id;
+        members: []
+    })
 
-    // Update the document with its ID
-    await docRef.update({
-        id: newDocId
-    });
-
-    await adminDb.collection('users').doc(userId).collection('rooms').doc(newDocId).set({
-        userId: userId,
-        role: "owner",
-        createdAt: FieldValue.serverTimestamp(),
-        roomId: newDocId
-    });
-
-    return { docId: newDocId };
+    await adminDb.collection('users').doc(userId).collection
+        ('rooms').doc(docRef.id).set({
+            userId: userId,
+            role: "owner",
+            createdAt: new Date(),
+            roomId: docRef.id
+        })
+    return { docId: docRef.id }
 }
 
 export async function deleteDocument(roomId: string) {
-    // auth().protect(); // ensure the user is authenticated
+    auth().protect(); // ensure the user is authenticated
 
     console.log("deleteDocument", roomId);
 
@@ -136,25 +132,121 @@ export async function removeUserFromDocument(roomId: string, email: string) {
         return { success: false };
     }
 }
-  
 
-  export async function deleteTask(roomId: string, taskId: string) {
-    auth().protect(); // ensure the user is authenticated
-  
-    console.log("deleteTask", roomId, taskId);
-  
+export async function createNewOrganization(orgName: string, orgDescription: string) {
+    auth().protect();
+
     try {
-      await adminDb
-        .collection("documents")
-        .doc(roomId)
-        .collection("tasks")
-        .doc(taskId)
-        .delete();
-  
-      console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
-      return { success: true };
-    } catch (error) {
-      console.error("Error deleting task:", error);
-      return { success: false };
+        const { sessionClaims } = await auth();
+        const userId = sessionClaims!.email!;
+        if (!userId) {
+            throw new Error('Current user not authenticated or invalid email');
+        }
+
+        // Validate orgDescription for valid characters
+        const validRegex = /^[a-zA-Z0-9.,'-]+$/;
+        if (!validRegex.test(orgName)) {
+            throw new Error('Organization name contains invalid characters. Only alphanumeric characters and punctuation (.,\'-) are allowed.');
+        }
+        
+
+        const docCollectionRef = adminDb.collection("organizations");
+        const docRef = await docCollectionRef.add({
+            title: orgName,
+            description: orgDescription,
+            admins: [userId],
+            members: []
+        })
+
+        await adminDb.collection('users').doc(userId).collection
+            ('orgs').doc(docRef.id).set({
+                userId: userId,
+                role: "admin",
+                createdAt: new Date(),
+                orgId: docRef.id
+            })
+        return { orgId: docRef.id, success: true };
+    } catch (e) {
+        return { success: false, message: (e as Error).message }
     }
-  }
+}
+
+export async function deleteOrg(orgId: string) {
+    auth().protect(); // ensure the user is authenticated
+
+    console.log(orgId);
+    try {
+
+        await adminDb.collection("organizations").doc(orgId).delete();
+
+        const query = await adminDb
+            .collectionGroup("orgs")
+            .where("orgId", "==", orgId)
+            .get();
+
+        const batch = adminDb.batch();
+        // delete the organization reference in the user's collection for every user in the organization
+        query.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+
+        await batch.commit();
+
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false };
+    }
+}
+
+export async function inviteUserToOrg(orgId: string, email: string, access: string) {
+    auth().protect();
+
+    console.log("inviteUserToOrg", orgId, email);
+
+    try {
+        orgId = orgId.trim();
+        if (!orgId) {
+            throw new Error('Organization id cannot be empty');
+        }
+
+        const orgSnapshot = await adminDb.collection("organizations").doc(orgId).get();
+
+        // Check if the organization exists
+        if (!orgSnapshot.exists) {
+            throw new Error(`Organization with id ${orgId} not found`);
+        }
+
+        // Check if the user is already a member of the organization
+        const organizationData = orgSnapshot.data();
+        const members = organizationData?.members || [];
+        const admins = organizationData?.admins || [];
+
+        if (members.includes(email) || admins.includes(email)) {
+            throw new Error(`User is already a member of the organization`);
+        }
+
+        // Add the user to the organization's members or admins array
+        await adminDb.collection("organizations").doc(orgId).set(
+            (access === 'admin') ? { admins: [...admins, email] } : { members: [...members, email] }, // append the new email to the corresponding array
+            { merge: true } // use merge to only update the members or admins field without overwriting the document
+        );
+
+        await adminDb
+            .collection("users")
+            .doc(email)
+            .collection("orgs")
+            .doc(orgId)
+            .set({
+                userId: email,
+                role: access,
+                createdAt: new Date(),
+                orgId,
+            });
+
+        return { success: true, message: 'User invited successfully' };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}

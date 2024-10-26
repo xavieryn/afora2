@@ -1,3 +1,5 @@
+export const access_roles: string[] = ['editor', 'admin'];
+
 export type User = {
     fullName: string;
     firstName: string;
@@ -22,4 +24,11 @@ export type Task = {
     id: string;
     title: string;
     // Add other fields as necessary
+}
+
+export type Organization = {
+    title: string;
+    description: string;
+    admins: string[];
+    members: string[];
 }

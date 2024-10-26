@@ -11,16 +11,25 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser } from "@clerk/nextjs";
-import { collectionGroup, DocumentData, query, where } from "firebase/firestore";
+import { collection, collectionGroup, DocumentData, query, where } from "firebase/firestore";
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
+import NewOrgButton from "./NewOrgButton";
+import Link from "next/link";
 
 interface RoomDocument extends DocumentData {
   createdAt: string;
   role: "owner" | "editor";
   roomId: string;
+  userId: string
+}
+
+interface OrgDocument extends DocumentData {
+  createdAt: string;
+  role: string;
+  orgId: string;
   userId: string
 }
 
@@ -70,12 +79,45 @@ function Sidebar() {
     )
     //console.log(grouped)
     setGroupedData(grouped);
-  }, [data])
+  }, [data]);
+
+  const [orgsData] = useCollection(
+    user && user.primaryEmailAddress && collection(db, "users", user.primaryEmailAddress.toString(), "orgs"));
+  const [orgs, setOrgs] = useState<OrgDocument[]>([]);
+
+  useEffect(() => {
+    if (!orgsData) return;
+    const orgsList = orgsData.docs.map((doc) => (doc.data())) as OrgDocument[];
+    setOrgs(orgsList);
+  }, [orgsData]);
+  // console.log('orgData: ', orgs);
+
   const menuOptions = (
     <>
       <div className="flex py-4 flex-col space-y-4 md:max-w-36">
         <NewDocumentButton />
+        <NewOrgButton />
+
         <JoinDocumentButton />
+
+        {/* My Orgs */}
+        {orgs.length === 0 ? (
+          <h2 className="text-gray-500 font-semibold text-sm">
+            No Organizations Found
+          </h2>
+        ) : (
+            <>
+              <h2 className="text-gray-500 font-semibold text-sm">
+                My Organizations
+              </h2>
+              {orgs.map((org) => (
+                <Link key={org.orgId} href={`/org/${org.orgId}`} className="text-blue-500 hover:underline">
+                  {org.orgId}
+                </Link>
+              ))}
+            </>
+        )}
+
         {/* my documents */}
         {groupedData.owner.length === 0 ? (
           <h2 className="text-gray-500 font-semibold text-sm">
