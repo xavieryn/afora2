@@ -15,7 +15,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
   const [output, setOutput] = useState('');
   const handleGenerateTeams = () => {
     matching()
-      .then((output: any) => {
+      .then((output: string) => {
         setOutput(output);
         console.log("API Response:", output); // Log the output from the matching function
       })

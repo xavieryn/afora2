@@ -32,7 +32,7 @@ function InviteUser() {
     const [isPending, startTransition] = useTransition();
     const [email, setEmail] = useState("");
     const pathname = usePathname();
-    const router = useRouter();
+    //const router = useRouter();
     const [access, setAccess] = useState(access_roles[0]);
 
     const handleInvite = async (e: FormEvent) => {
