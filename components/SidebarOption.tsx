@@ -11,16 +11,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-function SidebarOption({ href, id }: {
-  href: string;
+function SidebarOption({ id }: {
   id: string;
 }) {
-  const [data] = useDocumentData(doc(db, "documents", id));
+  const [data] = useDocumentData(doc(db, "organizations", id));
 
   if (!data) return null;
 
-  // Extract the base path (without the 'people' part if it exists)
-  const basePath = href.replace(/\/people$/, '');
+  const basePath = `/org/${id}`;
 
   return (
     <div>
