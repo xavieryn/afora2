@@ -7,6 +7,8 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 // IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
 
+import { FieldValue } from 'firebase-admin/firestore';
+
 export async function createNewDocument() {
     auth().protect();
 
@@ -30,7 +32,6 @@ export async function createNewDocument() {
     return { docId: docRef.id }
 }
 
-
 export async function deleteDocument(roomId: string) {
     auth().protect(); // ensure the user is authenticated
 
@@ -50,6 +51,7 @@ export async function deleteDocument(roomId: string) {
             batch.delete(doc.ref);
         })
 
+        batch.commit();
 
         return { success: true }
     } catch (error) {

@@ -23,7 +23,7 @@ export default function Unsafe() {
         handleSubmit,
         formState: { errors },
         setValue,
-        watch,
+        // watch,
     } = useForm<Inputs>({
         defaultValues: {
             gender: user?.unsafeMetadata?.gender as string || '',

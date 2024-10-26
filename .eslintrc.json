@@ -1,3 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/ban-types": "off",
+    "@typescript-eslint/no-unsafe-function-type": "off"
+  }
 }

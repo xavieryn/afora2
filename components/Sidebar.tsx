@@ -77,7 +77,7 @@ function Sidebar() {
       editor: [],
     }
     )
-    console.log(grouped)
+    //console.log(grouped)
     setGroupedData(grouped);
   }, [data]);
 
@@ -125,8 +125,8 @@ function Sidebar() {
           </h2>
         ) : (
           <>
-            <h2 className="text-gray-500 font-semibold text-sm">
-              My Documents
+            <h2 className="font-bold text-lg">
+              My Organizations
             </h2>
             {groupedData.owner.map((doc) => (
               <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />

@@ -1,42 +1,65 @@
+'use client'
+
 export default Kanban
 
-import React, {
+
+import { deleteTask } from "@/actions/actions";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { db } from "@/firebase";
+import { addDoc, collection, doc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
+import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+import {
   Dispatch,
-  SetStateAction,
-  useState,
   DragEvent,
   FormEvent,
+  SetStateAction,
   useEffect,
+  useState,
 } from "react";
-import { FiPlus, FiTrash } from "react-icons/fi";
-import { motion } from "framer-motion";
 import { FaFire } from "react-icons/fa";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { doc } from "firebase/firestore";
-import { db } from "@/firebase";
+import { FiPlus, FiTrash } from "react-icons/fi";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 
-function Kanban( { id } : { id:string}) {
+
+interface Task {
+  id: string;
+  title: string;
+  column: string
+  // Add other fields as necessary
+}
+
+
+function Kanban({ tasks }: { tasks: Task[] }) {
   return (
     <div className="  w-full">
-      <Board id={id} />
+      <Board tasks={tasks} />
     </div>
   )
 }
 
-const Board = ( { id } : { id:string }) => {
+const Board = ({ tasks }: { tasks: Task[] }) => {
 
   // GRAB FROM THE ACTUAL DB
-  const [data] = useDocumentData(doc(db, "documents", id));
-  console.log(data)
-  const [cards, setCards] = useState(DEFAULT_CARDS);
+  const [cards, setCards] = useState(tasks);
 
-//   useEffect(() => {
-//     if (data) {
-//         setCards(data);
-//     }
-// }, [data]);
+  //   useEffect(() => {
+  //     if (data) {
+  //         setCards(data);
+  //     }
+  // }, [data]);
 
-  // THIS WILL BE AN ACTUAL MAP FUNCTION
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-12">
       <Column
@@ -54,6 +77,7 @@ const Board = ( { id } : { id:string }) => {
         setCards={setCards}
       />
       <Column
+
         title="In progress"
         column="doing"
         headingColor="text-blue-200"
@@ -75,9 +99,9 @@ const Board = ( { id } : { id:string }) => {
 type ColumnProps = {
   title: string;
   headingColor: string;
-  cards: CardType[];
+  cards: Task[];
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const Column = ({
@@ -89,13 +113,16 @@ const Column = ({
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
 
-  const handleDragStart = (e: DragEvent, card: CardType) => {
-    e.dataTransfer.setData("cardId", card.id);
+
+
+  const path = usePathname();
+
+  const handleDragStart = (e: DragEvent, task: Task) => {
+    e.dataTransfer.setData("cardId", task.id);
   };
 
-  const handleDragEnd = (e: DragEvent) => {
+  const handleDragEnd = async (e: DragEvent) => {
     const cardId = e.dataTransfer.getData("cardId");
-
     setActive(false);
     clearHighlights();
 
@@ -123,8 +150,20 @@ const Column = ({
 
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
+      const segments = path.split("/");
+      const id = segments[segments.length - 1]
+      try {
+        const cardRef = doc(db, "documents", id, "tasks", cardId);
+        await updateDoc(cardRef, {
+          column: column,
+          // Add any other fields that need updating
+        });
+        // The local state will be updated automatically by the onSnapshot listener
+      } catch (error) {
+        console.error("Error updating card: ", error);
+      }
 
-      setCards(copy); // NEED TO WORK HERE
+      setCards(copy);
     }
   };
 
@@ -208,7 +247,10 @@ const Column = ({
           }`}
       >
         {filteredCards.map((c) => {
-          return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
+          return <div key={c.id} >
+            <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+
+          </div>
         })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
@@ -217,11 +259,50 @@ const Column = ({
   );
 };
 
-type CardProps = CardType & {
+interface CardProps extends Task {
   handleDragStart: Function;
-};
+}
 
-const Card = ({ title, id, column, handleDragStart }: CardProps) => {
+
+const Card = ({ id, title, column, handleDragStart }: CardProps) => {
+  const [temp_title, setTitle] = useState(title);
+  const [input, setInput] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
+  const path = usePathname();
+
+  useEffect(() => {
+    const segments = path.split("/");
+    const documentId = segments[segments.length - 1];
+
+    const unsubscribe = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+      if (doc.exists()) {
+        setTitle(doc.data().title);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [id, path]);
+
+  const updateTitle = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim()) {
+      setIsUpdating(true);
+      const segments = path.split("/");
+      const documentId = segments[segments.length - 1];
+
+      try {
+        await updateDoc(doc(db, "documents", documentId, "tasks", id), {
+          title: input.trim()
+        });
+        setInput("");
+      } catch (error) {
+        console.error("Error updating task: ", error);
+      } finally {
+        setIsUpdating(false);
+      }
+    }
+  };
+
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -229,10 +310,39 @@ const Card = ({ title, id, column, handleDragStart }: CardProps) => {
         layout
         layoutId={id}
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, { title, id, column })}
+        
+        onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
-        <p className="text-sm text-neutral-100">{title}</p>
+        <AlertDialog>
+          <AlertDialogTrigger>
+            <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex justify-center ">
+                <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
+                  <Input
+                    placeholder={temp_title}
+                    className="flex flex-1 space-x-2"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                  />
+                  <Button disabled={isUpdating} type="submit">
+                    {isUpdating ? "Updating..." : "Update"}
+                  </Button>
+                </form>
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                Here you will be able to invite people, change the name, write a description etc
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>Continue</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </motion.div>
     </>
   );
@@ -256,9 +366,11 @@ const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
 const BurnBarrel = ({
   setCards,
 }: {
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 }) => {
   const [active, setActive] = useState(false);
+
+  const pathname = usePathname();
 
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();  // prevents rerendering the screen
@@ -270,11 +382,14 @@ const BurnBarrel = ({
   };
 
   const handleDragEnd = (e: DragEvent) => {
+
     const cardId = e.dataTransfer.getData("cardId");
-
     setCards((pv) => pv.filter((c) => c.id !== cardId));
-
     setActive(false);
+    const roomId = pathname.split("/").pop();
+    if (!roomId) return;
+
+    deleteTask(roomId, cardId);
   };
 
   return (
@@ -283,8 +398,8 @@ const BurnBarrel = ({
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${active
-          ? "border-red-800 bg-red-800/20 text-red-500"
-          : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
+        ? "border-red-800 bg-red-800/20 text-red-500"
+        : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
         }`}
     >
       {active ? <FaFire className="animate-bounce" /> : <FiTrash />}
@@ -294,30 +409,53 @@ const BurnBarrel = ({
 
 type AddCardProps = {
   column: ColumnType;
-  setCards: Dispatch<SetStateAction<CardType[]>>;
+  setCards: Dispatch<SetStateAction<Task[]>>;
 };
 
 const AddCard = ({ column, setCards }: AddCardProps) => {
   const [text, setText] = useState("");
   const [adding, setAdding] = useState(false);
+  const path = usePathname();
+  const segments = path.split("/");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();  // prevents rerendering the screen
 
     if (!text.trim().length) return;
 
-    const newCard = {
-      column,
-      title: text.trim(),
-      id: Math.random().toString(),
-    };
+    try {
+      const documentId = segments[segments.length - 1];
 
-    setCards((pv) => [...pv, newCard]);
-    // THIS NEEDS TO GET APPENDED TO FIRESTORE DOC 
+      // Add the new task to Firestore
+      const docRef = await addDoc(collection(db, "documents", documentId, "tasks"), {
+        column,
+        title: text.trim(),
+        createdAt: serverTimestamp(),
+      });
 
-    setAdding(false);
+      // Get the auto-generated ID
+      const newTaskId = docRef.id;
+
+      // Update the document with its own ID
+      await updateDoc(docRef, {
+        id: newTaskId
+      });
+
+      // Update the local state
+      const newCard = {
+        column,
+        title: text.trim(),
+        id: newTaskId,
+      };
+      setCards((pv) => [...pv, newCard]);
+
+      console.log("New task added and updated with ID: ", newTaskId);
+      setAdding(false);
+    } catch (error) {
+      console.error("Error adding new task: ", error);
+      // Handle the error appropriately (e.g., show an error message to the user)
+    }
   };
-
   return (
     <>
       {adding ? (
@@ -327,7 +465,7 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
             onChange={(e) => setText(e.target.value)}
             autoFocus
             placeholder="Add new task..."
-            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm text-neutral-50 placeholder-violet-300 focus:outline-0"
+            className="w-full rounded border border-violet-400 bg-violet-400/20 p-3 text-sm  placeholder-violet-300 focus:outline-0"
           />
           <div className="mt-1.5 flex items-center justify-end gap-1.5">
             <button
@@ -361,39 +499,4 @@ const AddCard = ({ column, setCards }: AddCardProps) => {
 
 type ColumnType = "backlog" | "todo" | "doing" | "done";
 
-type CardType = {
-  title: string;
-  id: string;
-  column: ColumnType;
-};
-
-const DEFAULT_CARDS: CardType[] = [
-  // BACKLOG
-  { title: "Look into render bug in dashboard", id: "1", column: "backlog" },
-  { title: "SOX compliance checklist", id: "2", column: "backlog" },
-  { title: "[SPIKE] Migrate to Azure", id: "3", column: "backlog" },
-  { title: "Document Notifications service", id: "4", column: "backlog" },
-  // TODO
-  {
-    title: "Research DB options for new microservice",
-    id: "5",
-    column: "todo",
-  },
-  { title: "Postmortem for outage", id: "6", column: "todo" },
-  { title: "Sync with product on Q3 roadmap", id: "7", column: "todo" },
-
-  // DOING
-  {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    column: "doing",
-  },
-  { title: "Add logging to daily CRON", id: "9", column: "doing" },
-  // DONE
-  {
-    title: "Set up DD dashboards for Lambda listener",
-    id: "10",
-    column: "done",
-  },
-];
 
