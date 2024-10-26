@@ -1,3 +1,8 @@
+
+/**
+ * - editor: members who can edit the documents
+ * - admin: administrators who have higher access 
+ */
 export const access_roles: string[] = ['editor', 'admin'];
 
 export type User = {

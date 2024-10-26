@@ -29,17 +29,17 @@ function SidebarOption({ id }: {
           </AccordionTrigger>
           <AccordionContent>
             <Link href={basePath}>
-              <p className="truncate">Board</p>
+              <p className="truncate hover:underline">Board</p>
             </Link>
             {/* ADD ONCE WE HAVE IT LABELED AS ORGANIZATIONS */}
             {/* <Link href={`${basePath}/board`}>
-              <p className="truncate">Board</p>
+              <p className="truncate hover:underline">Board</p>
             </Link> */}
             <Link href={`${basePath}/people`}>
-              <p className="truncate">People</p>
+              <p className="truncate hover:underline">People</p>
             </Link>
             <Link href={`${basePath}/settings`}>
-              <p className="truncate">Settings</p>
+              <p className="truncate hover:underline">Settings</p>
             </Link>
           </AccordionContent>
         </AccordionItem>
