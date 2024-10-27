@@ -1,3 +1,4 @@
+import { DocumentData } from "firebase/firestore";
 
 /**
  * - editor: members who can edit the documents
@@ -18,7 +19,7 @@ export type User = {
     };
 }
 
-export type DocumentData = {
+export type ProjectData = {
     title: string;
     admins: string[];
     members: string[];
@@ -36,4 +37,12 @@ export type Organization = {
     description: string;
     admins: string[];
     members: string[];
+}
+
+// this structure describes the subcollection 'org' document under each user
+// orgId and userId are not repetitive and are needed for quick query when deleting organizations
+export interface UserOrgData extends DocumentData {
+    role: string;
+    orgId: string;
+    userId: string;
 }

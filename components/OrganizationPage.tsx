@@ -10,6 +10,7 @@ import { useDocument } from 'react-firebase-hooks/firestore'
 import { doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import MemberList from './MemberList'
+import TeamsPage from './TeamsPage'
 
 const OrganizationPage = ({ id }: { id: string }) => {
   const [output, setOutput] = useState('');
@@ -68,12 +69,12 @@ const OrganizationPage = ({ id }: { id: string }) => {
       <Tabs defaultValue="about-us" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="about-us">About Us</TabsTrigger>
-          <TabsTrigger value="groups">Groups</TabsTrigger>
+          <TabsTrigger value="teams">Teams</TabsTrigger>
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
         <TabsContent value="about-us">{orgData && orgData.description}</TabsContent>
-        <TabsContent value="groups">Details about the groups within the organization.</TabsContent>
+        <TabsContent value="teams"><TeamsPage orgId={id}/></TabsContent>
         <TabsContent value="members">{orgData && <MemberList admins={orgData.admins} members={orgData.members} />}</TabsContent>
         <TabsContent value="settings">Organization settings and preferences.</TabsContent>
       </Tabs>

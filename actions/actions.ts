@@ -6,9 +6,6 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 
 // IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
-
-import { FieldValue } from 'firebase-admin/firestore';
-
 export async function createNewDocument() {
     auth().protect();
 
@@ -152,6 +149,7 @@ export async function createNewOrganization(orgName: string, orgDescription: str
 
         const docCollectionRef = adminDb.collection("organizations");
         const docRef = await docCollectionRef.add({
+            createdAt: new Date(),
             title: orgName,
             description: orgDescription,
             admins: [userId],
@@ -162,7 +160,6 @@ export async function createNewOrganization(orgName: string, orgDescription: str
             ('orgs').doc(docRef.id).set({
                 userId: userId,
                 role: "admin",
-                createdAt: new Date(),
                 orgId: docRef.id
             })
         return { orgId: docRef.id, success: true };
