@@ -1,3 +1,4 @@
+import AppOnboarding from "@/components/AppOnboarding";
 import HomePage from "@/components/HomePage";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowLeftCircle } from "lucide-react";
@@ -14,8 +15,7 @@ export default function Home() {
             <h1 className="font-bold text-2xl text-gray-800">Get started with creating a New Document</h1>
           </div>
           <div>
-            <HomePage />
-
+            <AppOnboarding />
           </div>
         </div>
 

@@ -58,8 +58,7 @@ export async function deleteDocument(roomId: string) {
 }
 
 export async function inviteUserToDocument(roomId: string, email: string, access: string) {
-    // TODO: this seems to lead to refresh/redirect of pages regardless of success or not
-    // auth().protect();
+    auth().protect();
 
     console.log("inviteUserToDocument", roomId, email);
 
@@ -145,7 +144,7 @@ export async function createNewOrganization(orgName: string, orgDescription: str
         if (!validRegex.test(orgName)) {
             throw new Error('Organization name contains invalid characters. Only alphanumeric characters and punctuation (.,\'-) are allowed.');
         }
-        
+
 
         const docCollectionRef = adminDb.collection("organizations");
         const docRef = await docCollectionRef.add({
@@ -245,5 +244,19 @@ export async function inviteUserToOrg(orgId: string, email: string, access: stri
     } catch (error) {
         console.error(error);
         return { success: false, message: (error as Error).message };
+    }
+}
+
+export async function setUserOnboardingSurvey(selectedTags: string[][]) {
+    auth().protect();
+
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
+    try {
+        await adminDb.collection('users').doc(userId).set({
+            onboardingSurveyResponse: selectedTags.map((tags) => tags.join(','))
+        });
+    } catch (e) {
+        console.error(e);
     }
 }
