@@ -151,9 +151,9 @@ const Column = ({
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
       const segments = path.split("/");
-      const id = segments[segments.length - 1]
+      const document_id = segments[segments.length - 1]
       try {
-        const cardRef = doc(db, "documents", id, "tasks", cardId);
+        const cardRef = doc(db, "documents", document_id, "tasks", cardId);
         await updateDoc(cardRef, {
           column: column,
           // Add any other fields that need updating
@@ -166,6 +166,21 @@ const Column = ({
       setCards(copy);
     }
   };
+
+  useEffect(() => {
+    // const segments = path.split("/");
+    //const documentId = segments[segments.length - 1];
+    const filteredCards = cards.filter((c) => c.column === column);
+
+    console.log("hi")
+    // const grabCard = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+    //   if (doc.exists()) {
+    //     setTitle(doc.data().title);
+    //   }
+    // });
+
+    // return () => grabCard();
+  }, [cards]);
 
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault(); // prevents rerendering the screen
@@ -230,6 +245,10 @@ const Column = ({
   };
 
   const filteredCards = cards.filter((c) => c.column === column);
+  // useEffect(()=>{
+  //   console.log(cards.filter((c) => c.column === column))
+  //   // console.log(column)
+  // }, cards);
 
   return (
     <div className="w-56 shrink-0">
@@ -249,7 +268,6 @@ const Column = ({
         {filteredCards.map((c) => {
           return <div key={c.id} >
             <Card key={c.id} {...c} handleDragStart={handleDragStart} />
-
           </div>
         })}
         <DropIndicator beforeId={null} column={column} />
@@ -274,13 +292,13 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     const segments = path.split("/");
     const documentId = segments[segments.length - 1];
 
-    const unsubscribe = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+    const grabCard = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
       if (doc.exists()) {
         setTitle(doc.data().title);
       }
     });
 
-    return () => unsubscribe();
+    return () => grabCard();
   }, [id, path]);
 
   const updateTitle = async (e: React.FormEvent) => {
@@ -391,6 +409,20 @@ const BurnBarrel = ({
 
     deleteTask(roomId, cardId);
   };
+  // const path = usePathname();
+  // const segments = path.split("/");
+  // useEffect(() => {
+  //   const segments = path.split("/");
+  //   const documentId = segments[segments.length - 1];
+    
+  //   const grabCard = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+  //     if (doc.exists()) {
+  //       setTitle(doc.data().title);
+  //     }
+  //   });
+
+  //   return () => grabCard();
+  // }, [id, path]);
 
   return (
     <div
