@@ -292,3 +292,25 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
         return { success: false, message: (error as Error).message };
     }
 }
+
+export async function setProjOnboardingSurvey(responses: string[]) {
+    auth().protect();
+
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
+    try {
+
+        // Check if any of the responses are empty
+        if (responses.some(r => r === '')) {
+            throw new Error('Please answer all questions!');
+        }
+
+        await adminDb.collection('users').doc(userId).set({
+            projOnboardingSurveyResponse: responses
+        });
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}
