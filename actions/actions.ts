@@ -283,7 +283,7 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
             throw new Error('Please select at least one tag for each question!');
         }
 
-        await adminDb.collection('users').doc(userId).set({
+        await adminDb.collection('users').doc(userId).update({
             onboardingSurveyResponse: formatted
         });
         return { success: true };
@@ -305,7 +305,7 @@ export async function setProjOnboardingSurvey(responses: string[]) {
             throw new Error('Please answer all questions!');
         }
 
-        await adminDb.collection('users').doc(userId).set({
+        await adminDb.collection('users').doc(userId).update({
             projOnboardingSurveyResponse: responses
         });
         return { success: true };

@@ -23,6 +23,7 @@ import { Textarea } from './ui/textarea';
 
 const ProjOnboarding = () => {
     const [responses, setResponses] = useState<string[]>([]);
+
     const [isOpen, setIsOpen] = useState(false);
     const [page, setPage] = useState(0);
     useEffect(() => {
@@ -46,14 +47,14 @@ const ProjOnboarding = () => {
 
     const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString()));
 
-    if (!userData || userData.data()!.onboardingSurveyResponse) {
+    if (!userData || userData.data()!.projOnboardingSurveyResponse) {
         return null;
     }
 
     return (
         <div>
             <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                <AlertDialogOverlay className="bg-black bg-opacity-80 fixed inset-0" />
+                {/* <AlertDialogOverlay className="bg-black bg-opacity-80 fixed inset-0" /> */}
                 {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
                 <AlertDialogContent className="w-full max-w-2xl">
                     <Progress value={page / (projQuestions.length) * 100} />
@@ -62,7 +63,7 @@ const ProjOnboarding = () => {
                         <AlertDialogHeader>
                             <AlertDialogTitle>Project Onboarding Survey</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Please take a minute to fill out this mandatory form. The information will be used for project-matching.
+                                Please take a minute to fill out this mandatory form. The information will be used for matching of teammates for your project.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                     }
@@ -74,6 +75,7 @@ const ProjOnboarding = () => {
 
                             <Textarea
                                 placeholder="Enter your response"
+                                value={responses[page - 1]}
                                 onChange={(e) => {
                                     setResponses((prev) => {
                                         const newR = [...prev];

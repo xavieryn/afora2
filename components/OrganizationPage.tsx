@@ -11,6 +11,7 @@ import { doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import MemberList from './MemberList'
 import ProjPage from './ProjPage'
+import ProjOnboarding from './ProjOnboarding'
 
 const OrganizationPage = ({ id }: { id: string }) => {
   const [output, setOutput] = useState('');
@@ -48,6 +49,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
   return (
     <div className="overflow-x-hidden">
       <div className="flex items-center justify-between mb-10">
+        <ProjOnboarding />
         <h1 className="text-4xl font-bold">
           {orgData && orgData.title}
         </h1>
@@ -72,7 +74,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="projects"><ProjPage orgId={id}/></TabsContent>
+        <TabsContent value="projects"><ProjPage orgId={id} /></TabsContent>
         <TabsContent value="members">{orgData && <MemberList admins={orgData.admins} members={orgData.members} />}</TabsContent>
         <TabsContent value="settings">Organization settings and preferences.</TabsContent>
       </Tabs>

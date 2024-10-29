@@ -76,7 +76,7 @@ const AppOnboarding = () => {
                         <AlertDialogHeader>
                             <AlertDialogTitle>App Onboarding Survey</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Please take a minute to fill out this mandatory form. The information will be used for team-matching.
+                                Please take a minute to fill out this mandatory form. It will help your future matching and teammates recommendations.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                     }
