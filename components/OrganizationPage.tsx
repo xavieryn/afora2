@@ -12,19 +12,10 @@ import { db } from '@/firebase'
 import MemberList from './MemberList'
 import ProjPage from './ProjPage'
 import ProjOnboarding from './ProjOnboarding'
+import GenerateTeamsButton from './GenerateTeamsButton'
 
 const OrganizationPage = ({ id }: { id: string }) => {
   const [output, setOutput] = useState('');
-  const handleGenerateTeams = () => {
-    matching()
-      .then((output: string) => {
-        setOutput(output);
-        console.log("API Response:", output); // Log the output from the matching function
-      })
-      .catch((error: Error) => {
-        console.error("Error:", error); // Handle any errors
-      });
-  };
 
   const [org, loading, error] = useDocument(doc(db, 'organizations', id));
 
@@ -55,9 +46,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
         </h1>
 
         <div className="flex items-center gap-2">
-          <Button onClick={handleGenerateTeams}>
-            Generate Teams
-          </Button>
+          <GenerateTeamsButton setOutput={setOutput}/>
           {output && (
             <div>
               <h3>Generated Teams:</h3>
