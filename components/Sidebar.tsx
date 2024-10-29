@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
+import JoinOrgButton from "./JoinOrgButton";
 
 interface OrgDocument extends DocumentData {
   createdAt: string;
@@ -43,8 +44,8 @@ function Sidebar() {
     <>
       <div className="flex py-4 flex-col md:max-w-36">
         <div className="space-y-3 flex py-4 flex-col md:max-w-36">
-          <NewDocumentButton />
           <NewOrgButton />
+          <JoinOrgButton />
         </div>
         {/* <JoinDocumentButton /> */}
 
