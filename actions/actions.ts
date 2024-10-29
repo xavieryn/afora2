@@ -251,24 +251,23 @@ export async function inviteUserToOrg(orgId: string, email: string, access: stri
 
 export async function deleteTask(roomId: string, taskId: string) {
     auth().protect(); // ensure the user is authenticated
-  
+
     console.log("deleteTask", roomId, taskId);
-  
+
     try {
-      await adminDb
-        .collection("documents")
-        .doc(roomId)
-        .collection("tasks")
-        .doc(taskId)
-        .delete();
-  
-      console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
-      return { success: true };
+        await adminDb
+            .collection("documents")
+            .doc(roomId)
+            .collection("tasks")
+            .doc(taskId)
+            .delete();
+
+        console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
+        return { success: true };
     } catch (error) {
-      console.error("Error deleting task:", error);
-      return { success: false };
+        console.error("Error deleting task:", error);
+        return { success: false };
     }
-  }
 }
 
 export async function setUserOnboardingSurvey(selectedTags: string[][]) {
