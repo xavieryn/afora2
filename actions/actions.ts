@@ -253,10 +253,19 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
     const { sessionClaims } = await auth();
     const userId = sessionClaims?.email!;
     try {
+        const formatted = selectedTags.map((tags) => tags.join(','));
+
+        // Check if any of the formatted strings are empty
+        if (formatted.some(tag => tag === '')) {
+            throw new Error('Please select at least one tag for each question!');
+        }
+
         await adminDb.collection('users').doc(userId).set({
-            onboardingSurveyResponse: selectedTags.map((tags) => tags.join(','))
+            onboardingSurveyResponse: formatted
         });
-    } catch (e) {
-        console.error(e);
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
     }
 }

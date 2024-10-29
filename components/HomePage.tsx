@@ -8,7 +8,7 @@ async function HomePage() {
     return (
         // TODO: add home page 
         <>
-            <AppOnboarding/>
+            
         </>
     )
 }

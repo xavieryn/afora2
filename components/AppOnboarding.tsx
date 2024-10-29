@@ -45,17 +45,21 @@ const AppOnboarding = () => {
             return newTags;
         });
     };
-    const handleSubmit = () => {
-        setUserOnboardingSurvey(selectedTags);
-        toast.success('Survey response received successfully!');
-        setIsOpen(false);
+    const handleSubmit = async () => {
+        const { success, message } = await setUserOnboardingSurvey(selectedTags);
+        if (success) {
+            toast.success('Survey response received successfully!');
+            setIsOpen(false);
+        } else {
+            toast.error(message);
+        }
     }
 
     const { user } = useUser();
 
     const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString()));
 
-    if(!userData || userData.data()!.onboardingSurveyResponse){
+    if (!userData || userData.data()!.onboardingSurveyResponse) {
         return null;
     }
 
@@ -74,7 +78,6 @@ const AppOnboarding = () => {
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                     }
-
 
                     {page > 0 &&
                         <>
