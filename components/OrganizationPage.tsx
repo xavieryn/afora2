@@ -1,10 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from './ui/button'
 import DeleteOrg from './DeleteOrg'
 import InviteUserToOrganization from './InviteUserToOrganization'
-import { matching } from '@/ai_scripts/matching'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useDocument } from 'react-firebase-hooks/firestore'
 import { doc } from 'firebase/firestore'
@@ -12,10 +10,8 @@ import { db } from '@/firebase'
 import MemberList from './MemberList'
 import ProjPage from './ProjPage'
 import ProjOnboarding from './ProjOnboarding'
-import GenerateTeamsButton from './GenerateTeamsButton'
 
 const OrganizationPage = ({ id }: { id: string }) => {
-  const [output, setOutput] = useState('');
 
   const [org, loading, error] = useDocument(doc(db, 'organizations', id));
 
@@ -46,13 +42,6 @@ const OrganizationPage = ({ id }: { id: string }) => {
         </h1>
 
         <div className="flex items-center gap-2">
-          <GenerateTeamsButton setOutput={setOutput}/>
-          {output && (
-            <div>
-              <h3>Generated Teams:</h3>
-              <pre>{JSON.stringify(output, null, 2)}</pre>
-            </div>
-          )}
           <DeleteOrg />
           <InviteUserToOrganization />
         </div>

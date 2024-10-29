@@ -3,8 +3,9 @@ import { db } from '@/firebase';
 import { UserOrgData } from '@/types/types';
 import { useUser } from '@clerk/nextjs'
 import { doc, DocumentData } from 'firebase/firestore';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore';
+import GenerateTeamsButton from './GenerateTeamsButton';
 
 const ProjPage = ({ orgId }: { orgId: string }) => {
 
@@ -25,7 +26,7 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
             setUserRole(userOrg.role);
         }
     }, [data])
-
+    const [output, setOutput] = useState('');
 
     return (
         <>
@@ -36,6 +37,13 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
                     <h2>Admin Section</h2>
                     <p>Welcome, Admin! Here you can manage the team.</p>
                     {/* Add more admin-specific components or functionality here */}
+                    <GenerateTeamsButton setOutput={setOutput} />
+                    {output && (
+                        <div>
+                            <h3>Generated Teams:</h3>
+                            <pre>{JSON.stringify(output, null, 2)}</pre>
+                        </div>
+                    )}
                 </div>
             ) : (
                 <div>
