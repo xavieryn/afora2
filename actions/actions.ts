@@ -143,6 +143,8 @@ export async function createNewOrganization(orgName: string, orgDescription: str
         const validRegex = /^[a-zA-Z0-9.,'-]+$/;
         if (!validRegex.test(orgName)) {
             throw new Error('Organization name contains invalid characters. Only alphanumeric characters and punctuation (.,\'-) are allowed.');
+            // I feel like  an organization should be able to contain spaces because that is so normal
+            // Would there be a way to do this? 
         }
 
 
@@ -245,6 +247,28 @@ export async function inviteUserToOrg(orgId: string, email: string, access: stri
         console.error(error);
         return { success: false, message: (error as Error).message };
     }
+}
+
+export async function deleteTask(roomId: string, taskId: string) {
+    auth().protect(); // ensure the user is authenticated
+  
+    console.log("deleteTask", roomId, taskId);
+  
+    try {
+      await adminDb
+        .collection("documents")
+        .doc(roomId)
+        .collection("tasks")
+        .doc(taskId)
+        .delete();
+  
+      console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
+      return { success: true };
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      return { success: false };
+    }
+  }
 }
 
 export async function setUserOnboardingSurvey(selectedTags: string[][]) {

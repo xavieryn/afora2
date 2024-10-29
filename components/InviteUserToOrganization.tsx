@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { FormEvent, useState, useTransition } from "react";
 import { Button } from "./ui/button";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, } from "next/navigation";
 import { inviteUserToOrg } from "@/actions/actions";
 import { toast } from "sonner";
 import { Input } from "./ui/input";
@@ -31,7 +31,7 @@ function InviteUser() {
     const [isPending, startTransition] = useTransition();
     const [email, setEmail] = useState("");
     const pathname = usePathname();
-    const router = useRouter();
+    // const router = useRouter();
     const [access, setAccess] = useState(access_roles[0]);
 
     const handleInvite = async (e: FormEvent) => {

@@ -33,12 +33,28 @@ function People() {
 
   return (
     <div>
-      {data?.members.map((people: string) => (
-        <div key={people}>
-          {people}
-        </div>
+      <div>
+        <h1 className="font-bold">
+          Admin
+        </h1>
+        {data?.admins && data?.admins.map((admin: string) => (
+          <div key={admin}>
+            {admin}
+          </div>
+        ))}
+      </div>
 
-      ))}
+      <div>
+        <h1 className="font-bold">
+          Members
+        </h1>
+        {data?.members.map((people: string) => (
+          <div key={people}>
+            {people}
+          </div>
+        ))}
+      </div>
+
     </div>
   )
 }

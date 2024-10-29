@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import DeleteOrg from './DeleteOrg'
 import InviteUserToOrganization from './InviteUserToOrganization'
@@ -16,7 +16,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
   const [output, setOutput] = useState('');
   const handleGenerateTeams = () => {
     matching()
-      .then((output: any) => {
+      .then((output: string) => {
         setOutput(output);
         console.log("API Response:", output); // Log the output from the matching function
       })

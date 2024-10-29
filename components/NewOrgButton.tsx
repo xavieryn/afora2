@@ -13,7 +13,7 @@ import {
   DialogTrigger,
   DialogFooter
 } from "@/components/ui/dialog"
-import { useUser } from "@clerk/nextjs";
+// import { useUser } from "@clerk/nextjs";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Textarea } from "@/components/ui/textarea"
@@ -24,7 +24,7 @@ function NewOrgButton() {
   const [orgName, setOrgName] = useState('');
   const [orgDescription, setOrgDescription] = useState('');
   const router = useRouter();
-  const { user } = useUser();
+  // const { user } = useUser();
 
   const handleCreateNewOrganization = () => {
     startTransition(async () => {
