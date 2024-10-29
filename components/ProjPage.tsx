@@ -6,7 +6,7 @@ import { doc, DocumentData } from 'firebase/firestore';
 import React, { useEffect } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore';
 
-const TeamsPage = ({ orgId }: { orgId: string }) => {
+const ProjPage = ({ orgId }: { orgId: string }) => {
 
     const { user } = useUser();
 
@@ -29,7 +29,7 @@ const TeamsPage = ({ orgId }: { orgId: string }) => {
 
     return (
         <>
-            <div>TeamsPage</div>
+            <div>ProjPage</div>
             <div>Viewing as: <strong><u>{userRole}</u></strong></div >
             {userRole === 'admin' ? (
                 <div>
@@ -48,4 +48,4 @@ const TeamsPage = ({ orgId }: { orgId: string }) => {
     )
 }
 
-export default TeamsPage
+export default ProjPage
