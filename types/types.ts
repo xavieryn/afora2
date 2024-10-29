@@ -47,10 +47,10 @@ export interface UserOrgData extends DocumentData {
     userId: string;
 }
 
-export const header = ['Core Skills and Expertise', 'Current Interests', 'Fields Seeking to Pursue'];
-export const questions = ['What is your primary area of expertise and main professional skills?', 'What industries or fields are you currently most interested in some levels of skills and experiences?', 'What future roles or job titles are you aiming for?'];
 
-export const tags = [
+export const appHeader = ['Core Skills and Expertise', 'Current Interests', 'Fields Seeking to Pursue'];
+export const appQuestions = ['What is your primary area of expertise and main professional skills?', 'What industries or fields are you currently most interested in some levels of skills and experiences?', 'What future roles or job titles are you aiming for?'];
+export const appTags = [
     "Web Development",
     "Data Science",
     "UI/UX Design",
@@ -124,5 +124,8 @@ export const tags = [
     "Corporate Strategy",
     "Policy Analysis",
     "Event Planning",
-  ];
-  
+];
+
+// TODO: moved to somewhere else beause questions can be customized by org admin
+export const projHeader = ['Hard Skills', 'Communication Style', 'Project Preferences', 'Extreme Preferences', 'Time Availability']
+export const projQuestions = ['What are your top three technical or professional skills? Which tools, frameworks, or technologies are you proficient in?', 'What is your preferred method of communication for this project? (e.g., Slack, Email, Video calls) How often do you prefer to receive updates or engage with teammates? (e.g., daily, weekly)', 'What kind of project structure do you prefer? (e.g., rigid with clear processes, or flexible with more autonomy) What industry or type of project excites you most for this specific collaboration?', 'Anyone you definitely want to work with for this project? Someone you definitely do not want to work with for this project?'];
