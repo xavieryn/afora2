@@ -14,6 +14,10 @@ import { header, questions, tags } from '@/types/types';
 import { Progress } from "@/components/ui/progress"
 import { setUserOnboardingSurvey } from '@/actions/actions';
 import { toast } from 'sonner';
+import { db } from '@/firebase';
+import { useDocument } from 'react-firebase-hooks/firestore';
+import { doc } from 'firebase/firestore';
+import { useUser } from '@clerk/nextjs';
 
 const AppOnboarding = () => {
     const [selectedTags, setSelectedTags] = useState<string[][]>([]);
@@ -29,7 +33,7 @@ const AppOnboarding = () => {
     const toggleTag = (tag: string) => {
         setSelectedTags((prev) => {
             const newTags = prev.map((tags, index) => {
-                if (index === page-1) {
+                if (index === page - 1) {
                     if (tags.includes(tag)) {
                         return tags.filter((t) => t !== tag);
                     } else {
@@ -41,11 +45,18 @@ const AppOnboarding = () => {
             return newTags;
         });
     };
-
     const handleSubmit = () => {
         setUserOnboardingSurvey(selectedTags);
         toast.success('Survey response received successfully!');
         setIsOpen(false);
+    }
+
+    const { user } = useUser();
+
+    const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString()));
+
+    if(!userData || userData.data()!.onboardingSurveyResponse){
+        return null;
     }
 
     return (
@@ -67,14 +78,14 @@ const AppOnboarding = () => {
 
                     {page > 0 &&
                         <>
-                            <AlertDialogTitle>{header[page-1]}</AlertDialogTitle>
-                            <p>{`Q${page}: ${questions[page-1]}`}</p>
+                            <AlertDialogTitle>{header[page - 1]}</AlertDialogTitle>
+                            <p>{`Q${page}: ${questions[page - 1]}`}</p>
 
                             <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
                                 {tags.map((tag) => (
                                     <Button
                                         key={tag}
-                                        variant={selectedTags[page-1].includes(tag) ? "default" : "outline"} // Apply selected style
+                                        variant={selectedTags[page - 1].includes(tag) ? "default" : "outline"} // Apply selected style
                                         className={`flex items-center space-x-2 px-3 py-1 rounded-lg`}
                                         onClick={() => toggleTag(tag)}
                                     >
