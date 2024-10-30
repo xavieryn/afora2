@@ -33,9 +33,12 @@ const ProjOnboarding = () => {
         setIsOpen(true);
         setPage(0);
         setResponses(Array(projQuestions.length).fill(""));
+        setSelectedSlots(new Set());
     }, []);
 
     const handleSubmit = async () => {
+        const selectedSlotsString = Array.from(selectedSlots).join(', ');
+        responses[projQuestions.length-1] = selectedSlotsString; 
         const { success, message } = await setProjOnboardingSurvey(responses);
         if (success) {
             toast.success('Survey response received successfully!');
