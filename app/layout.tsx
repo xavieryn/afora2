@@ -4,6 +4,7 @@ import { ClerkProvider, SignedIn } from "@clerk/nextjs";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import AppOnboarding from "@/components/AppOnboarding";
 
 export const metadata: Metadata = {
   title: "Afora",
@@ -24,6 +25,8 @@ export default function RootLayout({
             {/* Sidebar */}
             <SignedIn>
               <Sidebar />
+              {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
+              <AppOnboarding/>
             </SignedIn>
             <div className="flex-1 p-4 bg-gray-100 overflow-y-auto scrollbar-hide">
               {children}

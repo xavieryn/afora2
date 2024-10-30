@@ -1,3 +1,9 @@
+import { DocumentData } from "firebase/firestore";
+
+/**
+ * - editor: members who can edit the documents
+ * - admin: administrators who have higher access 
+ */
 export const access_roles: string[] = ['editor', 'admin'];
 
 export type User = {
@@ -13,7 +19,7 @@ export type User = {
     };
 }
 
-export type DocumentData = {
+export type ProjectData = {
     title: string;
     admins: string[];
     members: string[];
@@ -32,3 +38,91 @@ export type Organization = {
     admins: string[];
     members: string[];
 }
+
+// this structure describes the subcollection 'org' document under each user
+// orgId and userId are not repetitive and are needed for quick query when deleting organizations
+export interface UserOrgData extends DocumentData {
+    role: string;
+    orgId: string;
+    userId: string;
+}
+
+export const header = ['Core Skills and Expertise', 'Current Interests', 'Fields Seeking to Pursue'];
+export const questions = ['What is your primary area of expertise and main professional skills?', 'What industries or fields are you currently most interested in some levels of skills and experiences?', 'What future roles or job titles are you aiming for?'];
+
+export const tags = [
+    "Web Development",
+    "Data Science",
+    "UI/UX Design",
+    "Product Management",
+    "Cybersecurity",
+    "Machine Learning",
+    "Software Engineering",
+    "Cloud Computing",
+    "Project Management",
+    "Business Analysis",
+    "Graphic Design",
+    "DevOps",
+    "Quality Assurance",
+    "Digital Marketing",
+    "Content Writing",
+    "Video Editing",
+    "Game Development",
+    "Mobile Development",
+    "Systems Architecture",
+    "Data Engineering",
+    "Blockchain",
+    "SEO",
+    "Network Security",
+    "Copywriting",
+    "Sales",
+    "Customer Support",
+    "Financial Analysis",
+    "Human Resources",
+    "IT Support",
+    "Deep Learning",
+    "NLP",
+    "Operations Management",
+    "E-commerce",
+    "Legal Consulting",
+    "Data Analysis",
+    "Statistics",
+    "Risk Management",
+    "IT Consulting",
+    "Supply Chain",
+    "UI Design",
+    "UX Research",
+    "Visual Design",
+    "Animation",
+    "Social Media",
+    "Advertising",
+    "Brand Strategy",
+    "Research",
+    "Public Relations",
+    "Fundraising",
+    "Training",
+    "Health Informatics",
+    "Clinical Research",
+    "Education",
+    "Economics",
+    "Physics",
+    "Healthcare",
+    "Psychology",
+    "Environmental Science",
+    "Logistics",
+    "Electronics",
+    "Embedded Systems",
+    "Robotics",
+    "Manufacturing",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Electrical Engineering",
+    "Chemical Engineering",
+    "Artificial Intelligence",
+    "Customer Experience",
+    "Talent Acquisition",
+    "Corporate Strategy",
+    "Policy Analysis",
+    "Event Planning",
+  ];
+  

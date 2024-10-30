@@ -11,16 +11,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 
-function SidebarOption({ href, id }: {
-  href: string;
+function SidebarOption({ id }: {
   id: string;
 }) {
-  const [data] = useDocumentData(doc(db, "documents", id));
+  const [data] = useDocumentData(doc(db, "organizations", id));
 
   if (!data) return null;
 
-  // Extract the base path (without the 'people' part if it exists)
-  const basePath = href.replace(/\/people$/, '');
+  const basePath = `/org/${id}`;
 
   return (
     <div>
@@ -31,17 +29,17 @@ function SidebarOption({ href, id }: {
           </AccordionTrigger>
           <AccordionContent>
             <Link href={basePath}>
-              <p className="truncate">Board</p>
+              <p className="truncate hover:underline">Board</p>
             </Link>
             {/* ADD ONCE WE HAVE IT LABELED AS ORGANIZATIONS */}
             {/* <Link href={`${basePath}/board`}>
-              <p className="truncate">Board</p>
+              <p className="truncate hover:underline">Board</p>
             </Link> */}
             <Link href={`${basePath}/people`}>
-              <p className="truncate">People</p>
+              <p className="truncate hover:underline">People</p>
             </Link>
             <Link href={`${basePath}/settings`}>
-              <p className="truncate">Settings</p>
+              <p className="truncate hover:underline">Settings</p>
             </Link>
           </AccordionContent>
         </AccordionItem>

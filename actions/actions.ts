@@ -6,9 +6,6 @@ import { query, collection, where, getDocs } from "firebase/firestore";
 
 // IMPLEMENT THIS WITH FIREBASE FIRESTORE NOW THAT WE AREN'T USING LIVE BLOCKS
 
-
-import { FieldValue } from 'firebase-admin/firestore';
-
 export async function createNewDocument() {
     auth().protect();
 
@@ -61,8 +58,7 @@ export async function deleteDocument(roomId: string) {
 }
 
 export async function inviteUserToDocument(roomId: string, email: string, access: string) {
-    // TODO: this seems to lead to refresh/redirect of pages regardless of success or not
-    // auth().protect();
+    auth().protect();
 
     console.log("inviteUserToDocument", roomId, email);
 
@@ -150,10 +146,11 @@ export async function createNewOrganization(orgName: string, orgDescription: str
             // I feel like  an organization should be able to contain spaces because that is so normal
             // Would there be a way to do this? 
         }
-        
+
 
         const docCollectionRef = adminDb.collection("organizations");
         const docRef = await docCollectionRef.add({
+            createdAt: new Date(),
             title: orgName,
             description: orgDescription,
             admins: [userId],
@@ -164,7 +161,6 @@ export async function createNewOrganization(orgName: string, orgDescription: str
             ('orgs').doc(docRef.id).set({
                 userId: userId,
                 role: "admin",
-                createdAt: new Date(),
                 orgId: docRef.id
             })
         return { orgId: docRef.id, success: true };
@@ -255,21 +251,44 @@ export async function inviteUserToOrg(orgId: string, email: string, access: stri
 
 export async function deleteTask(roomId: string, taskId: string) {
     auth().protect(); // ensure the user is authenticated
-  
+
     console.log("deleteTask", roomId, taskId);
-  
+
     try {
-      await adminDb
-        .collection("documents")
-        .doc(roomId)
-        .collection("tasks")
-        .doc(taskId)
-        .delete();
-  
-      console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
-      return { success: true };
+        await adminDb
+            .collection("documents")
+            .doc(roomId)
+            .collection("tasks")
+            .doc(taskId)
+            .delete();
+
+        console.log(`Task ${taskId} deleted successfully from room ${roomId}`);
+        return { success: true };
     } catch (error) {
-      console.error("Error deleting task:", error);
-      return { success: false };
+        console.error("Error deleting task:", error);
+        return { success: false };
     }
-  }
+}
+
+export async function setUserOnboardingSurvey(selectedTags: string[][]) {
+    auth().protect();
+
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
+    try {
+        const formatted = selectedTags.map((tags) => tags.join(','));
+
+        // Check if any of the formatted strings are empty
+        if (formatted.some(tag => tag === '')) {
+            throw new Error('Please select at least one tag for each question!');
+        }
+
+        await adminDb.collection('users').doc(userId).set({
+            onboardingSurveyResponse: formatted
+        });
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}

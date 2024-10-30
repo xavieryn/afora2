@@ -1,16 +1,15 @@
 // import { currentUser } from "@clerk/nextjs/server";
 
+import AppOnboarding from "./AppOnboarding"
+
 async function HomePage() {
     // const user = await currentUser()
 
     return (
         // TODO: add home page 
-        <div className="p-4 sm:p-10">
-            <h1 className="font-bold text-4xl">Projects</h1>
-            <ul>
-                
-            </ul>
-        </div>
+        <>
+            
+        </>
     )
 }
 export default HomePage

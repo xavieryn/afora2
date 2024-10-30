@@ -11,20 +11,12 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser } from "@clerk/nextjs";
-import { collection, collectionGroup, DocumentData, query, where } from "firebase/firestore";
+import { collection, DocumentData, query, where } from "firebase/firestore";
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
 import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
-import Link from "next/link";
-
-interface RoomDocument extends DocumentData {
-  createdAt: string;
-  role: "owner" | "editor";
-  roomId: string;
-  userId: string
-}
 
 interface OrgDocument extends DocumentData {
   createdAt: string;
@@ -35,51 +27,6 @@ interface OrgDocument extends DocumentData {
 
 function Sidebar() {
   const { user } = useUser()
-  // const [data, loading, error] = useCollection(
-  const [data] = useCollection(
-    user &&
-    query(
-      (collectionGroup(db, 'rooms')),
-      where('userId', '==', user.emailAddresses[0].toString())
-    )
-  )
-
-  const [groupedData, setGroupedData] = useState<{
-    owner: RoomDocument[];
-    editor: RoomDocument[];
-  }>({
-    owner: [],
-    editor: [],
-  });
-  useEffect(() => {
-    if (!data) return;
-
-    const grouped = data.docs.reduce<{
-      owner: RoomDocument[];
-      editor: RoomDocument[];
-    }>(
-      (acc, curr) => {
-        const roomData = curr.data() as RoomDocument;
-        if (roomData.role === "owner") {
-          acc.owner.push({
-            id: curr.id,
-            ...roomData,
-          })
-        } else {
-          acc.editor.push({
-            id: curr.id,
-            ...roomData
-          })
-        }
-        return acc;
-      }, {
-      owner: [],
-      editor: [],
-    }
-    )
-    //console.log(grouped)
-    setGroupedData(grouped);
-  }, [data]);
 
   const [orgsData] = useCollection(
     user && user.primaryEmailAddress && collection(db, "users", user.primaryEmailAddress.toString(), "orgs"));
@@ -94,60 +41,30 @@ function Sidebar() {
 
   const menuOptions = (
     <>
-      <div className="flex py-4 flex-col space-y-4 md:max-w-36">
-        <NewDocumentButton />
-        <NewOrgButton />
+      <div className="flex py-4 flex-col md:max-w-36">
+        <div className="space-y-3 flex py-4 flex-col md:max-w-36">
+          <NewDocumentButton />
+          <NewOrgButton />
+        </div>
+        {/* <JoinDocumentButton /> */}
 
-        <JoinDocumentButton />
-
-        {/* My Orgs */}
+        {/* My Organization */}
         {orgs.length === 0 ? (
           <h2 className="text-gray-500 font-semibold text-sm">
             No Organizations Found
           </h2>
         ) : (
-            <>
-              <h2 className="text-gray-500 font-semibold text-sm">
-                My Organizations
-              </h2>
-              {orgs.map((org) => (
-                <Link key={org.orgId} href={`/org/${org.orgId}`} className="text-blue-500 hover:underline">
-                  {org.orgId}
-                </Link>
-              ))}
-            </>
-        )}
-
-        {/* my documents */}
-        {groupedData.owner.length === 0 ? (
-          <h2 className="text-gray-500 font-semibold text-sm">
-            No Documents Found
-          </h2>
-        ) : (
-          <>
-            <h2 className="font-bold text-lg">
-              My Organizations
-            </h2>
-            {groupedData.owner.map((doc) => (
-              <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
-            ))}
-          </>
-        )}
-
-        {/* list... */}
-        {/* Shared with Me */}
-        {groupedData.editor.length > 0 && (
           <>
             <h2 className="text-gray-500 font-semibold text-sm">
-              Shared with Me
+              My Organizations
             </h2>
-            {groupedData.editor.map((doc) => (
-              <SidebarOption key={doc.id} id={doc.id} href={`/doc/${doc.id}`} />
-            ))}
-
+            <div className="-space-y-5">
+              {orgs.map((org) => (
+                <SidebarOption key={org.orgId} id={org.orgId} />
+              ))}
+            </div>
           </>
         )}
-        {/* List...  */}
       </div>
     </>
   )
