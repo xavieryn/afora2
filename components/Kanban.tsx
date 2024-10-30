@@ -85,13 +85,6 @@ const Board = ({ id }: { id: string }) => {
   // Move useState to the top, before any conditional returns
   const [cards, setCards] = useState<Task[]>([]); // Add appropriate type
 
-  // // Update cards when tasks change
-  // useEffect(() => {
-  //   if (tasks) {
-  //     setCards(tasksList);
-  //   }
-  // }, [tasks]);
-
   if (tasksLoading) return <div>Loading...</div>;
   if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>;
   if (!tasks) return <div>No tasks found</div>;

@@ -1,9 +1,11 @@
 'use client';
 
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, useUser } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
 import Link from "next/link";
 import { Settings } from "lucide-react";
+import FundUs from "./FundUs";
+import ContactUs from "./ContactUs";
 
 function Header() {
   const { user } = useUser();
@@ -19,7 +21,9 @@ function Header() {
         {/* Breadcrumbs*/}
         <Breadcrumbs />
 
-        <div>
+        <div className="flex gap-6">
+          <FundUs/>
+          <ContactUs/>
           <SignedOut>
             <SignInButton />
           </SignedOut>
@@ -29,7 +33,7 @@ function Header() {
               <Link href={'/setting'}>
                 <p className="truncate"><Settings /></p>
               </Link>
-              <UserButton />
+              {/* <UserButton /> */}
             </div>
           </SignedIn>
         </div>
