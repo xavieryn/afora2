@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import React, { useState, useRef } from 'react'
+import { Card, CardContent } from '@/components/ui/card'
 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
@@ -10,54 +10,39 @@ const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
     return `${hour.toString().padStart(2, '0')}:${minute}`
 })
 
-interface TimeSlot {
-    selected: boolean
-}
-
-interface DayColumn {
-    day: string
-    timeSlots: TimeSlot[]
-}
-
-const TimeSlotSelector = () => {
-    const [columns, setColumns] = useState<DayColumn[]>(DAYS.map(day => ({
-        day,
-        timeSlots: TIME_SLOTS.map(() => ({ selected: false }))
-    })))
+const TimeSlotSelector = ({ selectedSlots, setSelectedSlots }: { selectedSlots: Set<string>, setSelectedSlots: React.Dispatch<React.SetStateAction<Set<string>>> }) => {
     const [isDragging, setIsDragging] = useState(false)
     const [dragStartPos, setDragStartPos] = useState<{ day: number; slot: number } | null>(null)
     const [dragEndPos, setDragEndPos] = useState<{ day: number; slot: number } | null>(null)
-    const [selectedBoxes, setSelectedBoxes] = useState<Set<string>>(new Set())
+    const [tempSelectedBoxes, setTempSelectedBoxes] = useState<Set<string>>(new Set())
     const gridRef = useRef<HTMLDivElement>(null)
 
     const toggleSelectedBoxes = () => {
-        setColumns(prevColumns => {
-            const newColumns = [...prevColumns]
-            selectedBoxes.forEach(key => {
-                const [day, slot] = key.split('-').map(Number)
-                newColumns[day] = {
-                    ...newColumns[day],
-                    timeSlots: newColumns[day].timeSlots.map((timeSlot, index) =>
-                        index === slot ? { ...timeSlot, selected: !timeSlot.selected } : timeSlot
-                    )
+        setSelectedSlots(prevSelected => {
+            const newSelected = new Set(prevSelected)
+            tempSelectedBoxes.forEach(key => {
+                if (newSelected.has(key)) {
+                    newSelected.delete(key)
+                } else {
+                    newSelected.add(key)
                 }
             })
-            return newColumns
+            return newSelected
         })
-        setSelectedBoxes(new Set())
+        setTempSelectedBoxes(new Set())
     }
 
     const handleMouseDown = (dayIndex: number, slotIndex: number) => {
         setIsDragging(true)
         setDragStartPos({ day: dayIndex, slot: slotIndex })
         setDragEndPos({ day: dayIndex, slot: slotIndex })
-        setSelectedBoxes(new Set([`${dayIndex}-${slotIndex}`]))
+        setTempSelectedBoxes(new Set([`${dayIndex}-${slotIndex}`]))
     }
 
     const handleMouseEnter = (dayIndex: number, slotIndex: number) => {
         if (isDragging) {
             setDragEndPos({ day: dayIndex, slot: slotIndex })
-            setSelectedBoxes(prevSelected => {
+            setTempSelectedBoxes(prevSelected => {
                 const newSelected = new Set(prevSelected)
                 const minDay = Math.min(dragStartPos!.day, dayIndex)
                 const maxDay = Math.max(dragStartPos!.day, dayIndex)
@@ -111,33 +96,36 @@ const TimeSlotSelector = () => {
                                 onMouseUp={handleMouseUp}
                             >
                                 <div className="grid grid-cols-7 gap-x-0.5 gap-y-0 h-full">
-                                    {columns.map((column, dayIndex) => (
-                                        <div key={column.day} className="flex flex-col items-center">
+                                    {DAYS.map((day, dayIndex) => (
+                                        <div key={day} className="flex flex-col items-center">
                                             <div className="flex flex-col items-center">
-                                                {column.timeSlots.map((slot, slotIndex) => (
-                                                    <div
-                                                        key={`${column.day}-${slotIndex}`}
-                                                        className={`w-16 h-6 rounded-sm transition-colors cursor-pointer ${slot.selected
-                                                            ? 'bg-primary hover:bg-primary/90'
-                                                            : 'bg-secondary hover:bg-secondary/80'
-                                                            } ${selectedBoxes.has(`${dayIndex}-${slotIndex}`)
-                                                                ? 'ring-2 ring-offset-1 ring-primary'
-                                                                : ''
-                                                            }`}
-                                                        onMouseDown={() => handleMouseDown(dayIndex, slotIndex)}
-                                                        onMouseEnter={() => handleMouseEnter(dayIndex, slotIndex)}
-                                                        aria-label={`${column.day} ${TIME_SLOTS[slotIndex]} ${slot.selected ? 'selected' : 'not selected'}`}
-                                                        role="checkbox"
-                                                        aria-checked={slot.selected}
-                                                        tabIndex={0}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter' || e.key === ' ') {
-                                                                setSelectedBoxes(new Set([`${dayIndex}-${slotIndex}`]))
-                                                                toggleSelectedBoxes()
-                                                            }
-                                                        }}
-                                                    />
-                                                ))}
+                                                {TIME_SLOTS.map((_, slotIndex) => {
+                                                    const slotKey = `${dayIndex}-${slotIndex}`
+                                                    return (
+                                                        <div
+                                                            key={slotKey}
+                                                            className={`w-16 h-6 rounded-sm transition-colors cursor-pointer ${selectedSlots.has(slotKey)
+                                                                    ? 'bg-primary hover:bg-primary/90'
+                                                                    : 'bg-secondary hover:bg-secondary/80'
+                                                                } ${tempSelectedBoxes.has(slotKey)
+                                                                    ? 'ring-2 ring-offset-1 ring-primary'
+                                                                    : ''
+                                                                }`}
+                                                            onMouseDown={() => handleMouseDown(dayIndex, slotIndex)}
+                                                            onMouseEnter={() => handleMouseEnter(dayIndex, slotIndex)}
+                                                            aria-label={`${day} ${TIME_SLOTS[slotIndex]} ${selectedSlots.has(slotKey) ? 'selected' : 'not selected'}`}
+                                                            role="checkbox"
+                                                            aria-checked={selectedSlots.has(slotKey)}
+                                                            tabIndex={0}
+                                                            onKeyDown={(e) => {
+                                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                                    setTempSelectedBoxes(new Set([slotKey]))
+                                                                    toggleSelectedBoxes()
+                                                                }
+                                                            }}
+                                                        />
+                                                    )
+                                                })}
                                             </div>
                                         </div>
                                     ))}

@@ -24,6 +24,7 @@ import TimeSlotSelector from './TimeSlotSelector';
 
 const ProjOnboarding = () => {
     const [responses, setResponses] = useState<string[]>([]);
+    const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
     const [isOpen, setIsOpen] = useState(false);
     const [page, setPage] = useState(0);
 
@@ -73,9 +74,11 @@ const ProjOnboarding = () => {
                         <>
                             <AlertDialogTitle>{projHeader[page - 1]}</AlertDialogTitle>
                             <p>{`Q${page}: ${projQuestions[page - 1]}`}</p>
-
                             {page === projQuestions.length ? (
-                                <TimeSlotSelector />
+                                <TimeSlotSelector
+                                    selectedSlots={selectedSlots}
+                                    setSelectedSlots={setSelectedSlots}
+                                />
                             ) : (
                                 <Textarea
                                     placeholder="Enter your response"
