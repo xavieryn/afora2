@@ -18,18 +18,6 @@ interface Task {
   // Add other fields as necessary
 }
 
-export const useTasksSubcollection = (documentId: string) => {
-  const [snapshot, loading, error] = useCollection(
-    query(collection(db, "documents", documentId, "tasks"), orderBy('id', 'asc'))
-  );
-
-  const tasks = snapshot?.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Task[];
-
-  return { tasks, loading, error };
-};
 
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -45,13 +33,11 @@ function Editor({ id }: { id: string }) {
 
     const [data, dataLoading, dataError] = useDocumentData(doc(db, "documents", id));
     console.log(data)
-    const { tasks, loading: tasksLoading, error: tasksError } = useTasksSubcollection(id);
   
       // FEED THESE TASKS INTO THE KANBAN!!!!!!!
     //console.log(tasks)
-    if (dataLoading || tasksLoading) return <div>Loading...</div>;
+    if (dataLoading) return <div>Loading...</div>;
     if (dataError) return <div>Error loading document: {dataError.message}</div>;
-    if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>;
 
 
     return (
@@ -70,7 +56,7 @@ function Editor({ id }: { id: string }) {
 
             </div>
 
-            <Kanban tasks={tasks} />
+            <Kanban id = {id}/>
 
         </div>
     )
