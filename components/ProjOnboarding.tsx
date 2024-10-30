@@ -20,12 +20,13 @@ import { useDocument } from 'react-firebase-hooks/firestore';
 import { doc } from 'firebase/firestore';
 import { useUser } from '@clerk/nextjs';
 import { Textarea } from './ui/textarea';
+import TimeSlotSelector from './TimeSlotSelector';
 
 const ProjOnboarding = () => {
     const [responses, setResponses] = useState<string[]>([]);
-
     const [isOpen, setIsOpen] = useState(false);
     const [page, setPage] = useState(0);
+
     useEffect(() => {
         // Open the dialog automatically when the component mounts
         setIsOpen(true);
@@ -52,7 +53,7 @@ const ProjOnboarding = () => {
     }
 
     return (
-        <div>
+        <>
             <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                 {/* <AlertDialogOverlay className="bg-black bg-opacity-80 fixed inset-0" /> */}
                 {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
@@ -73,17 +74,21 @@ const ProjOnboarding = () => {
                             <AlertDialogTitle>{projHeader[page - 1]}</AlertDialogTitle>
                             <p>{`Q${page}: ${projQuestions[page - 1]}`}</p>
 
-                            <Textarea
-                                placeholder="Enter your response"
-                                value={responses[page - 1]}
-                                onChange={(e) => {
-                                    setResponses((prev) => {
-                                        const newR = [...prev];
-                                        newR[page - 1] = e.target.value;
-                                        return newR;
-                                    });
-                                }}
-                            />
+                            {page === projQuestions.length ? (
+                                <TimeSlotSelector />
+                            ) : (
+                                <Textarea
+                                    placeholder="Enter your response"
+                                    value={responses[page - 1]}
+                                    onChange={(e) => {
+                                        setResponses((prev) => {
+                                            const newR = [...prev];
+                                            newR[page - 1] = e.target.value;
+                                            return newR;
+                                        });
+                                    }}
+                                />
+                            )}
                         </>
                     }
 
@@ -103,7 +108,7 @@ const ProjOnboarding = () => {
                     </AlertDialogFooter >
                 </AlertDialogContent >
             </AlertDialog >
-        </div >
+        </>
     )
 }
 
