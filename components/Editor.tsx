@@ -7,18 +7,10 @@ import { MoonIcon, SunIcon } from "lucide-react";
 import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
-import { collection, query, orderBy, doc } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { doc } from 'firebase/firestore';
+// import { collection, query, orderBy, doc } from 'firebase/firestore';
+// import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/firebase'; // Adjust this import path
-
-interface Task {
-  id: string;
-  title: string;
-  column: string
-  // Add other fields as necessary
-}
-
-
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 

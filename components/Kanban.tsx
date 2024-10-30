@@ -67,16 +67,30 @@ export const useTasksSubcollection = (documentId: string) => {
 };
 
 const Board = ({ id }: { id: string }) => {
-  const { tasks, loading: tasksLoading, error: tasksError } = useTasksSubcollection(id);
+  const [tasks, tasksLoading, tasksError] = useCollection(
+    query(
+      collection(db, "documents", id, "tasks"), 
+      orderBy('id', 'asc')
+    )
+  );
+
+  useEffect(() => {
+    if (!tasks) return;
+    const tasksList = tasks?.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Task[];
+    setCards(tasksList);
+  }, [tasks]);
   // Move useState to the top, before any conditional returns
   const [cards, setCards] = useState<Task[]>([]); // Add appropriate type
 
-  // Update cards when tasks change
-  useEffect(() => {
-    if (tasks) {
-      setCards(tasks);
-    }
-  }, [tasks]);
+  // // Update cards when tasks change
+  // useEffect(() => {
+  //   if (tasks) {
+  //     setCards(tasksList);
+  //   }
+  // }, [tasks]);
 
   if (tasksLoading) return <div>Loading...</div>;
   if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>;
