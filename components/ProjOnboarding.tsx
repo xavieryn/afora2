@@ -21,8 +21,7 @@ import { doc } from 'firebase/firestore';
 import { useUser } from '@clerk/nextjs';
 import { Textarea } from './ui/textarea';
 import TimeSlotSelector from './TimeSlotSelector';
-
-const ProjOnboarding = () => {
+const ProjOnboarding = ({ orgId }: { orgId: string }) => {
     const [responses, setResponses] = useState<string[]>([]);
     const [selectedSlots, setSelectedSlots] = useState<Set<string>>(new Set());
     const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +37,8 @@ const ProjOnboarding = () => {
 
     const handleSubmit = async () => {
         const selectedSlotsString = Array.from(selectedSlots).join(', ');
-        responses[projQuestions.length-1] = selectedSlotsString; 
-        const { success, message } = await setProjOnboardingSurvey(responses);
+        responses[projQuestions.length - 1] = selectedSlotsString;
+        const { success, message } = await setProjOnboardingSurvey(orgId, responses);
         if (success) {
             toast.success('Survey response received successfully!');
             setIsOpen(false);
@@ -50,7 +49,7 @@ const ProjOnboarding = () => {
 
     const { user } = useUser();
 
-    const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString()));
+    const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString(), 'orgs', orgId));
 
     if (!userData || userData.data()!.projOnboardingSurveyResponse) {
         return null;

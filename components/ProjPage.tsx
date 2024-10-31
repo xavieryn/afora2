@@ -2,7 +2,7 @@
 import { db } from '@/firebase';
 import { UserOrgData } from '@/types/types';
 import { useUser } from '@clerk/nextjs'
-import { doc, DocumentData } from 'firebase/firestore';
+import { doc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';

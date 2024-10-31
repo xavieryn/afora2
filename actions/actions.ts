@@ -293,7 +293,7 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
     }
 }
 
-export async function setProjOnboardingSurvey(responses: string[]) {
+export async function setProjOnboardingSurvey(orgId: string, responses: string[]) {
     auth().protect();
 
     const { sessionClaims } = await auth();
@@ -305,7 +305,7 @@ export async function setProjOnboardingSurvey(responses: string[]) {
             throw new Error('Please answer all questions!');
         }
 
-        await adminDb.collection('users').doc(userId).update({
+        await adminDb.collection('users').doc(userId).collection('orgs').doc(orgId).update({
             projOnboardingSurveyResponse: responses
         });
         return { success: true };
