@@ -1,1 +1,1 @@
-export declare function matching(teamSize, questions, data);
+export declare function matching(teamSize, questions, input);

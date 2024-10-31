@@ -30,12 +30,9 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
 
     return (
         <>
-            <div>ProjPage</div>
             <div>Viewing as: <strong><u>{userRole}</u></strong></div >
             {userRole === 'admin' ? (
                 <div>
-                    <h2>Admin Section</h2>
-                    <p>Welcome, Admin! Here you can manage the team.</p>
                     {/* Add more admin-specific components or functionality here */}
                     <GenerateTeamsButton setOutput={setOutput} orgId={orgId} />
                     {output && (

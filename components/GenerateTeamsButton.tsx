@@ -43,15 +43,14 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
     }
 
     const memberList = orgData.members;
-    const userData = await memberList.map(async (user) => {
-      // const [userOrg] = useDocument(doc(db, 'users', user, 'org', orgId));
-      // const userOrgData = userOrg.data();
-      const userOrg = (await getDoc(doc(db, 'users', user, 'org', orgId)));
+    const userDataPromise = memberList.map(async (user) => {
+      const userOrg = await getDoc(doc(db, 'users', user, 'org', orgId));
       const userOrgData = userOrg.data();
-      console.log(userOrgData);
       const surveyResponse = userOrgData?.projOnboardingSurveyResponse ? userOrgData.projOnboardingSurveyResponse.join(',') : '';
       return `{${user}:${surveyResponse}}`;
     });
+
+    const userData = await Promise.all(userDataPromise);
 
     matching(teamSize, projQuestions, userData)
       .then((output: string) => {
@@ -87,6 +86,7 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
               </Label>
               <Input
                 id="teamSize"
+                type="number" // Ensure only numbers are accepted
                 value={teamSize}
                 onChange={(e) => setTeamSize(e.target.value)} // Update state on change
                 placeholder="Enter team size"

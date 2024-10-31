@@ -50,18 +50,19 @@ const responseFormat = {
     }
 };
 
-export const matching = async (teamSize, questions, data) => {
+export const matching = async (teamSize, questions, input) => {
     const context = `You need group the users into groups of size ${teamSize}. Given the user onboarding survey response in the following format and order: ${questions}, put users with similar background and skill level together.`;
     console.log('teamsize', teamSize);
     console.log('questions', questions);
-    console.log('data', data);
+    console.log('input', input);
 
     teamSize = Number(teamSize);
     if (isNaN(teamSize) || teamSize <= 0) {
         throw new Error('Team size must be a valid positive number');
     }
-    if (!data || data.length === 0) {
+    if (!input || input.length === 0) {
         throw new Error('There are no members to be matched.');
     }
-    return await apiRequest({context, responseFormat, data});
+    input = input.join(' ');
+    return await apiRequest({context, responseFormat, input});
 }
