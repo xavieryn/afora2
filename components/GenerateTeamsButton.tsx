@@ -15,10 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Organization, projQuestions } from '@/types/types';
 import { db } from '@/firebase';
-import { useDocument, useDocumentData, useDocumentDataOnce } from 'react-firebase-hooks/firestore';
-import { doc } from 'firebase/firestore';
-import { adminDb } from '@/firebase-admin';
+import { useDocument } from 'react-firebase-hooks/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (output: string) => void }) => {
   const [open, setOpen] = useState(false);
@@ -35,7 +35,7 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
   if (!org) {
     return <div>No organization found</div>;
   }
-  const handleGenerateTeams = () => {
+  const handleGenerateTeams = async () => {
     const orgData = org!.data()! as Organization;
 
     if (!orgData) {
@@ -43,11 +43,13 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
     }
 
     const memberList = orgData.members;
-
-    const userData = memberList.map(async (user) => {
-      const userOrg = await adminDb.collection('users').doc(user).collection('org').doc(orgId).get();
+    const userData = await memberList.map(async (user) => {
+      // const [userOrg] = useDocument(doc(db, 'users', user, 'org', orgId));
+      // const userOrgData = userOrg.data();
+      const userOrg = (await getDoc(doc(db, 'users', user, 'org', orgId)));
       const userOrgData = userOrg.data();
-      const surveyResponse = userOrgData?.projOnboardingSurveyResponse ? userOrgData.projOnboardingSurveyResponse.join(',') : 'No ';
+      console.log(userOrgData);
+      const surveyResponse = userOrgData?.projOnboardingSurveyResponse ? userOrgData.projOnboardingSurveyResponse.join(',') : '';
       return `{${user}:${surveyResponse}}`;
     });
 
@@ -104,7 +106,3 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
 };
 
 export default GenerateTeamsButton;
-
-function useState(arg0: boolean): [any, any] {
-  throw new Error('Function not implemented.');
-}

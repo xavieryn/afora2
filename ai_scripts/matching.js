@@ -51,25 +51,17 @@ const responseFormat = {
 };
 
 export const matching = async (teamSize, questions, data) => {
-    const context = `You need group the users into groups of size ${teamSize}. Put users with similar background and skill level together.`;
-    
-    const input = "1. Alice Johnson          - Skill Level: 99\n" +
-                    "2. Michael Smith          - Skill Level: 65\n" +
-                    "3. Sarah Thompson         - Skill Level: 82\n" +
-                    "4. David Williams         - Skill Level: 54\n" +
-                    "5. Emily Davis            - Skill Level: 12\n" +
-                    "6. Christopher Brown      - Skill Level: 73\n" +
-                    "7. Jessica Wilson         - Skill Level: 30\n" +
-                    "8. Daniel Martinez        - Skill Level: 20\n" +
-                    "9. Megan Garcia           - Skill Level: 77\n" +
-                    "10. Andrew Lee            - Skill Level: 85";
+    const context = `You need group the users into groups of size ${teamSize}. Given the user onboarding survey response in the following format and order: ${questions}, put users with similar background and skill level together.`;
     console.log('teamsize', teamSize);
     console.log('questions', questions);
     console.log('data', data);
 
-    if (typeof teamSize !== 'number') {
-        throw new Error('Team size must be a number');
+    teamSize = Number(teamSize);
+    if (isNaN(teamSize) || teamSize <= 0) {
+        throw new Error('Team size must be a valid positive number');
     }
-    
-    return await apiRequest({context, responseFormat, input});
+    if (!data || data.length === 0) {
+        throw new Error('There are no members to be matched.');
+    }
+    return await apiRequest({context, responseFormat, data});
 }
