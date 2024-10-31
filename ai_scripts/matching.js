@@ -3,7 +3,6 @@
 // because openai blocks openai api key if used on client side to prevent leaking
 const apiRequest = require("./apiRequest");
 
-const context = "You need group the users into groups with same size based on their skill level. Match members' skill level within the group as much as possible";
 const responseFormat = {
     "type": "json_schema",
     "json_schema": {
@@ -51,7 +50,8 @@ const responseFormat = {
     }
 };
 
-export const matching = async () => {
+export const matching = async (teamSize, questions, data) => {
+    const context = `You need group the users into groups of size ${teamSize}. Put users with similar background and skill level together.`;
     
     const input = "1. Alice Johnson          - Skill Level: 99\n" +
                     "2. Michael Smith          - Skill Level: 65\n" +
@@ -63,6 +63,13 @@ export const matching = async () => {
                     "8. Daniel Martinez        - Skill Level: 20\n" +
                     "9. Megan Garcia           - Skill Level: 77\n" +
                     "10. Andrew Lee            - Skill Level: 85";
+    console.log('teamsize', teamSize);
+    console.log('questions', questions);
+    console.log('data', data);
+
+    if (typeof teamSize !== 'number') {
+        throw new Error('Team size must be a number');
+    }
     
     return await apiRequest({context, responseFormat, input});
 }

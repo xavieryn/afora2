@@ -37,7 +37,7 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
                     <h2>Admin Section</h2>
                     <p>Welcome, Admin! Here you can manage the team.</p>
                     {/* Add more admin-specific components or functionality here */}
-                    <GenerateTeamsButton setOutput={setOutput} />
+                    <GenerateTeamsButton setOutput={setOutput} orgId={orgId} />
                     {output && (
                         <div>
                             <h3>Generated Teams:</h3>
