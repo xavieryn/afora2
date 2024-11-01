@@ -50,22 +50,6 @@ function Kanban({ id }: { id: string }) {
   );
 }
 
-export const useTasksSubcollection = (documentId: string) => {
-  const [value, loading, error] = useCollection(
-    query(
-      collection(db, "documents", documentId, "tasks"), 
-      orderBy('id', 'asc')
-    )
-  );
-
-  const tasks = value?.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data()
-  })) as Task[];
-
-  return { tasks, loading, error };
-};
-
 const Board = ({ id }: { id: string }) => {
   const [tasks, tasksLoading, tasksError] = useCollection(
     query(
