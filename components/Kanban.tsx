@@ -25,13 +25,16 @@ import {
   FormEvent,
   SetStateAction,
   useEffect,
+  useMemo,
+  useRef,
   useState,
-  useTransition,
 } from "react";
 import { FaFire } from "react-icons/fa";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import JoditEditor from 'jodit-react';
+
 
 
 interface Task {
@@ -272,6 +275,8 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
   const [input, setInput] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const path = usePathname();
+  const editor = useRef(null);
+  const [content, setContent] = useState('');
 
   useEffect(() => {
     const segments = path.split("/");
@@ -306,6 +311,51 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     }
   };
 
+  {/* Need to put something in here later (LEARN WHAT USE MEMO DOES)  */ }
+  // const config = useMemo(
+  // 	() => ({
+  // 		readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+  // 		placeholder: 'Start typings...'
+  // 	}),
+  // 	[]
+  // );
+
+  const config = {
+    readonly: false,
+    height: 300,
+    buttons: [
+      'bold',
+      'italic',
+      'underline',
+      '|',
+      'ul',
+      'ol',
+      '|',
+      'link'
+    ],
+    removeButtons: [
+      'brush',
+      'file',
+      'video',
+      'table',
+      'fontsize',
+      'strict',
+      'preview',
+      'variant',
+      'print',
+      'about',
+      'outdent',
+      'indent',
+      'selectall'
+    ],
+    showXPathInStatusbar: false,
+    showCharsCounter: false,
+    showWordsCounter: false,
+    toolbarAdaptive: false,
+    toolbarSticky: false,
+    spellcheck: false,
+    disablePlugins: 'drag-and-drop,drag-and-drop-element,video,file' // disable specific plugins
+  };
   return (
     <>
       <DropIndicator beforeId={id} column={column} />
@@ -316,13 +366,13 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
         onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
-        <AlertDialog>
+        <AlertDialog >
           <AlertDialogTrigger>
             <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="w-3/4 h-3/4">
             <AlertDialogHeader>
-              <AlertDialogTitle className="flex justify-center ">
+              <AlertDialogTitle className="flex justify-center">
                 <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
                   <Input
                     placeholder={temp_title}
@@ -335,8 +385,26 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
                   </Button>
                 </form>
               </AlertDialogTitle>
-              <AlertDialogDescription>
-                Here you will be able to invite people, change the name, write a description etc
+              <AlertDialogDescription className="p-3">
+                <div>
+                  <h1>Due Date</h1>
+                </div>
+                <div className="flex flex-row gap-4 items-center pt-3">
+                  <span>Assign</span>
+                  <form>
+                    <Input placeholder="email" />
+                  </form>
+                </div>
+
+                <div className="pt-3" >  {/*  Description Test Editor */}
+                  <JoditEditor
+                    ref={editor}
+                    value={content}
+                    config={config}
+                    onBlur={(newContent: string) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+                    onChange={(newContent: string) => { }}
+                  />
+                </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
