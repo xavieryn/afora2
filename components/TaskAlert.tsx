@@ -4,8 +4,9 @@ import JoditEditor from 'jodit-react'
 import DueDate from './DueDate';
 import TaskStatus from './TaskStatus';
 
-function TaskAlert() {
+function TaskAlert({ id }: { id: string }) {
     const editor = useRef(null);
+    //console.log(id)
     const [content, setContent] = useState('');
     {/* Need to put something in here later (LEARN WHAT USE MEMO DOES)  */ }
     // const config = useMemo(
@@ -54,18 +55,18 @@ function TaskAlert() {
     };
     return (
         <div>
-            <div className='gap-4 flex flex-row'>
+            <div className='gap-4 flex flex-row items-center'>
                 <div>
                     Status
                 </div>
                 <div className='flex flex-1'>
-                    <TaskStatus />
+                    <TaskStatus id={id}/>
                 </div>
             </div>
             <div className="flex flex-row gap-4 items-center pt-3">
                 <span>Assign</span>
                 <form>
-                    <Input placeholder="email" className="flex flex-1 hover:bg-gray-200"/>
+                    <Input placeholder="email" className="flex flex-1 hover:bg-gray-200" />
                 </form>
             </div>
             <div className='pt-3 flex flex-row gap-4 '>

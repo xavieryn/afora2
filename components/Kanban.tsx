@@ -118,8 +118,6 @@ const Column = ({
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
 
-
-
   const path = usePathname();
 
   const handleDragStart = (e: DragEvent, task: Task) => {
@@ -343,7 +341,7 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
             </form>
           </AlertDialogTitle>
           <AlertDialogDescription className="p-3">
-            <TaskAlert />
+            <TaskAlert id={id}/>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
