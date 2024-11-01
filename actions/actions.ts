@@ -314,3 +314,19 @@ export async function setProjOnboardingSurvey(orgId: string, responses: string[]
         return { success: false, message: (error as Error).message };
     }
 }
+
+export async function updateGroups(orgId: string, groups: string[][]) {
+    auth().protect();
+
+    try {
+        groups.map(async (group, index) => {
+            await adminDb.collection('organizations').doc(orgId).collection('projs').add({
+                title: `Group ${index+1}`,
+                members: group
+            });
+        })
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}

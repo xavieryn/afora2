@@ -3,10 +3,12 @@ import { db } from '@/firebase';
 import { UserOrgData } from '@/types/types';
 import { useUser } from '@clerk/nextjs'
 import { doc } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
+import { updateGroups } from '@/actions/actions';
+import { toast } from 'sonner';
 
 type MatchingOutput = {
     groupSize: number
@@ -16,6 +18,8 @@ type MatchingOutput = {
 const ProjPage = ({ orgId }: { orgId: string }) => {
     const { user } = useUser();
     const userId = user?.primaryEmailAddress?.emailAddress;
+
+    const [isPending, startTransition] = useTransition();
 
     if (!userId) {
         return <div>User not found</div>;
@@ -43,6 +47,21 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
             }
         }
     }, [output]);
+    const handleAccept = () => {
+        if (parsedOutput) {
+            startTransition(() => {
+                updateGroups(orgId, parsedOutput.groups)
+                    .then(() => {
+                        // Show success toast
+                        toast.success('Groups updated successfully');
+                    })
+                    .catch((error) => {
+                        console.error('Failed to update groups:', error);
+                        toast.error('Failed to update groups');
+                    });
+            });
+        }
+    };
 
     return (
         <>
@@ -64,7 +83,7 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
                                 </div>
                             ))}
                             <div className="flex justify-end space-x-4 mt-4">
-                                <Button onClick={() => console.log('Button clicked!')}>Accept</Button>
+                                <Button disabled={isPending} onClick={handleAccept}>Accept</Button>
                             </div>
                         </>
                     )}
