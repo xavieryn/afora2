@@ -19,25 +19,11 @@ const responseFormat = {
                     "type": "array",
                     "description": "List of groups created from users.",
                     "items": {
-                        "type": "object",
-                        "properties": {
-                            "group_id": {
-                                "type": "string",
-                                "description": "Unique identifier for the group."
-                            },
-                            "members": {
-                                "type": "array",
-                                "description": "List of user IDs in the group.",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required": [
-                            "group_id",
-                            "members"
-                        ],
-                        "additionalProperties": false
+                        "type": "array",
+                        "description": "List of user IDs in each group.",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -52,9 +38,9 @@ const responseFormat = {
 
 export const matching = async (teamSize, questions, input) => {
     const context = `You need group the users into groups of size ${teamSize}. Given the user onboarding survey response in the following format and order: ${questions}, put users with similar background and skill level together.`;
-    console.log('teamsize', teamSize);
-    console.log('questions', questions);
-    console.log('input', input);
+    // console.log('teamsize', teamSize);
+    // console.log('questions', questions);
+    // console.log('input', input);
 
     teamSize = Number(teamSize);
     if (isNaN(teamSize) || teamSize <= 0) {
@@ -64,5 +50,5 @@ export const matching = async (teamSize, questions, input) => {
         throw new Error('There are no members to be matched.');
     }
     input = input.join(' ');
-    return await apiRequest({context, responseFormat, input});
+    return await apiRequest({ context, responseFormat, input });
 }

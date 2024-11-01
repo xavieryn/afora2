@@ -7,6 +7,11 @@ import React, { useEffect, useState } from 'react'
 import { useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 
+type MatchingOutput = {
+    groupSize: number
+    groups: string[][]
+}
+
 const ProjPage = ({ orgId }: { orgId: string }) => {
 
     const { user } = useUser();
@@ -27,6 +32,18 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
         }
     }, [data])
     const [output, setOutput] = useState('');
+    const [parsedOutput, setParsedOutput] = useState<MatchingOutput | null>(null);
+
+    useEffect(() => {
+        if (output) {
+            try {
+                const parsed: MatchingOutput = JSON.parse(output);
+                setParsedOutput(parsed);
+            } catch (error) {
+                console.error('Failed to parse output:', error);
+            }
+        }
+    }, [output]);
 
     return (
         <>
@@ -35,12 +52,16 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
                 <div>
                     {/* Add more admin-specific components or functionality here */}
                     <GenerateTeamsButton setOutput={setOutput} orgId={orgId} />
-                    {output && (
-                        <div>
-                            <h3>Generated Teams:</h3>
-                            <pre>{JSON.stringify(output, null, 2)}</pre>
+                    {output && parsedOutput && parsedOutput.groups && parsedOutput.groups.map((group, index) => (
+                        <div key={index} className="group-card shadow-md p-4 mb-4 rounded-lg bg-white dark:bg-gray-800">
+                            <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-gray-100">Group {index + 1}</h3>
+                            <ul className="list-disc pl-5">
+                                {group.map((member, memberIndex) => (
+                                    <li key={memberIndex} className="text-gray-700 dark:text-gray-300">{member}</li>
+                                ))}
+                            </ul>
                         </div>
-                    )}
+                    ))}
                 </div>
             ) : (
                 <div>
