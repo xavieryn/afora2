@@ -34,6 +34,7 @@ import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import JoditEditor from 'jodit-react';
+import TaskAlert from "./TaskAlert";
 
 
 
@@ -272,37 +273,36 @@ type CardProps = {
 
 const Card = ({ id, title, column, handleDragStart }: CardProps) => {
   const [temp_title, setTitle] = useState(title);
-  const [input, setInput] = useState("");
   const [isUpdating, setIsUpdating] = useState(false);
   const path = usePathname();
-  const editor = useRef(null);
-  const [content, setContent] = useState('');
 
   useEffect(() => {
     const segments = path.split("/");
     const documentId = segments[segments.length - 1];
 
-    const unsubscribe = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+    const data = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
       if (doc.exists()) {
-        setTitle(doc.data().title);
+        const newTitle = doc.data().title;
+        setTitle(newTitle);
       }
     });
 
-    return () => unsubscribe();
+    return () => data();
   }, [id, path]);
+
+  // Remove the second useEffect since we're handling the input state in the first one
 
   const updateTitle = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (input.trim()) {
+    if (temp_title.trim()) {
       setIsUpdating(true);
       const segments = path.split("/");
       const documentId = segments[segments.length - 1];
 
       try {
         await updateDoc(doc(db, "documents", documentId, "tasks", id), {
-          title: input.trim()
+          title: temp_title.trim()
         });
-        setInput("");
       } catch (error) {
         console.error("Error updating task: ", error);
       } finally {
@@ -311,52 +311,8 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     }
   };
 
-  {/* Need to put something in here later (LEARN WHAT USE MEMO DOES)  */ }
-  // const config = useMemo(
-  // 	() => ({
-  // 		readonly: false, // all options from https://xdsoft.net/jodit/docs/,
-  // 		placeholder: 'Start typings...'
-  // 	}),
-  // 	[]
-  // );
-
-  const config = {
-    readonly: false,
-    height: 300,
-    buttons: [
-      'bold',
-      'italic',
-      'underline',
-      '|',
-      'ul',
-      'ol',
-      '|',
-      'link'
-    ],
-    removeButtons: [
-      'brush',
-      'file',
-      'video',
-      'table',
-      'fontsize',
-      'strict',
-      'preview',
-      'variant',
-      'print',
-      'about',
-      'outdent',
-      'indent',
-      'selectall'
-    ],
-    showXPathInStatusbar: false,
-    showCharsCounter: false,
-    showWordsCounter: false,
-    toolbarAdaptive: false,
-    toolbarSticky: false,
-    spellcheck: false,
-    disablePlugins: 'drag-and-drop,drag-and-drop-element,video,file' // disable specific plugins
-  };
   return (
+    // Rest of your JSX remains the same
     <>
       <DropIndicator beforeId={id} column={column} />
       <motion.div
@@ -375,10 +331,9 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
               <AlertDialogTitle className="flex justify-center">
                 <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
                   <Input
-                    placeholder={temp_title}
                     className="flex flex-1 space-x-2"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
+                    value={temp_title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
                   <Button disabled={isUpdating} type="submit">
                     {isUpdating ? "Updating..." : "Update"}
@@ -386,25 +341,7 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
                 </form>
               </AlertDialogTitle>
               <AlertDialogDescription className="p-3">
-                <div>
-                  <h1>Due Date</h1>
-                </div>
-                <div className="flex flex-row gap-4 items-center pt-3">
-                  <span>Assign</span>
-                  <form>
-                    <Input placeholder="email" />
-                  </form>
-                </div>
-
-                <div className="pt-3" >  {/*  Description Test Editor */}
-                  <JoditEditor
-                    ref={editor}
-                    value={content}
-                    config={config}
-                    onBlur={(newContent: string) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
-                    onChange={(newContent: string) => { }}
-                  />
-                </div>
+                <TaskAlert />
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -417,6 +354,7 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     </>
   );
 };
+  
 
 type DropIndicatorProps = {
   beforeId: string | null;
