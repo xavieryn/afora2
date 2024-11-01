@@ -24,7 +24,7 @@ function DueDate() {
             <AlertDialogTrigger className="flex flex-1 hover:bg-gray-200">{test}</AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogTitle>Choose Due Date For This Task</AlertDialogTitle>
                     <AlertDialogDescription>
                         <Calendar
                             mode="single"

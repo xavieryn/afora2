@@ -315,42 +315,43 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     // Rest of your JSX remains the same
     <>
       <DropIndicator beforeId={id} column={column} />
-      <motion.div
-        layout
-        layoutId={id}
-        draggable="true"
-        onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
-        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
-      >
-        <AlertDialog >
-          <AlertDialogTrigger>
-            <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
-          </AlertDialogTrigger>
-          <AlertDialogContent className="w-3/4 h-3/4">
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex justify-center">
-                <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
-                  <Input
-                    className="flex flex-1 space-x-2"
-                    value={temp_title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                  <Button disabled={isUpdating} type="submit">
-                    {isUpdating ? "Updating..." : "Update"}
-                  </Button>
-                </form>
-              </AlertDialogTitle>
-              <AlertDialogDescription className="p-3">
-                <TaskAlert />
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </motion.div>
+      <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <motion.div
+          layout
+          layoutId={id}
+          draggable="true"
+          onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
+          className="cursor-pointer rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing flex flex-1 hover:bg-neutral-700 transition-colors"
+        >
+          <p className="text-sm text-neutral-100 flex flex-1">{temp_title}</p>
+        </motion.div>
+      </AlertDialogTrigger>
+      
+      <AlertDialogContent className="w-3/4 h-3/4">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex justify-center">
+            <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
+              <Input
+                className="flex flex-1 space-x-2"
+                value={temp_title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <Button disabled={isUpdating} type="submit">
+                {isUpdating ? "Updating..." : "Update"}
+              </Button>
+            </form>
+          </AlertDialogTitle>
+          <AlertDialogDescription className="p-3">
+            <TaskAlert />
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
     </>
   );
 };
