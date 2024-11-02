@@ -18,12 +18,13 @@ import { db } from '@/firebase';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { doc, getDoc } from 'firebase/firestore';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 
 const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (output: string) => void }) => {
   const [open, setOpen] = useState(false);
   const [teamSize, setTeamSize] = useState("");
   const [org, loading, error] = useDocument(doc(db, 'organizations', orgId));
+  const [isPending, startTransition] = useTransition();
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -52,7 +53,7 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
 
     const userData = await Promise.all(userDataPromise);
 
-    matching(teamSize, projQuestions, userData)
+    startTransition(async () => matching(teamSize, projQuestions, userData)
       .then((output: string) => {
         console.log("API Response:", output); // Log the output from the matching function
         setOutput(output);
@@ -61,7 +62,7 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
       .catch((error: Error) => {
         console.error("Error:", error); // Handle any errors
         toast.error(error.message);
-      });
+      }));
   };
   return (
     <>
@@ -95,8 +96,8 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={handleGenerateTeams}>
-              Generate
+            <Button type="submit" disabled={isPending} onClick={handleGenerateTeams}>
+              {isPending ? 'Generating...' : 'Generate'}
             </Button>
           </DialogFooter>
         </DialogContent>

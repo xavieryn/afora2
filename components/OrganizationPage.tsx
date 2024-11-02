@@ -4,8 +4,8 @@ import React, { useState } from 'react'
 import DeleteOrg from './DeleteOrg'
 import InviteUserToOrganization from './InviteUserToOrganization'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useDocument } from 'react-firebase-hooks/firestore'
-import { doc } from 'firebase/firestore'
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore'
+import { collection, doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import MemberList from './MemberList'
 import ProjPage from './ProjPage'
@@ -14,7 +14,8 @@ import ProjOnboarding from './ProjOnboarding'
 const OrganizationPage = ({ id }: { id: string }) => {
 
   const [org, loading, error] = useDocument(doc(db, 'organizations', id));
-
+  const [projectsData, projLoading, projError] = useCollection(collection(db, 'organizations', id, 'projs'));
+  
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -32,6 +33,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
   if (!orgData) {
     return <div>No organization found</div>;
   }
+  
 
   return (
     <div className="overflow-x-hidden">
@@ -52,7 +54,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="projects"><ProjPage orgId={id} /></TabsContent>
+        <TabsContent value="projects"><ProjPage orgId={id} projectsData={projectsData} loading={projLoading} error={projError}/></TabsContent>
         <TabsContent value="members">{orgData && <MemberList admins={orgData.admins} members={orgData.members} />}</TabsContent>
         <TabsContent value="settings">Organization settings and preferences.</TabsContent>
       </Tabs>

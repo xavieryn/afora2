@@ -27,21 +27,21 @@ const ProjectCard = ({
     ]
 }: ProjectCardProps) => {
     return (
-        <Card className="w-full max-w-md mx-auto overflow-hidden">
+        <Card className="w-full max-w-sm mx-auto overflow-hidden">
             <CardHeader className="p-0">
                 <div
-                    className="h-48 bg-cover bg-center flex items-end justify-start p-4"
+                    className="h-32 bg-cover bg-center flex items-end justify-start p-2"
                     style={{ backgroundImage: `url(${backgroundImage})` }}
                     role="img"
                     aria-label={`Background image for ${projectName}`}
                 >
-                    <h2 className="text-2xl font-bold text-white bg-black bg-opacity-50 p-2 rounded">
+                    <h2 className="text-xl font-bold text-white bg-black bg-opacity-75 p-1 rounded">
                         {projectName}
                     </h2>
                 </div>
             </CardHeader>
-            <CardContent className="p-4">
-                <h3 className="text-lg font-semibold mb-2">Upcoming Tasks</h3>
+            <CardContent className="p-2">
+                <h3 className="text-md font-semibold mb-1">Upcoming Tasks</h3>
             </CardContent>
         </Card>
     )
