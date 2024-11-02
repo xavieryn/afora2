@@ -1,77 +1,41 @@
 'use client'
 
-import { startTransition, useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useCollection } from 'react-firebase-hooks/firestore'
-import { collection, doc, orderBy, query, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
-import { usePathname } from "next/navigation";
+import { usePathname } from "next/navigation"
 
-
-type Status = 'backlog' | 'todo' | 'doing' | 'done'
 
 interface TaskStatusProps {
-    initialStatus?: Status
-    onSelect?: (status: Status) => void
+    initialStatus: String
     id: string
 }
 
-interface Task {
-    id: string;
-    title: string;
-    column: string
-    // Add other fields as necessary
-  }
+function TaskStatus({ initialStatus, id }: TaskStatusProps) {
+    const [status, setStatus] = useState(initialStatus)
+    const pathname = usePathname()
+    const projectId = pathname.split("/").pop()
 
-// FIX THE HARD CODED TODO LATER
-function TaskStatus({ initialStatus = 'todo', onSelect, id }: TaskStatusProps) {
-    const [status, setStatus] = useState<Status>(initialStatus)
-    const pathname = usePathname(); 
-    const projectId = pathname.split("/").pop();
-    const [tasks, loading, error] = useCollection(
-        query(collection(db, "documents", projectId, "tasks"), orderBy('id', 'asc'))
-      );
-    
-    console.log('project id', projectId);
-    console.log('task id', id);
-
-    // WHAT AM I TRYING TO DO? 
-    // IF SOMETHING CHANGES IN STATUS, THEN WE KNOW THAT THE STATUS CHANGED
-    // SO WE WATCH THAT AND REMAP IT
-    useEffect(() => {
-
-        if (!tasks) return;
-        const tasksList = tasks?.docs.map(doc => ({
-          ...doc.data()
-        })) as Task[];
-        // setCards(tasksList);
-
-      }, [status]);
-
-    const handleSelect = async (newStatus: Status): Promise<void> => {
+    const handleSelect = async (newStatus: String): Promise<void> => {
         try {
-            setStatus(newStatus);
-            if (onSelect) {
-                onSelect(newStatus);
-            }
-            startTransition(async () => {
-                await updateDoc(doc(db, "documents", projectId , "tasks", id), {
+            setStatus(newStatus)
+            if (projectId) {
+                await updateDoc(doc(db, "documents", projectId, "tasks", id), {
                     column: newStatus
-                });
-            });
-
+                })
+            }
         } catch (error) {
-            console.error("Error updating status:", error);
-            // You might want to handle the error appropriately here
+            console.error("Error updating status:", error)
+            // Revert the status if the update fails
+            setStatus(status)
         }
     }
-
-
 
     return (
         <DropdownMenu>

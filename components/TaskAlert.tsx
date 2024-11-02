@@ -11,7 +11,7 @@ type FormInputs = {
     email: string;
 }
 
-function TaskAlert({ id }: { id: string }) {
+function TaskAlert({ id, column }: { id: string, column:string }) {
     const editor = useRef(null)
     const [content, setContent] = useState('')
 
@@ -59,12 +59,12 @@ function TaskAlert({ id }: { id: string }) {
                     Status
                 </div>
                 <div className='flex flex-1'>
-                    <TaskStatus id={id} />
+                    <TaskStatus id={id} initialStatus={column} />
                 </div>
             </div>
             <div className="flex flex-row flex-1 gap-4 items-center pt-3">
                 <span>Assign</span>
-                <AssignTask/>
+                <AssignTask id={id} />
             </div>
             <div className='pt-3 flex flex-row gap-4 '>
                 <div>
