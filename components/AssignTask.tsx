@@ -13,9 +13,9 @@ function AssignTask() {
    };
 
    return (
-       <form onSubmit={handleSubmit(onSubmit)}>
-           <input {...register("email")} className='hover:bg-gray-200'/>         
-           <input type="submit" className='mx-2 hover:bg-gray-200'/>
+       <form onSubmit={handleSubmit(onSubmit)} className='flex flex-1'>
+           <input {...register("email")} className='hover:bg-gray-200 border-2 flex flex-1'/>         
+           <input type="submit" className='mx-2 hover:bg-gray-200 '/>
        </form>
    );
 }

@@ -21,18 +21,37 @@ interface TaskStatusProps {
     id: string
 }
 
+interface Task {
+    id: string;
+    title: string;
+    column: string
+    // Add other fields as necessary
+  }
+
 // FIX THE HARD CODED TODO LATER
 function TaskStatus({ initialStatus = 'todo', onSelect, id }: TaskStatusProps) {
     const [status, setStatus] = useState<Status>(initialStatus)
     const pathname = usePathname(); 
     const projectId = pathname.split("/").pop();
+    const [tasks, loading, error] = useCollection(
+        query(collection(db, "documents", projectId, "tasks"), orderBy('id', 'asc'))
+      );
     
     console.log('project id', projectId);
     console.log('task id', id);
 
+    // WHAT AM I TRYING TO DO? 
+    // IF SOMETHING CHANGES IN STATUS, THEN WE KNOW THAT THE STATUS CHANGED
+    // SO WE WATCH THAT AND REMAP IT
     useEffect(() => {
-        console.log('hi')
-    },[status])
+
+        if (!tasks) return;
+        const tasksList = tasks?.docs.map(doc => ({
+          ...doc.data()
+        })) as Task[];
+        // setCards(tasksList);
+
+      }, [status]);
 
     const handleSelect = async (newStatus: Status): Promise<void> => {
         try {
