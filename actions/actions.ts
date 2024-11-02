@@ -318,6 +318,7 @@ export async function setProjOnboardingSurvey(orgId: string, responses: string[]
 export async function updateGroups(orgId: string, groups: string[][]) {
     auth().protect();
 
+    // TODO: add the proj to the users' proj subcollection too
     try {
         groups.map(async (group, index) => {
             await adminDb.collection('organizations').doc(orgId).collection('projs').add({

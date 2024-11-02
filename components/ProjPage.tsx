@@ -1,14 +1,15 @@
 'use client'
 import { db } from '@/firebase';
-import { UserOrgData } from '@/types/types';
+import { Project, UserOrgData } from '@/types/types';
 import { useUser } from '@clerk/nextjs'
-import { doc } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import React, { useEffect, useState, useTransition } from 'react'
-import { useDocument } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
 import { toast } from 'sonner';
+import ProjectCard from './ProjectCard';
 
 type MatchingOutput = {
     groupSize: number
@@ -63,6 +64,7 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
         }
     };
 
+    const [projectsData, loading, error] = useCollection(collection(db, 'organizations', orgId, 'projs'));
     return (
         <>
             <div>Viewing as: <strong><u>{userRole}</u></strong></div >
@@ -95,6 +97,22 @@ const ProjPage = ({ orgId }: { orgId: string }) => {
                     {/* Add more member-specific components or functionality here */}
                 </div>
             )}
+
+            <div>
+                {loading && <p>Loading projects...</p>}
+                {error && <p>Error loading projects: {error.message}</p>}
+                {!loading && !error && projectsData && projectsData.docs.length > 0 && (
+                    projectsData.docs.map((doc) => {
+                        const proj = doc.data() as Project;
+                        return (
+                            <>
+                                <ProjectCard projectName={proj.title} backgroundImage={''} tasks={[]} />
+                            </>
+                        );
+                    })
+                )}
+                {!loading && !error && projectsData && projectsData.docs.length === 0 && <p>No projects found.</p>}
+            </div>
         </>
     )
 }

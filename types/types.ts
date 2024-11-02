@@ -19,7 +19,7 @@ export type User = {
     };
 }
 
-export type ProjectData = {
+export type Project = {
     title: string;
     admins: string[];
     members: string[];
@@ -46,7 +46,6 @@ export interface UserOrgData extends DocumentData {
     orgId: string;
     userId: string;
 }
-
 
 export const appHeader = ['Core Skills and Expertise', 'Current Interests', 'Fields Seeking to Pursue'];
 export const appQuestions = ['What is your primary area of expertise and main professional skills?', 'What industries or fields are you currently most interested in some levels of skills and experiences?', 'What future roles or job titles are you aiming for?'];
