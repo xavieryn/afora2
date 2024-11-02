@@ -1,5 +1,4 @@
 "use client"
-import * as React from "react"
 import { Calendar } from "@/components/ui/calendar"
 
 import {
@@ -13,12 +12,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { useEffect, useState } from "react"
 
 
 function DueDate() {
-    const [date, setDate] = React.useState<Date | undefined>(new Date())
-    // grab date if there is, otherwise
-    const test = '11/20/24'
+    const [date, setDate] = useState<Date | undefined>(new Date());
+    const test = '11/20/24';
+
+    useEffect(() => {
+        if (date) { 
+            console.log(date.toLocaleDateString('en-US')); 
+        }
+    },[date])
+
     return (
         <AlertDialog>
             <AlertDialogTrigger className="flex flex-1 hover:bg-gray-200">{test}</AlertDialogTrigger>
@@ -40,7 +46,6 @@ function DueDate() {
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-
     )
 }
 
