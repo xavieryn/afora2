@@ -10,31 +10,17 @@ import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
 import { toast } from 'sonner';
 import ProjectCard from './ProjectCard';
+import DeleteOrg from './DeleteOrg';
+import InviteUserToOrganization from './InviteUserToOrganization';
 
 type MatchingOutput = {
     groupSize: number
     groups: string[][]
 }
 
-const ProjPage = ({ orgId, projectsData, loading, error }: { orgId: string, projectsData: QuerySnapshot<DocumentData, DocumentData> | undefined, loading: boolean, error: FirestoreError | undefined }) => {
-    const { user } = useUser();
-    const userId = user?.primaryEmailAddress?.emailAddress;
-
+const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole: string, orgId: string, projectsData: QuerySnapshot<DocumentData, DocumentData> | undefined, loading: boolean, error: FirestoreError | undefined }) => {
     const [isPending, startTransition] = useTransition();
 
-    if (!userId) {
-        return <div>User not found</div>;
-    }
-
-    const [data] = useDocument(doc(db, 'users', userId, 'orgs', orgId));
-
-    const [userRole, setUserRole] = React.useState('');
-    useEffect(() => {
-        if (data) {
-            const userOrg = data.data() as UserOrgData;
-            setUserRole(userOrg.role);
-        }
-    }, [data])
     const [output, setOutput] = useState('');
     const [parsedOutput, setParsedOutput] = useState<MatchingOutput | null>(null);
 
@@ -86,6 +72,9 @@ const ProjPage = ({ orgId, projectsData, loading, error }: { orgId: string, proj
                             <div className="flex justify-end space-x-4 mt-4">
                                 <Button disabled={isPending} onClick={handleAccept}>
                                     {isPending ? 'Accepting...' : 'Accept'}
+                                </Button>
+                                <Button variant="secondary" onClick={() => setOutput('')}>
+                                    Cancel
                                 </Button>
                             </div>
                         </>

@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import {
     Table,
@@ -7,18 +8,19 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-interface MemberListProps {
-    admins: string[];
-    members: string[];
-}
-
-const MemberList: React.FC<MemberListProps> = ({ admins, members }) => {
+import InviteUserToOrganization from './InviteUserToOrganization';
+const MemberList = ({ admins, members, userRole }: { admins: string[]; members: string[]; userRole: string }) => {
     return (
         <div>
             <Table>
                 <TableHeader>
                     <TableRow>
                         <TableHead className="w-[100px] text-xl font-bold">Admins</TableHead>
+                        {userRole === 'admin' && (
+                            <TableHead className="text-right">
+                                <InviteUserToOrganization />
+                            </TableHead>
+                        )}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
