@@ -59,8 +59,9 @@ const AppOnboarding = () => {
     const { user } = useUser();
 
     const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString()));
-
-    if (!userData || userData.data()!.onboardingSurveyResponse) {
+    if (loading) return <div>Loading</div>
+    if (error) return  <div> error: { error.message }</div>
+    if (!userData || userData.data()?.onboardingSurveyResponse) {
         return null;
     }
 

@@ -16,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { db } from "@/firebase";
-import { addDoc, collection, doc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, onSnapshot, orderBy, query, serverTimestamp, updateDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import {
@@ -31,6 +31,7 @@ import { FaFire } from "react-icons/fa";
 import { FiPlus, FiTrash } from "react-icons/fi";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useCollection } from "react-firebase-hooks/firestore";
 
 
 interface Task {
@@ -41,24 +42,36 @@ interface Task {
 }
 
 
-function Kanban({ tasks }: { tasks: Task[] }) {
+function Kanban({ id }: { id: string }) {
   return (
-    <div className="  w-full">
-      <Board tasks={tasks} />
+    <div className="w-full">
+      <Board id={id} />
     </div>
-  )
+  );
 }
 
-const Board = ({ tasks }: { tasks: Task[] }) => {
+const Board = ({ id }: { id: string }) => {
+  const [tasks, tasksLoading, tasksError] = useCollection(
+    query(
+      collection(db, "documents", id, "tasks"), 
+      orderBy('id', 'asc')
+    )
+  );
 
-  // GRAB FROM THE ACTUAL DB
-  const [cards, setCards] = useState(tasks);
+  useEffect(() => {
+    if (!tasks) return;
+    const tasksList = tasks?.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    })) as Task[];
+    setCards(tasksList);
+  }, [tasks]);
+  // Move useState to the top, before any conditional returns
+  const [cards, setCards] = useState<Task[]>([]); // Add appropriate type
 
-  //   useEffect(() => {
-  //     if (data) {
-  //         setCards(data);
-  //     }
-  // }, [data]);
+  if (tasksLoading) return <div>Loading...</div>;
+  if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>;
+  if (!tasks) return <div>No tasks found</div>;
 
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-12">
@@ -77,7 +90,6 @@ const Board = ({ tasks }: { tasks: Task[] }) => {
         setCards={setCards}
       />
       <Column
-
         title="In progress"
         column="doing"
         headingColor="text-blue-200"
@@ -95,7 +107,6 @@ const Board = ({ tasks }: { tasks: Task[] }) => {
     </div>
   );
 };
-
 type ColumnProps = {
   title: string;
   headingColor: string;
@@ -112,8 +123,6 @@ const Column = ({
   setCards,
 }: ColumnProps) => {
   const [active, setActive] = useState(false);
-
-
 
   const path = usePathname();
 
@@ -151,9 +160,10 @@ const Column = ({
         copy.splice(insertAtIndex, 0, cardToTransfer);
       }
       const segments = path.split("/");
-      const id = segments[segments.length - 1]
+      const document_id = segments[segments.length - 1]
       try {
-        const cardRef = doc(db, "documents", id, "tasks", cardId);
+        const cardRef = doc(db, "documents", document_id, "tasks", cardId);
+
         await updateDoc(cardRef, {
           column: column,
           // Add any other fields that need updating
@@ -249,7 +259,6 @@ const Column = ({
         {filteredCards.map((c) => {
           return <div key={c.id} >
             <Card key={c.id} {...c} handleDragStart={handleDragStart} />
-
           </div>
         })}
         <DropIndicator beforeId={null} column={column} />
@@ -274,13 +283,13 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
     const segments = path.split("/");
     const documentId = segments[segments.length - 1];
 
-    const unsubscribe = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
+    const grabCard = onSnapshot(doc(db, "documents", documentId, "tasks", id), (doc) => {
       if (doc.exists()) {
         setTitle(doc.data().title);
       }
     });
 
-    return () => unsubscribe();
+    return () => grabCard();
   }, [id, path]);
 
   const updateTitle = async (e: React.FormEvent) => {
@@ -310,7 +319,7 @@ const Card = ({ id, title, column, handleDragStart }: CardProps) => {
         layout
         layoutId={id}
         draggable="true"
-        
+
         onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
         className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
       >
