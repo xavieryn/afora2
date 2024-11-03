@@ -1,7 +1,6 @@
 'use client';
 
 import { MenuIcon } from "lucide-react"
-import NewDocumentButton from "./NewDocumentButton"
 import { useCollection } from "react-firebase-hooks/firestore"
 import {
   Sheet,
@@ -11,11 +10,10 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { useUser } from "@clerk/nextjs";
-import { collection, DocumentData, query, where } from "firebase/firestore";
+import { collection, DocumentData } from "firebase/firestore";
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
-import JoinDocumentButton from "./JoinDocumentButton";
 import NewOrgButton from "./NewOrgButton";
 import JoinOrgButton from "./JoinOrgButton";
 

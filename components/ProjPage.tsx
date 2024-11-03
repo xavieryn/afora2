@@ -1,17 +1,17 @@
 'use client'
-import { db } from '@/firebase';
+// import { db } from '@/firebase';
 import { Project, UserOrgData } from '@/types/types';
-import { useUser } from '@clerk/nextjs'
-import { doc, DocumentData, FirestoreError, QuerySnapshot } from 'firebase/firestore';
+// import { useUser } from '@clerk/nextjs'
+import { DocumentData, FirestoreError, QuerySnapshot } from 'firebase/firestore';
 import React, { useEffect, useState, useTransition } from 'react'
-import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+// import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
 import { toast } from 'sonner';
 import ProjectCard from './ProjectCard';
-import DeleteOrg from './DeleteOrg';
-import InviteUserToOrganization from './InviteUserToOrganization';
+// import DeleteOrg from './DeleteOrg';
+// import InviteUserToOrganization from './InviteUserToOrganization';
 
 type MatchingOutput = {
     groupSize: number

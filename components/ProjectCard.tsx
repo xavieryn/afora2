@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+// import { Separator } from "@/components/ui/separator"
 
-interface Member {
-    id: string
-    name: string
-}
+// interface Member {
+//     id: string
+//     name: string
+// }
 
 interface Task {
     id: string
@@ -26,6 +26,7 @@ const ProjectCard = ({
         { id: "3", title: "Write unit tests" },
     ]
 }: ProjectCardProps) => {
+    console.log(tasks)
     return (
         <Card className="w-full max-w-sm mx-auto overflow-hidden">
             <CardHeader className="p-0">

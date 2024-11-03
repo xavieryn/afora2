@@ -1,4 +1,4 @@
-import AppOnboarding from "@/components/AppOnboarding";
+// import AppOnboarding from "@/components/AppOnboarding";
 import HomePage from "@/components/HomePage";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowLeftCircle } from "lucide-react";
