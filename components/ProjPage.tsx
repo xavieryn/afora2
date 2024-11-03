@@ -1,6 +1,6 @@
 'use client'
 // import { db } from '@/firebase';
-import { Project, UserOrgData } from '@/types/types';
+import { Project } from '@/types/types';
 // import { useUser } from '@clerk/nextjs'
 import { DocumentData, FirestoreError, QuerySnapshot } from 'firebase/firestore';
 import React, { useEffect, useState, useTransition } from 'react'
