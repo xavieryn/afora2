@@ -1,17 +1,18 @@
-import React, { useRef, useState } from 'react'
-import { Input } from './ui/input'
 import JoditEditor from 'jodit-react'
 import DueDate from './DueDate'
 import TaskStatus from './TaskStatus'
-import { useForm } from 'react-hook-form'
 import AssignTask from './AssignTask'
+import { Task } from '@/types/types'
+import { useState, useRef, Dispatch, SetStateAction} from 'react'
+
 
 // Define the type for your form data
 type FormInputs = {
     email: string;
 }
 
-function TaskAlert({ id, column }: { id: string, column:string }) {
+function TaskAlert({ id, column, assigned, cards, setCards }: { id: string, column:string, assigned: Array<string>, cards:Task[], setCards:  Dispatch<SetStateAction<Task[]>>
+ }) {
     const editor = useRef(null)
     const [content, setContent] = useState('')
 
@@ -59,12 +60,12 @@ function TaskAlert({ id, column }: { id: string, column:string }) {
                     Status
                 </div>
                 <div className='flex flex-1'>
-                    <TaskStatus id={id} initialStatus={column} />
+                    <TaskStatus id={id} initialStatus={column} cards={cards} setCards={setCards} />
                 </div>
             </div>
             <div className="flex flex-row flex-1 gap-4 items-center pt-3">
                 <span>Assign</span>
-                <AssignTask id={id} />
+                <AssignTask id={id} assigned={assigned} />
             </div>
             <div className='pt-3 flex flex-row gap-4 '>
                 <div>

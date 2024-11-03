@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -10,30 +10,39 @@ import {
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { usePathname } from "next/navigation"
+import { Task } from '@/types/types'
 
 
 interface TaskStatusProps {
-    initialStatus: String
+    initialStatus: string
     id: string
+    cards: Task[]
+    setCards: Dispatch<SetStateAction<Task[]>>
 }
 
-function TaskStatus({ initialStatus, id }: TaskStatusProps) {
-    const [status, setStatus] = useState(initialStatus)
+function TaskStatus({ initialStatus, id, cards, setCards }: TaskStatusProps) {
+    const [column, setColumn] = useState(initialStatus)
     const pathname = usePathname()
     const projectId = pathname.split("/").pop()
 
     const handleSelect = async (newStatus: String): Promise<void> => {
+        // Disable loading state or optimistic updates for now
         try {
-            setStatus(newStatus)
+            let copy = [...cards]
+            let cardToTransfer = copy.find((c) => c.id === id)
+            if (!cardToTransfer) return
+            cardToTransfer = { ...cardToTransfer, column }
+
+            copy = copy.filter((c) => c.id !== id)
+
+            setCards(copy)
             if (projectId) {
                 await updateDoc(doc(db, "documents", projectId, "tasks", id), {
                     column: newStatus
-                })
+                });
             }
         } catch (error) {
-            console.error("Error updating status:", error)
-            // Revert the status if the update fails
-            setStatus(status)
+            console.error("Error updating status:", error);
         }
     }
 

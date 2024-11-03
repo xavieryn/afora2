@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Dispatch, SetStateAction} from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
@@ -7,6 +7,7 @@ import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import TaskAlert from './TaskAlert'
+import { Task } from '@/types/types'
 
 interface CardProps {
   id: string
@@ -14,9 +15,12 @@ interface CardProps {
   column: string
   handleDragStart: Function
   assigned: Array<string>
+  setCards: Dispatch<SetStateAction<Task[]>>
+  cards: Task[]
+
 }
 
-export default function Card({ id, title, column, handleDragStart, assigned }: CardProps) {
+export default function Card({ id, title, column, handleDragStart, assigned, setCards, cards }: CardProps ) {
   const [temp_title, setTitle] = useState(title)
   const [input, setInput] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
@@ -84,7 +88,7 @@ export default function Card({ id, title, column, handleDragStart, assigned }: C
                 </form>
               </AlertDialogTitle>
               <AlertDialogDescription>
-                <TaskAlert id={id} column={column}/>
+                <TaskAlert id={id} column={column} assigned={assigned} cards={cards} setCards={setCards}/>
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

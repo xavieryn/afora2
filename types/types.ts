@@ -18,8 +18,11 @@ export type DocumentData = {
     // Add other fields as necessary
 }
 
-export type Task = {
-    id: string;
-    title: string;
-    // Add other fields as necessary
-}
+
+export interface Task {
+    id: string
+    title: string
+    column: string
+    assigned: Array<string>
+    date: string
+  }

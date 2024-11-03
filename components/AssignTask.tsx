@@ -8,10 +8,11 @@ interface IFormInput {
    email: String;
 }
 
-function AssignTask({id}: {id:string}) {
+function AssignTask({id, assigned}: {id:string, assigned: Array<String>}) {
    const { register, handleSubmit, reset } = useForm<IFormInput>();
    const pathname = usePathname()
    const projectId = pathname.split("/").pop()
+   console.log(assigned)
 
    const onSubmit: SubmitHandler<IFormInput> = async (data) => {
        console.log('Email: ', data.email);

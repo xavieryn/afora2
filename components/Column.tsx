@@ -5,14 +5,8 @@ import { db } from '@/firebase'
 import Card from './Card'
 import DropIndicator from './DropIndicator'
 import AddCard from './AddCard'
+import { Task } from '@/types/types'
 
-interface Task {
-  id: string
-  title: string
-  column: string
-  assigned: Array<string>
-  date: string
-}
 
 type ColumnType = "backlog" | "todo" | "doing" | "done"
 
@@ -150,7 +144,9 @@ export default function Column({ title, headingColor, cards, column, setCards }:
       >
         {filteredCards.map((c) => (
           <div key={c.id}>
-            <Card key={c.id} {...c} handleDragStart={handleDragStart} />
+            <Card key={c.id} {...c} handleDragStart={handleDragStart} setCards={setCards} cards={cards}
+             />
+             {/*  { title, headingColor, cards, column, setCards }: ColumnProps */}
           </div>
         ))}
         <DropIndicator beforeId={null} column={column} />
