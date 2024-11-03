@@ -97,7 +97,7 @@ const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole:
                                 })
                         )}
                     </div>
-                    {!parsedOutput && !loading && !error && projectsData && projectsData.docs.length === 0 && (
+                    {!output && !loading && !error && projectsData && projectsData.docs.length === 0 && (
                         <div className="flex flex-col items-center justify-center h-80 text-center space-y-4">
                             <p className="text-lg font-bold">No projects found.</p>
                             <GenerateTeamsButton setOutput={setOutput} orgId={orgId} />
