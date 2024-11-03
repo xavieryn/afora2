@@ -11,8 +11,8 @@ type FormInputs = {
     email: string;
 }
 
-function TaskAlert({ id, column, assigned, cards, setCards }: { id: string, column:string, assigned: Array<string>, cards:Task[], setCards:  Dispatch<SetStateAction<Task[]>>
- }) {
+function TaskAlert({ id, column, assigned, cards, setCards }: 
+    { id: string, column:string, assigned: Array<string>, cards:Task[], setCards:  Dispatch<SetStateAction<Task[]>>}) {
     const editor = useRef(null)
     const [content, setContent] = useState('')
 
@@ -72,7 +72,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }: { id: string, colu
                     Deadline
                 </div>
                 <div className='flex flex-1'>
-                    <DueDate />
+                    <DueDate cards={cards} id={id} />
                 </div>
             </div>
 

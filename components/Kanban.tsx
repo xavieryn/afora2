@@ -5,14 +5,9 @@ import { useCollection } from 'react-firebase-hooks/firestore'
 import { collection, query, orderBy } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Board from './Board'
+import { Task } from '@/types/types'
 
-interface Task {
-  id: string
-  title: string
-  column: string
-  assigned: Array<string>
-  date: string
-}
+
 
 export default function Kanban({ id }: { id: string }) {
   const [tasks, tasksLoading, tasksError] = useCollection(
