@@ -283,10 +283,49 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
             throw new Error('Please select at least one tag for each question!');
         }
 
-        await adminDb.collection('users').doc(userId).set({
+        await adminDb.collection('users').doc(userId).update({
             onboardingSurveyResponse: formatted
         });
         return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}
+
+export async function setProjOnboardingSurvey(orgId: string, responses: string[]) {
+    auth().protect();
+
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
+    try {
+
+        // Check if any of the responses are empty
+        if (responses.some(r => r === '')) {
+            throw new Error('Please answer all questions!');
+        }
+
+        await adminDb.collection('users').doc(userId).collection('orgs').doc(orgId).update({
+            projOnboardingSurveyResponse: responses
+        });
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}
+
+export async function updateGroups(orgId: string, groups: string[][]) {
+    auth().protect();
+
+    // TODO: add the proj to the users' proj subcollection too
+    try {
+        groups.map(async (group, index) => {
+            await adminDb.collection('organizations').doc(orgId).collection('projs').add({
+                title: `Group ${index+1}`,
+                members: group
+            });
+        })
     } catch (error) {
         console.error(error);
         return { success: false, message: (error as Error).message };

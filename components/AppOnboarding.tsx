@@ -7,10 +7,11 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
+    AlertDialogOverlay,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from './ui/button';
-import { header, questions, tags } from '@/types/types';
+import { appHeader, appQuestions, appTags } from '@/types/types';
 import { Progress } from "@/components/ui/progress"
 import { setUserOnboardingSurvey } from '@/actions/actions';
 import { toast } from 'sonner';
@@ -27,7 +28,7 @@ const AppOnboarding = () => {
         // Open the dialog automatically when the component mounts
         setIsOpen(true);
         setPage(0);
-        setSelectedTags(Array(questions.length).fill([]));
+        setSelectedTags(Array(appQuestions.length).fill([]));
     }, []);
 
     const toggleTag = (tag: string) => {
@@ -67,26 +68,27 @@ const AppOnboarding = () => {
     return (
         <div>
             <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                <AlertDialogOverlay className="bg-black bg-opacity-80 fixed inset-0" />
                 {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
                 <AlertDialogContent className="w-full max-w-2xl">
-                    <Progress value={page / (questions.length) * 100} />
+                    <Progress value={page / (appQuestions.length) * 100} />
 
                     {page === 0 &&
                         <AlertDialogHeader>
                             <AlertDialogTitle>App Onboarding Survey</AlertDialogTitle>
                             <AlertDialogDescription>
-                                Please take a minute to fill out this mandatory form. The information will be used for team-matching.
+                                Please take a minute to fill out this mandatory form. It will help your future matching and teammates recommendations.
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                     }
 
                     {page > 0 &&
                         <>
-                            <AlertDialogTitle>{header[page - 1]}</AlertDialogTitle>
-                            <p>{`Q${page}: ${questions[page - 1]}`}</p>
+                            <AlertDialogTitle>{appHeader[page - 1]}</AlertDialogTitle>
+                            <p>{`Q${page}: ${appQuestions[page - 1]}`}</p>
 
                             <div className="flex flex-wrap gap-2 max-h-64 overflow-y-auto">
-                                {tags.map((tag) => (
+                                {appTags.map((tag) => (
                                     <Button
                                         key={tag}
                                         variant={selectedTags[page - 1].includes(tag) ? "default" : "outline"} // Apply selected style
@@ -106,7 +108,7 @@ const AppOnboarding = () => {
                         {page > 0 &&
                             <>
                                 <Button variant="outline" onClick={() => setPage(page - 1)} disabled={page === 1}>Back</Button>
-                                {page < questions.length ?
+                                {page < appQuestions.length ?
                                     <Button onClick={() => setPage(page + 1)}>Next</Button>
                                     :
                                     <Button onClick={handleSubmit}>Submit</Button>

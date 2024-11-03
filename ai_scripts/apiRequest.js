@@ -8,10 +8,6 @@ const openai = new OpenAI({
 });
 
 const apiRequest = async ({context, responseFormat, input}) => {
-
-    // console.log("Context:", context);
-    // console.log("Response Format:", responseFormat);
-    // console.log("Input:", input);
     try {
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",

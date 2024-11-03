@@ -3,7 +3,6 @@
 // because openai blocks openai api key if used on client side to prevent leaking
 const apiRequest = require("./apiRequest");
 
-const context = "You need group the users into groups with same size based on their skill level. Match members' skill level within the group as much as possible";
 const responseFormat = {
     "type": "json_schema",
     "json_schema": {
@@ -20,25 +19,11 @@ const responseFormat = {
                     "type": "array",
                     "description": "List of groups created from users.",
                     "items": {
-                        "type": "object",
-                        "properties": {
-                            "group_id": {
-                                "type": "string",
-                                "description": "Unique identifier for the group."
-                            },
-                            "members": {
-                                "type": "array",
-                                "description": "List of user IDs in the group.",
-                                "items": {
-                                    "type": "string"
-                                }
-                            }
-                        },
-                        "required": [
-                            "group_id",
-                            "members"
-                        ],
-                        "additionalProperties": false
+                        "type": "array",
+                        "description": "List of user IDs in each group.",
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -51,18 +36,19 @@ const responseFormat = {
     }
 };
 
-export const matching = async () => {
-    
-    const input = "1. Alice Johnson          - Skill Level: 99\n" +
-                    "2. Michael Smith          - Skill Level: 65\n" +
-                    "3. Sarah Thompson         - Skill Level: 82\n" +
-                    "4. David Williams         - Skill Level: 54\n" +
-                    "5. Emily Davis            - Skill Level: 12\n" +
-                    "6. Christopher Brown      - Skill Level: 73\n" +
-                    "7. Jessica Wilson         - Skill Level: 30\n" +
-                    "8. Daniel Martinez        - Skill Level: 20\n" +
-                    "9. Megan Garcia           - Skill Level: 77\n" +
-                    "10. Andrew Lee            - Skill Level: 85";
-    
-    return await apiRequest({context, responseFormat, input});
+export const matching = async (teamSize, questions, input) => {
+    const context = `You need group the users into groups of size ${teamSize}. Given the user onboarding survey response in the following format and order: ${questions}, put users with similar background and skill level together.`;
+    // console.log('teamsize', teamSize);
+    // console.log('questions', questions);
+    // console.log('input', input);
+
+    teamSize = Number(teamSize);
+    if (isNaN(teamSize) || teamSize <= 0) {
+        throw new Error('Team size must be a valid positive number');
+    }
+    if (!input || input.length === 0) {
+        throw new Error('There are no members to be matched.');
+    }
+    input = input.join(' ');
+    return await apiRequest({ context, responseFormat, input });
 }
