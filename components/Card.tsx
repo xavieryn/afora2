@@ -1,4 +1,6 @@
-import { useState, useEffect, Dispatch, SetStateAction} from 'react'
+"use client"
+
+import { useState, useEffect, Dispatch, SetStateAction } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore'
@@ -17,10 +19,9 @@ interface CardProps {
   assigned: Array<string>
   setCards: Dispatch<SetStateAction<Task[]>>
   cards: Task[]
-
 }
 
-export default function Card({ id, title, column, handleDragStart, assigned, setCards, cards }: CardProps ) {
+export default function Card({ id, title, column, handleDragStart, assigned, setCards, cards}: CardProps ) {
   const [temp_title, setTitle] = useState(title)
   const [input, setInput] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
@@ -60,44 +61,42 @@ export default function Card({ id, title, column, handleDragStart, assigned, set
   }
 
   return (
-    <>
-      <motion.div
-        layout
-        layoutId={id}
-        draggable="true"
-        onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
-        className="cursor-grab rounded border border-neutral-700 bg-neutral-800 p-3 active:cursor-grabbing"
-      >
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex justify-center ">
-                <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
-                  <Input
-                    placeholder={temp_title}
-                    className="flex flex-1 space-x-2"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                  />
-                  <Button disabled={isUpdating} type="submit">
-                    {isUpdating ? "Updating..." : "Update"}
-                  </Button>
-                </form>
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                <TaskAlert id={id} column={column} assigned={assigned} cards={cards} setCards={setCards}/>
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </motion.div>
-    </>
+    <motion.div
+      layout
+      layoutId={id}
+      draggable="true"
+      onDragStart={(e) => handleDragStart(e, { temp_title, id, column })}
+      className="flex flex-1 cursor-grab active:cursor-grabbing"
+    >
+      <AlertDialog>
+        <AlertDialogTrigger className="flex flex-1 rounded border border-neutral-700 bg-neutral-800 p-3">
+          <p className="text-sm text-neutral-100 flex-1">{temp_title}</p>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex justify-center ">
+              <form onSubmit={updateTitle} className="flex max-w-6xl mx-auto justify-between pb-5">
+                <Input
+                  placeholder={temp_title}
+                  className="flex flex-1 space-x-2"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                />
+                <Button disabled={isUpdating} type="submit">
+                  {isUpdating ? "Updating..." : "Update"}
+                </Button>
+              </form>
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              <TaskAlert id={id} column={column} assigned={assigned} cards={cards} setCards={setCards}/>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </motion.div>
   )
 }
