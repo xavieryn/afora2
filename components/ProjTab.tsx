@@ -10,6 +10,7 @@ import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
 import { toast } from 'sonner';
 import ProjectCard from './ProjectCard';
+import { Skeleton } from './ui/skeleton';
 
 type MatchingOutput = {
     groupSize: number
@@ -97,7 +98,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
                         </>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {apLoading && <p>Loading projects...</p>}
+                        {apLoading && <Skeleton className="h-48 w-full" />}
                         {apError && <p>Error loading projects: {apError.message}</p>}
                         {!apLoading && !apError && allProjects && allProjects.docs.length > 0 && (
                             allProjects.docs
@@ -126,7 +127,11 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
             {userRole === 'editor' &&
                 <div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {userLoading && <p>Loading projects...</p>}
+                        {userLoading && (
+                            <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                                <Skeleton className="h-48 w-full" />
+                            </div>
+                        )}
                         {userError && <p>Error loading projects: {userError.message}</p>}
                         {!userLoading && !userError && userProjList.length > 0 && (
                             userProjList
