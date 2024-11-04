@@ -27,7 +27,7 @@ const ProjectCard = ({
     ]
 }: ProjectCardProps) => {
     return (
-        <Card className="w-full max-w-sm mx-auto overflow-hidden">
+        <Card className="w-full max-w-sm mx-auto overflow-hidden shadow-lg hover:shadow-3xl hover:scale-x-105 transition-transform duration-300">
             <CardHeader className="p-0">
                 <div
                     className="h-32 bg-cover bg-center flex items-end justify-start p-2"
