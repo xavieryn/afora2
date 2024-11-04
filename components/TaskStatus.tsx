@@ -28,6 +28,8 @@ function TaskStatus({ initialStatus, id, cards, setCards }: TaskStatusProps) {
     const handleSelect = async (newStatus: String): Promise<void> => {
         // Disable loading state or optimistic updates for now
         try {
+
+            // THERE IS A BUG IF THE USER CLICKS THE STATUS THEY ARE ALREADY A PART OF 
             let copy = [...cards]
             let cardToTransfer = copy.find((c) => c.id === id)
             if (!cardToTransfer) return
@@ -49,7 +51,7 @@ function TaskStatus({ initialStatus, id, cards, setCards }: TaskStatusProps) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger className="flex flex-1 items-center justify-between px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
-                {status}
+                {column}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
                 <DropdownMenuItem onSelect={() => handleSelect('backlog')}>Backlog</DropdownMenuItem>
