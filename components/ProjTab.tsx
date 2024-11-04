@@ -110,7 +110,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
                                 .map((doc) => {
                                     const proj = doc.data() as Project;
                                     return (
-                                        <ProjectCard projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                        <ProjectCard projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
                                     );
                                 })
                         )}
@@ -137,7 +137,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
                             userProjList
                                 .sort((a, b) => a.title.localeCompare(b.title))
                                 .map((proj) => (
-                                    <ProjectCard projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                    <ProjectCard projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
                                 ))
                         )}
                     </div>

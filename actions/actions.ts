@@ -327,7 +327,9 @@ export async function updateGroups(orgId: string, groups: string[][]) {
                     title: `Group ${index + 1}`,
                     members: group
                 });
+
             const projectId = projectRef.id;
+            await projectRef.update({ projId: projectId });
             await adminDb.collection('organizations').doc(orgId).collection('projs').add({
                 projId: projectId,
                 members: group
@@ -335,7 +337,7 @@ export async function updateGroups(orgId: string, groups: string[][]) {
             group.map(async (user) => {
                 await adminDb.collection('users').doc(user).collection('projs').doc(projectId).set({
                     orgId: orgId
-                });
+                }, { merge: true });
             })
         })
     } catch (error) {

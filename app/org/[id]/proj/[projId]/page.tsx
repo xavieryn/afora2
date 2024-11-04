@@ -5,9 +5,10 @@ import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-function ProjectPage({ params: { id } }: {
+function ProjectPage({ params: { id, projId } }: {
   params: {
     id: string;
+    projId: string;
   }
 }) {
 
@@ -18,7 +19,10 @@ function ProjectPage({ params: { id } }: {
     if (isLoaded && !isSignedIn) {
       router.replace('/'); // Redirect to the login page
     }
+    console.log('projid', projId);
   }, []);
+
+  
 
 
   return (

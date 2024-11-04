@@ -9,7 +9,7 @@ function SettingPage() {
 
     if (!user) {
         // Show a loading state or a message if the user is not loaded
-        return <div>Loading...</div>;
+        return ;
     }
 
     return (
