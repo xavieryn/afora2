@@ -2,27 +2,44 @@
 import { db } from '@/firebase';
 import { Project, UserOrgData } from '@/types/types';
 import { useUser } from '@clerk/nextjs'
-import { doc, DocumentData, FirestoreError, QuerySnapshot } from 'firebase/firestore';
+import { collection, doc, DocumentData, FirestoreError, getDocs, query, QuerySnapshot, where } from 'firebase/firestore';
 import React, { useEffect, useState, useTransition } from 'react'
-import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
+import { useCollection, useCollectionDataOnce, useCollectionOnce, useDocument } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
 import { toast } from 'sonner';
 import ProjectCard from './ProjectCard';
-import DeleteOrg from './DeleteOrg';
-import InviteUserToOrganization from './InviteUserToOrganization';
 
 type MatchingOutput = {
     groupSize: number
     groups: string[][]
 }
 
-const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole: string, orgId: string, projectsData: QuerySnapshot<DocumentData, DocumentData> | undefined, loading: boolean, error: FirestoreError | undefined }) => {
+const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { userId: string, userRole: string, orgId: string, projectsData: QuerySnapshot<DocumentData, DocumentData> | undefined, loading: boolean, error: FirestoreError | undefined }) => {
     const [isPending, startTransition] = useTransition();
 
     const [output, setOutput] = useState('');
     const [parsedOutput, setParsedOutput] = useState<MatchingOutput | null>(null);
+
+    const adminQ = query(collection(db, 'projects'), where('orgId', '==', orgId));
+    const [allProjects, apLoading, apError] = useCollection(adminQ);
+
+    const userQ = query(collection(db, 'users', userId, 'projs'), where('orgId', '==', orgId))
+    const [userProjects, userLoading, userError] = useCollection(userQ);
+    const [userProjList, setUserProjList] = useState<Project[]>([]);
+
+    useEffect(() => {
+        const fetchProjects = async () => {
+            if (!userLoading && !userError && userProjects && userProjects.docs.length > 0) {
+                const projectIds = userProjects.docs.map(doc => doc.id);
+                const projectDocs = await getDocs(query(collection(db, 'projects'), where('__name__', 'in', projectIds)));
+                const projects = projectDocs.docs.map(doc => doc.data() as Project);
+                setUserProjList(projects);
+            }
+        };
+        fetchProjects();
+    }, [userProjects]);
 
     useEffect(() => {
         if (output) {
@@ -80,10 +97,10 @@ const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole:
                         </>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {loading && <p>Loading projects...</p>}
-                        {error && <p>Error loading projects: {error.message}</p>}
-                        {!loading && !error && projectsData && projectsData.docs.length > 0 && (
-                            projectsData.docs
+                        {apLoading && <p>Loading projects...</p>}
+                        {apError && <p>Error loading projects: {apError.message}</p>}
+                        {!apLoading && !apError && allProjects && allProjects.docs.length > 0 && (
+                            allProjects.docs
                                 .sort((a, b) => {
                                     const projA = a.data() as Project;
                                     const projB = b.data() as Project;
@@ -92,7 +109,7 @@ const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole:
                                 .map((doc) => {
                                     const proj = doc.data() as Project;
                                     return (
-                                        <ProjectCard key={doc.id} projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                        <ProjectCard projectName={proj.title} backgroundImage={''} tasks={[]} />
                                     );
                                 })
                         )}
@@ -108,13 +125,21 @@ const ProjPage = ({ orgId, projectsData, loading, error, userRole }: { userRole:
             }
             {userRole === 'editor' &&
                 <div>
-                    <h2>Member Section</h2>
-                    <p>Welcome, Team Member! Here you can view your team information.</p>
-                    {/* Add more member-specific components or functionality here */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {userLoading && <p>Loading projects...</p>}
+                        {userError && <p>Error loading projects: {userError.message}</p>}
+                        {!userLoading && !userError && userProjList.length > 0 && (
+                            userProjList
+                                .sort((a, b) => a.title.localeCompare(b.title))
+                                .map((proj) => (
+                                    <ProjectCard projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                ))
+                        )}
+                    </div>
                 </div>
             }
         </>
     )
 }
 
-export default ProjPage
+export default ProjTab

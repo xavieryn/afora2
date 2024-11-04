@@ -321,10 +321,22 @@ export async function updateGroups(orgId: string, groups: string[][]) {
     // TODO: add the proj to the users' proj subcollection too
     try {
         groups.map(async (group, index) => {
+            const projectRef = await adminDb.collection('projects')
+                .add({
+                    orgId: orgId,
+                    title: `Group ${index + 1}`,
+                    members: group
+                });
+            const projectId = projectRef.id;
             await adminDb.collection('organizations').doc(orgId).collection('projs').add({
-                title: `Group ${index+1}`,
+                projId: projectId,
                 members: group
             });
+            group.map(async (user) => {
+                await adminDb.collection('users').doc(user).collection('projs').doc(projectId).set({
+                    orgId: orgId
+                });
+            })
         })
     } catch (error) {
         console.error(error);
