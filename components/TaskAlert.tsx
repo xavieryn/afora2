@@ -3,12 +3,22 @@ import DueDate from './DueDate'
 import TaskStatus from './TaskStatus'
 import AssignTask from './AssignTask'
 import { Task } from '@/types/types'
-import { useState, useRef, Dispatch, SetStateAction} from 'react'
+import { useState, useRef, Dispatch, SetStateAction } from 'react'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '@/firebase'
+import { usePathname } from 'next/navigation'
+import { useDocument } from 'react-firebase-hooks/firestore'
 
-function TaskAlert({ id, column, assigned, cards, setCards }: 
-    { id: string, column:string, assigned: Array<string>, cards:Task[], setCards:  Dispatch<SetStateAction<Task[]>>}) {
+function TaskAlert({ id, column, assigned, cards, setCards }:
+    { id: string, column: string, assigned: Array<string>, cards: Task[], setCards: Dispatch<SetStateAction<Task[]>> }) {
     const editor = useRef(null)
-    const [content, setContent] = useState('')
+    const pathname = usePathname();
+    const projectId = pathname.split("/").pop();
+    
+    // Use react-firebase-hooks to get the document
+    const [taskDoc, loading, error] = useDocument(
+        projectId ? doc(db, "documents", projectId, "tasks", id) : null
+    );
 
     const config = {
         readonly: false,
@@ -47,8 +57,25 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
         disablePlugins: 'drag-and-drop,drag-and-drop-element,video,file'
     }
 
+    // Debounce the Firebase update
+    let updateTimeout: NodeJS.Timeout;
+    const setContentFireBase = async (data: string) => {
+        try {
+            if (data && projectId) {
+                clearTimeout(updateTimeout);
+                updateTimeout = setTimeout(async () => {
+                    await updateDoc(doc(db, "documents", projectId, "tasks", id), {
+                        description: data 
+                    });
+                }, 1000);
+            }
+        } catch (error) {
+            console.error("Error updating description:", error);
+        }
+    };
+
     return (
-        <div >
+        <div>
             <div className='gap-4 flex flex-row items-center'>
                 <div>
                     Status
@@ -70,14 +97,19 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
                 </div>
             </div>
 
-            <div className="pt-3">
-                <JoditEditor
-                    ref={editor}
-                    value={content}
-                    config={config}
-                    onBlur={(newContent: string) => setContent(newContent)}
-                    onChange={(newContent: string) => { }}
-                />
+            <div>
+            <hr className="w-96 h-0.5 mx-auto my-2 border-0 rounded md:my-5 bg-gray-400"/>
+
+                {loading && <div>Loading...</div>}
+                {error && <div>Error: {error.message}</div>}
+                {taskDoc && (
+                    <JoditEditor
+                        ref={editor}
+                        value={taskDoc.data()?.description || ''}
+                        config={config}
+                        onChange={setContentFireBase}
+                    />
+                )}
             </div>
         </div>
     )
