@@ -44,7 +44,7 @@ const AssignTask = ({ id, assigned }: { id: string; assigned: string[] }) => {
     <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row'>
       <div className="border rounded-lg focus-within:ring-2 focus-within:ring-gray-500 focus-within:border-blue-500">
         <div className="flex flex-wrap items-center p-2 gap-2">
-          {assigned.map((email, index) => (
+          {assigned && assigned.map((email, index) => (
             <div
               key={index}
               className="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-sm group"
@@ -61,7 +61,7 @@ const AssignTask = ({ id, assigned }: { id: string; assigned: string[] }) => {
           ))}
           <input
             {...register("email")}
-            placeholder={assigned.length ? "Add another email" : "Enter email to assign"}
+            placeholder={assigned && assigned.length ? "Add another email" : "Enter email to assign"}
             className="flex-1 min-w-[200px] p-1 outline-none bg-transparent"
           />
         </div>

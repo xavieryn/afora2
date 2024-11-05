@@ -39,6 +39,9 @@ export default function AddCard({ column, setCards }: AddCardProps) {
         column,
         title: text.trim(),
         createdAt: serverTimestamp(),
+        date: "",
+        assigned: [],
+        description: ""
       })
 
       // Get the auto-generated ID
