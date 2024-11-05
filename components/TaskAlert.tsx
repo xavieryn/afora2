@@ -5,12 +5,6 @@ import AssignTask from './AssignTask'
 import { Task } from '@/types/types'
 import { useState, useRef, Dispatch, SetStateAction} from 'react'
 
-
-// Define the type for your form data
-type FormInputs = {
-    email: string;
-}
-
 function TaskAlert({ id, column, assigned, cards, setCards }: 
     { id: string, column:string, assigned: Array<string>, cards:Task[], setCards:  Dispatch<SetStateAction<Task[]>>}) {
     const editor = useRef(null)
