@@ -3,13 +3,10 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { MoonIcon, SunIcon } from "lucide-react";
-// import { useUser } from "@clerk/nextjs";
 import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
 import { doc } from 'firebase/firestore';
-// import { collection, query, orderBy, doc } from 'firebase/firestore';
-// import { useCollection } from 'react-firebase-hooks/firestore';
 import { db } from '@/firebase'; // Adjust this import path
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
@@ -54,4 +51,3 @@ function Editor({ id }: { id: string }) {
     )
 }
 export default Editor
-
