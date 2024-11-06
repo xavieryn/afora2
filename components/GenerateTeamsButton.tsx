@@ -25,7 +25,7 @@ const GenerateTeamsButton = ({ orgId, setOutput }: { orgId: string, setOutput: (
   const [org, loading, error] = useDocument(doc(db, 'organizations', orgId));
   const [isPending, startTransition] = useTransition();
   if (loading) {
-    return <div>Loading...</div>;
+    return ;
   }
 
   if (error) {

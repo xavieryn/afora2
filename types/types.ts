@@ -20,6 +20,7 @@ export type User = {
 }
 
 export type Project = {
+    projId: string;
     title: string;
     admins: string[];
     members: string[];

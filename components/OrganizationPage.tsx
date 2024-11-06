@@ -6,10 +6,10 @@ import { useCollection, useDocument } from 'react-firebase-hooks/firestore'
 import { collection, doc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import MemberList from './MemberList'
-import ProjPage from './ProjPage'
 import ProjOnboarding from './ProjOnboarding'
 import { UserOrgData } from '@/types/types'
 import { useUser } from '@clerk/nextjs'
+import ProjTab from './ProjTab'
 
 const OrganizationPage = ({ id }: { id: string }) => {
   const { user } = useUser();
@@ -27,7 +27,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
   }, [data])
   
   if (loading) {
-    return <div>Loading...</div>;
+    return ;
   }
 
   if (error) {
@@ -59,7 +59,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="projects"><ProjPage userRole={userRole} orgId={id} projectsData={projectsData} loading={projLoading} error={projError} /></TabsContent>
+        <TabsContent value="projects"><ProjTab userRole={userRole} userId={user?.primaryEmailAddress?.toString()!} orgId={id} projectsData={projectsData} loading={projLoading} error={projError} /></TabsContent>
         <TabsContent value="members">{orgData && <MemberList userRole={userRole} admins={orgData.admins} members={orgData.members} />}</TabsContent>
         <TabsContent value="settings">Organization settings and preferences.</TabsContent>
       </Tabs>
