@@ -1,10 +1,9 @@
 'use client'
 import { db } from '@/firebase';
-import { Project, UserOrgData } from '@/types/types';
-import { useUser } from '@clerk/nextjs'
-import { collection, doc, DocumentData, FirestoreError, getDocs, query, QuerySnapshot, where } from 'firebase/firestore';
+import { Project} from '@/types/types';
+import { collection, DocumentData, FirestoreError, getDocs, query, QuerySnapshot, where } from 'firebase/firestore';
 import React, { useEffect, useState, useTransition } from 'react'
-import { useCollection, useCollectionDataOnce, useCollectionOnce, useDocument } from 'react-firebase-hooks/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
 import { updateGroups } from '@/actions/actions';
@@ -110,7 +109,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
                                 .map((doc) => {
                                     const proj = doc.data() as Project;
                                     return (
-                                        <ProjectCard orgId={orgId} projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                        <ProjectCard  key={proj.projId} orgId={orgId} projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
                                     );
                                 })
                         )}
@@ -137,7 +136,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
                             userProjList
                                 .sort((a, b) => a.title.localeCompare(b.title))
                                 .map((proj) => (
-                                    <ProjectCard orgId={orgId} projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
+                                    <ProjectCard key={proj.projId} orgId={orgId} projId={proj.projId} projectName={proj.title} backgroundImage={''} tasks={[]} />
                                 ))
                         )}
                     </div>
