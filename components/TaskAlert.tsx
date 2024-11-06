@@ -82,7 +82,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
                     Status
                 </div>
                 <div className='flex flex-1'>
-                    <TaskStatus id={id} initialStatus={column} cards={cards} setCards={setCards} />
+                    <TaskStatus id={id} column={column} cards={cards} setCards={setCards} />
                 </div>
             </div>
             <div className="flex flex-row flex-1 gap-4 items-center pt-3">
