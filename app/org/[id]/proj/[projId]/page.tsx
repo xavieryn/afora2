@@ -27,7 +27,7 @@ function ProjectPage({ params: { id, projId } }: {
 
   return (
     <div className="flex flex-col flex-1">
-      {isSignedIn && <Document id={id} />}
+      {isSignedIn && <Document id={projId} />}
     </div>
   )
 }
