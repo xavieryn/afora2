@@ -1,7 +1,6 @@
 'use client'; // taking input from client
 
 import { useState } from "react";
-import { Button } from "./ui/button";
 // import { MoonIcon, SunIcon } from "lucide-react";
 import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
@@ -14,11 +13,11 @@ import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 function Editor({ id }: { id: string }) {
 
-    const [darkMode, setDarkMode] = useState(false); // THIS DOES NOT WORK FOR NOW
-    const style = `hover:text-white ${darkMode
-        ? "text-gray-300 bg-gray-700 hover:bg-gray-100 hover:text-gray-700"
-        : "text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-700"
-    }`
+    // const [darkMode, setDarkMode] = useState(false); // THIS DOES NOT WORK FOR NOW
+    // const style = `hover:text-white ${darkMode
+    //     ? "text-gray-300 bg-gray-700 hover:bg-gray-100 hover:text-gray-700"
+    //     : "text-gray-700 bg-gray-200 hover:bg-gray-300 hover:text-gray-700"
+    // }`
 
     const [data, dataLoading, dataError] = useDocumentData(doc(db, "documents", id));
     console.log(data)

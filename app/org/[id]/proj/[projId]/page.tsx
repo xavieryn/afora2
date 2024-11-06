@@ -11,7 +11,7 @@ function ProjectPage({ params: { id, projId } }: {
     projId: string;
   }
 }) {
-
+  console.log(id)
   const { isSignedIn, isLoaded } = useAuth(); // Get authentication state
   const router = useRouter();
   useEffect(() => {
