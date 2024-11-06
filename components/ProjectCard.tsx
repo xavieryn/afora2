@@ -11,10 +11,12 @@ interface ProjectCardProps {
     backgroundImage: string
     tasks: Task[]
     projId: string
+    orgId: string
 }
 
 const ProjectCard = ({
     projId,
+    orgId, 
     projectName = "Sample Project",
     backgroundImage = "/placeholder.svg?height=200&width=600",
     tasks = [
@@ -24,7 +26,7 @@ const ProjectCard = ({
     ]
 }: ProjectCardProps) => {
     return (
-        <a href={`projs/${projId}`}>
+        <a href={`${orgId}/proj/${projId}`}>
             <Card className="w-full max-w-sm mx-auto overflow-hidden shadow-lg hover:shadow-3xl hover:scale-x-105 transition-transform duration-300">
                 <CardHeader className="p-0">
                     <div
