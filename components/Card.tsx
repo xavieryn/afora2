@@ -23,7 +23,6 @@ interface CardProps {
 
 export default function Card({ id, title, column, handleDragStart, assigned, setCards, cards}: CardProps ) {
   const [temp_title, setTitle] = useState(title)
-  const [input, setInput] = useState("")
   const [isUpdating, setIsUpdating] = useState(false)
   const path = usePathname()
 
@@ -42,16 +41,15 @@ export default function Card({ id, title, column, handleDragStart, assigned, set
 
   const updateTitle = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (input.trim()) {
+    if (temp_title.trim()) {
       setIsUpdating(true)
       const segments = path.split("/")
       const documentId = segments[segments.length - 1]
 
       try {
         await updateDoc(doc(db, "documents", documentId, "tasks", id), {
-          title: input.trim()
+          title: temp_title.trim()
         })
-        setInput("")
       } catch (error) {
         console.error("Error updating task: ", error)
       } finally {
@@ -79,8 +77,8 @@ export default function Card({ id, title, column, handleDragStart, assigned, set
                 <Input
                   placeholder={temp_title}
                   className="flex flex-1 space-x-2"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
+                  value={temp_title}
+                  onChange={(e) => setTitle(e.target.value)}
                 />
                 <Button disabled={isUpdating} type="submit">
                   {isUpdating ? "Updating..." : "Update"}

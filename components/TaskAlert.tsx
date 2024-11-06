@@ -20,6 +20,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
         projectId ? doc(db, "documents", projectId, "tasks", id) : null
     );
 
+    // THIS CAN BE CHANGED TO ADD DIFFERENT FUNCTIONALITIES
     const config = {
         readonly: false,
         height: 300,
@@ -27,10 +28,10 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
             'bold',
             'italic',
             'underline',
-            '|',
-            'ul',
-            'ol',
-            '|',
+            // '|',
+            // 'ul',
+            // 'ol',
+            // '|',
             'link'
         ],
         removeButtons: [
@@ -67,7 +68,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
                     await updateDoc(doc(db, "documents", projectId, "tasks", id), {
                         description: data 
                     });
-                }, 1000);
+                }, 500);
             }
         } catch (error) {
             console.error("Error updating description:", error);
