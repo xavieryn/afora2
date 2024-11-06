@@ -17,6 +17,7 @@ const TimeSlotSelector = ({ selectedSlots, setSelectedSlots }: { selectedSlots: 
     const [tempSelectedBoxes, setTempSelectedBoxes] = useState<Set<string>>(new Set())
     const gridRef = useRef<HTMLDivElement>(null)
 
+    console.log(dragEndPos)
     const toggleSelectedBoxes = () => {
         setSelectedSlots(prevSelected => {
             const newSelected = new Set(prevSelected)

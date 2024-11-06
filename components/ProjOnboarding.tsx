@@ -7,7 +7,6 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
-    AlertDialogOverlay,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from './ui/button';
@@ -49,7 +48,8 @@ const ProjOnboarding = ({ orgId }: { orgId: string }) => {
 
     const { user } = useUser();
 
-    const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString(), 'orgs', orgId));
+    // const [userData, loading, error] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString(), 'orgs', orgId));
+    const [userData] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString(), 'orgs', orgId));
 
     if (!userData || userData.data()!.projOnboardingSurveyResponse) {
         return null;

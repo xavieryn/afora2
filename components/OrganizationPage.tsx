@@ -13,13 +13,10 @@ import ProjTab from './ProjTab'
 
 const OrganizationPage = ({ id }: { id: string }) => {
   const { user } = useUser();
-  const userId = user?.primaryEmailAddress?.emailAddress;
-  if (!userId) {
-    return <div>Loading...</div>;
-  }
+
   const [org, loading, error] = useDocument(doc(db, 'organizations', id));
   const [projectsData, projLoading, projError] = useCollection(collection(db, 'organizations', id, 'projs'));
-  const [data] = useDocument(doc(db, 'users', userId, 'orgs', id));
+  const [data] = useDocument(user && user.primaryEmailAddress && doc(db, 'users', user.primaryEmailAddress.toString(), 'orgs', id));
 
   const [userRole, setUserRole] = React.useState('');
   useEffect(() => {

@@ -25,6 +25,7 @@ const ProjectCard = ({
         { id: "3", title: "Write unit tests" },
     ]
 }: ProjectCardProps) => {
+    console.log(tasks)
     return (
         <a href={`${orgId}/proj/${projId}`}>
             <Card className="w-full max-w-sm mx-auto overflow-hidden shadow-lg hover:shadow-3xl hover:scale-x-105 transition-transform duration-300">

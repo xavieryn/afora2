@@ -1,6 +1,6 @@
 // import { currentUser } from "@clerk/nextjs/server";
 
-import AppOnboarding from "./AppOnboarding"
+// import AppOnboarding from "./AppOnboarding"
 
 async function HomePage() {
     // const user = await currentUser()
