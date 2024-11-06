@@ -1,6 +1,6 @@
 'use client'
 
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,19 +14,19 @@ import { Task } from '@/types/types'
 
 
 interface TaskStatusProps {
-    initialStatus: string
+    column: string
     id: string
     cards: Task[]
     setCards: Dispatch<SetStateAction<Task[]>>
 }
 
-function TaskStatus({ initialStatus, id, cards, setCards }: TaskStatusProps) {
-    const [column, setColumn] = useState(initialStatus)
+function TaskStatus({ column, id, cards, setCards }: TaskStatusProps) {
+    // const [column, setColumn] = useState(initialStatus)
+    // THIS MIGHT BREAK THE TASK STATUS, CANNOT CHECK UNTIL I IMPLEMENT TASK WITH JACKS ORGANIZATION
     const pathname = usePathname()
     const projectId = pathname.split("/").pop()
 
-    const handleSelect = async (newStatus: String): Promise<void> => {
-        // Disable loading state or optimistic updates for now
+    const handleSelect = async (newStatus: string): Promise<void> => {
         try {
 
             // THERE IS A BUG IF THE USER CLICKS THE STATUS THEY ARE ALREADY A PART OF 

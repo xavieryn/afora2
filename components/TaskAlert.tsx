@@ -3,7 +3,7 @@ import DueDate from './DueDate'
 import TaskStatus from './TaskStatus'
 import AssignTask from './AssignTask'
 import { Task } from '@/types/types'
-import { useState, useRef, Dispatch, SetStateAction } from 'react'
+import { useRef, Dispatch, SetStateAction } from 'react'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { usePathname } from 'next/navigation'
@@ -82,7 +82,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
                     Status
                 </div>
                 <div className='flex flex-1'>
-                    <TaskStatus id={id} initialStatus={column} cards={cards} setCards={setCards} />
+                    <TaskStatus id={id} column={column} cards={cards} setCards={setCards} />
                 </div>
             </div>
             <div className="flex flex-row flex-1 gap-4 items-center pt-3">

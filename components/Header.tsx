@@ -8,7 +8,6 @@ import FundUs from "./FundUs";
 import ContactUs from "./ContactUs";
 
 function Header() {
-  const { user } = useUser();
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white z-10 shadow-md">

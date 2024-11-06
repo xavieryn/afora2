@@ -2,7 +2,7 @@ import { useState, Dispatch, SetStateAction, FormEvent } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { FiPlus } from 'react-icons/fi'
-import { addDoc, collection, doc, updateDoc, serverTimestamp } from 'firebase/firestore'
+import { addDoc, collection, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '@/firebase'
 
 interface Task {
