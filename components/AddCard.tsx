@@ -57,8 +57,8 @@ export default function AddCard({ column, setCards }: AddCardProps) {
         column,
         title: text.trim(),
         id: newTaskId,
-        assigned: ['test'],
-        date: 'test/test/test'
+        assigned: [],
+        date: ""
       }
       setCards((pv) => [...pv, newCard])
 
