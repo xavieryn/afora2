@@ -59,7 +59,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
           <TabsTrigger value="members">Members</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
         </TabsList>
-        <TabsContent value="projects"><ProjTab userRole={userRole} userId={userId} orgId={id} projectsData={projectsData} loading={projLoading} error={projError} /></TabsContent>
+        <TabsContent value="projects"><ProjTab userRole={userRole} userId={user?.primaryEmailAddress?.toString()!} orgId={id} projectsData={projectsData} loading={projLoading} error={projError} /></TabsContent>
         <TabsContent value="members">{orgData && <MemberList userRole={userRole} admins={orgData.admins} members={orgData.members} />}</TabsContent>
         <TabsContent value="settings">Organization settings and preferences.</TabsContent>
       </Tabs>
