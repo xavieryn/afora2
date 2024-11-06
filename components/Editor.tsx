@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { MoonIcon, SunIcon } from "lucide-react";
+// import { MoonIcon, SunIcon } from "lucide-react";
 import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
@@ -35,9 +35,9 @@ function Editor({ id }: { id: string }) {
 
                 <div className="mr-10">
                     {/* Dark Mode */}
-                    <Button className={style} onClick={() => setDarkMode(!darkMode)}>
+                    {/* <Button className={style} onClick={() => setDarkMode(!darkMode)}>
                         {darkMode ? <SunIcon /> : <MoonIcon />}
-                    </Button>
+                    </Button> */}
                 </div>
 
                 <DeleteDocument />
