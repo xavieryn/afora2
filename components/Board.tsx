@@ -17,6 +17,7 @@ interface BoardProps {
 }
 
 export default function Board({ id, cards, setCards }: BoardProps) {
+  console.log(id)
   return (
     <div className="flex h-full w-full gap-3 overflow-scroll p-12">
       <Column

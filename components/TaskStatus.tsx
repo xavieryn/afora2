@@ -25,7 +25,7 @@ function TaskStatus({ initialStatus, id, cards, setCards }: TaskStatusProps) {
     const pathname = usePathname()
     const projectId = pathname.split("/").pop()
 
-    const handleSelect = async (newStatus: String): Promise<void> => {
+    const handleSelect = async (newStatus: string): Promise<void> => {
         // Disable loading state or optimistic updates for now
         try {
 
