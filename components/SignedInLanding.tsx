@@ -2,9 +2,9 @@
 
 import { ArrowLeftCircle } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
-import { collection, doc } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
 import { db } from '@/firebase';
-import { useCollection, useDocumentData } from 'react-firebase-hooks/firestore';
+import { useCollection  } from 'react-firebase-hooks/firestore';
 import { useUser } from '@clerk/nextjs';
 import HomePageCard from './HomePageCard';
 
@@ -46,7 +46,7 @@ function SignedInLanding() {
                 <div className="flex flex-wrap gap-8 m-4 max-h-[400px] ">
                     {orgs.map((org) => (
 
-                        <HomePageCard org={org} />
+                        <HomePageCard org={org} key={org.orgId} />
                     ))}
                 </div>
 

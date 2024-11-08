@@ -31,7 +31,7 @@ function Header() {
               <Link href={'/setting'}>
                 <p className="truncate"><Settings className="text-white hover:translate-y-[-2px] transition-transform duration-300" /></p>
               </Link>
-              <UserButton />
+              <UserButton /> {/* Should not use UserButton, but rather use UserProfile from Clerk (IMPLEMENT IT INTO SETTINGS) */}
           </SignedIn>
         </div>
       </div>

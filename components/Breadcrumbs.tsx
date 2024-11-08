@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import { Fragment } from "react";
 
 function Breadcrumbs() {
+    // Adds a path that a user can refer to know where they are and click to "parent" directories
     const path = usePathname();
 
     const segments = path.split("/");

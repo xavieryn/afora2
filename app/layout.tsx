@@ -17,22 +17,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // Switch to Google Auth if users become >10,000
     <ClerkProvider>
       <html lang="en">
-        <body>
-            <Header />
+        <body>sdf
+           <Header /> {/* Always show the header */}
           <div className="flex min-h-screen pt-[74px]">
-            {/* Sidebar */}
-            <SignedIn>
-            <Sidebar />
-            {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
-              <AppOnboarding/>
-          </SignedIn>
+            <SignedIn> {/* Only show side bar of organizations if user is signed in */}
+              <Sidebar />
+              {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
+              <AppOnboarding />
+            </SignedIn>
             <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide">
-              {children}
+            {children} {/* Home Page */}
             </div>
-        </div>
-        <Toaster position="top-center" />
+          </div>
+          <Toaster position="top-center" />
         </body>
       </html>
     </ClerkProvider>
