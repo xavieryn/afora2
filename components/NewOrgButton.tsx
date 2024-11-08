@@ -42,7 +42,7 @@ function NewOrgButton() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button disabled={isPending}>
+        <Button disabled={isPending} className="bg-[#6F61EF]">
           {isPending ? "Loading..." : "New Organization"}
         </Button>
       </DialogTrigger>

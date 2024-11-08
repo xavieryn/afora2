@@ -4,14 +4,13 @@ import { SignedIn, SignedOut, SignInButton,  } from "@clerk/nextjs";
 export default function Home() {
 
   return (
-    <main className="flex h-[calc(100vh-4.6rem)]">
+    <main className="flex h-[calc(100vh-4.7rem)]">
       <SignedIn>
         <SignedInLanding/>
         
       </SignedIn>
-
       <SignedOut>
-        <div className="w-full h-full bg-gradient-to-r from-purple-500 via-purple-500/50 to-purple-500/0 flex items-center justify-center">
+        <div className="w-full h-full bg-gradient-to-r from-[#6F61EF] via-[#6F61EF] to-purple-500/0 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full mx-4">
             <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
               Welcome to Afora
@@ -21,7 +20,7 @@ export default function Home() {
             </p>
             <div className="flex justify-center">
               <SignInButton mode="modal">
-                <button className="bg-purple-800 hover:bg-purple-900 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
+                <button className="bg-[#6F61EF] hover:bg-[#5948ee] text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105">
                   Sign Up / Sign In
                 </button>
               </SignInButton>

@@ -43,10 +43,10 @@ function SignedInLanding() {
 
         <div className='flex p-4'>
             {orgs.length > 0 ? (
-                <div className="flex flex-wrap gap-4 mx-auto  max-h-[400px] overflow-y-auto">
+                <div className="flex flex-wrap gap-8 m-4 max-h-[400px] ">
                     {orgs.map((org) => (
 
-                       <HomePageCard org={org}/>
+                        <HomePageCard org={org} />
                     ))}
                 </div>
 
@@ -56,7 +56,7 @@ function SignedInLanding() {
                     <div>
                         <div className="flex flex-col flex-1">
                             <div className="flex animate-pulse space-x-2 flex-row p-12 items-center">
-                                <ArrowLeftCircle className="w-12 h-12 text-purple-800" />
+                                <ArrowLeftCircle className="w-12 h-12 text-[#6F61EF]" />
                                 <h1 className="px-2 font-bold text-2xl text-gray-800">Get Started With Creating a New Organization</h1>
                             </div>
                         </div>

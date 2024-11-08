@@ -10,9 +10,9 @@ import ContactUs from "./ContactUs";
 function Header() {
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white z-10 shadow-md">
-      <div className="flex items-center justify-between p-5 mx-auto">
-        <h1 className="text-2xl font-bold">
+    <header className="fixed top-0 left-0 right-0 z-10 shadow-md  bg-[#6F61EF]	">
+      <div className="flex items-center justify-between p-4 m-3 mx-4">
+        <h1 className="text-2xl font-bold text-white">
           Afora
         </h1>
         {/* Breadcrumbs*/}
@@ -20,20 +20,18 @@ function Header() {
           <Breadcrumbs />
         </SignedIn>
 
-        <div className="flex gap-6">
+        <div className="flex gap-6 items-center text-white">
           <FundUs />
           <ContactUs />
           <SignedOut>
-            <SignInButton />
+            <SignInButton/>
           </SignedOut>
 
           <SignedIn>
-            <div className="flex gap-2">
               <Link href={'/setting'}>
-                <p className="truncate"><Settings /></p>
+                <p className="truncate"><Settings className="text-white hover:translate-y-[-2px] transition-transform duration-300" /></p>
               </Link>
               <UserButton />
-            </div>
           </SignedIn>
         </div>
       </div>
