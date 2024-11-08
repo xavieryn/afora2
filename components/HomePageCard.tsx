@@ -21,13 +21,18 @@ function HomePageCard({ org }: HomePageCardProps) {
 
     return (
         <Link href={basePath}>
-            <div className="group-card flex flex-col shadow-md p-4 mb-4 rounded-lg bg-white dark:bg-gray-800 w-80 h-80">
-                <h1 className="text-md font-semibold mb-2 text-gray-900 dark:text-gray-100">
-                    {data?.title}
-                </h1>
-                <h3>
-                    {data?.admins[0]}
-                </h3>
+            <div className="group-card flex flex-col shadow-md mb-4 rounded-xl overflow-hidden bg-white dark:bg-gray-800 w-96 h-96 hover:translate-y-[-4px] transition-transform duration-300">
+                <div className="bg-[#6F61EF] p-4">
+                    <h1 className="text-2xl font-semibold text-white mb-1">
+                        {data?.title}
+                    </h1>
+                    <p className="text-white text-sm">{org.orgId}</p>
+                </div>
+                <div className="flex-grow bg-white dark:bg-gray-800 p-4">
+                    <h3 className="text-gray-900 dark:text-gray-100 text-sm">
+                        Admin: {data?.admins[0]}
+                    </h3>
+                </div>
             </div>
         </Link>
     );
