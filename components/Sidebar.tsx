@@ -47,6 +47,10 @@ function Sidebar() {
         </div>
         {/* <JoinDocumentButton /> */}
 
+        <div>
+        <div className="h-px bg-gray-700 my-4 mx-2" />
+      </div>
+
         {/* My Organization */}
         {orgs.length === 0 ? (
           <h2 className="text-gray-500 font-semibold text-sm">
@@ -54,7 +58,7 @@ function Sidebar() {
           </h2>
         ) : (
           <>
-            <h2 className="text-gray-500 font-semibold text-sm">
+            <h2 className="font-bold text-md">
               My Organizations
             </h2>
             <div className="-space-y-5">

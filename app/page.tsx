@@ -1,18 +1,13 @@
-import HomePage from "@/components/HomePage";
-import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
-import { ArrowLeftCircle } from "lucide-react";
+import SignedInLanding from "@/components/SignedInLanding";
+import { SignedIn, SignedOut, SignInButton,  } from "@clerk/nextjs";
 
 export default function Home() {
+
   return (
     <main className="flex h-[calc(100vh-4.6rem)]">
       <SignedIn>
-        <div className="flex flex-col flex-1">
-          <div className="flex animate-pulse space-x-2 flex-row">
-            <ArrowLeftCircle className="w-12 h-12 text-purple-800" />
-            <h1 className="font-bold text-2xl text-gray-800">Get started with creating a New Document</h1>
-          </div>
-          <HomePage />
-        </div>
+        <SignedInLanding/>
+        
       </SignedIn>
 
       <SignedOut>
