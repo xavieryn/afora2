@@ -8,13 +8,8 @@ import { useCollection  } from 'react-firebase-hooks/firestore';
 import { useUser } from '@clerk/nextjs';
 import HomePageCard from './HomePageCard';
 import LoadingSpinner from './LoadingSpinner';
+import { Orgs } from '@/types/types';
 
-interface Orgs {
-    createdAt: string;
-    role: string;
-    orgId: string;
-    userId: string;
-}
 
 function SignedInLanding() {
     const [orgs, setOrgs] = useState<Orgs[]>([]);

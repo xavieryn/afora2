@@ -1,16 +1,10 @@
 import { db } from '@/firebase';
+import { Orgs } from '@/types/types';
 import { doc } from 'firebase/firestore';
 import Link from 'next/link';
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
 
-interface Orgs {
-    createdAt: string;
-    role: string;
-    orgId: string;
-    userId: string;
-    description: string;
-}
 
 interface HomePageCardProps {
     org: Orgs;
