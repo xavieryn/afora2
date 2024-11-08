@@ -8,6 +8,7 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '@/firebase'
 import { usePathname } from 'next/navigation'
 import { useDocument } from 'react-firebase-hooks/firestore'
+import LoadingSpinner from './LoadingSpinner'
 
 function TaskAlert({ id, column, assigned, cards, setCards }:
     { id: string, column: string, assigned: Array<string>, cards: Task[], setCards: Dispatch<SetStateAction<Task[]>> }) {
@@ -101,7 +102,7 @@ function TaskAlert({ id, column, assigned, cards, setCards }:
             <div>
             <hr className="w-96 h-0.5 mx-auto my-2 border-0 rounded md:my-5 bg-gray-400"/>
 
-                {loading && <div>Loading...</div>}
+                {loading && <div className='flex justify-center items-center'><LoadingSpinner/></div>}
                 {error && <div>Error: {error.message}</div>}
                 {taskDoc && (
                     <JoditEditor

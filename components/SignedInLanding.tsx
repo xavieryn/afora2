@@ -7,6 +7,7 @@ import { db } from '@/firebase';
 import { useCollection  } from 'react-firebase-hooks/firestore';
 import { useUser } from '@clerk/nextjs';
 import HomePageCard from './HomePageCard';
+import LoadingSpinner from './LoadingSpinner';
 
 interface Orgs {
     createdAt: string;
@@ -31,7 +32,7 @@ function SignedInLanding() {
     }, [orgsData]);
 
     if (!user || !email || orgsLoading) {
-        return <div>Loading...</div>;
+        return <div className='flex justify-center items-center'><LoadingSpinner/></div>;
     }
 
     if (orgsError) {
