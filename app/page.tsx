@@ -1,11 +1,10 @@
-// import AppOnboarding from "@/components/AppOnboarding";
 import HomePage from "@/components/HomePage";
 import { SignedIn, SignedOut, SignInButton } from "@clerk/nextjs";
 import { ArrowLeftCircle } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="flex bg-gray-100">
+    <main className="flex h-[calc(100vh-4.6rem)]">
       <SignedIn>
         <div className="flex flex-col flex-1">
           <div className="flex animate-pulse space-x-2 flex-row">
@@ -17,9 +16,8 @@ export default function Home() {
       </SignedIn>
 
       <SignedOut>
-        <div className="flex-1 flex items-center justify-center">
-
-          <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
+        <div className="w-full h-full bg-gradient-to-r from-purple-500 via-purple-500/50 to-purple-500/0 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full mx-4">
             <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
               Welcome to Afora
             </h2>
@@ -35,7 +33,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
       </SignedOut>
     </main>
   );

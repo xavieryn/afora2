@@ -20,19 +20,19 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body>
-          <Header />
+            <Header />
           <div className="flex min-h-screen pt-[74px]">
             {/* Sidebar */}
             <SignedIn>
-              <Sidebar />
-              {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
+            <Sidebar />
+            {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
               <AppOnboarding/>
-            </SignedIn>
-            <div className="flex-1 p-4 bg-gray-100 overflow-y-auto scrollbar-hide">
+          </SignedIn>
+            <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide">
               {children}
             </div>
-          </div>
-          <Toaster position="top-center" />
+        </div>
+        <Toaster position="top-center" />
         </body>
       </html>
     </ClerkProvider>
