@@ -9,6 +9,7 @@ interface Orgs {
     role: string;
     orgId: string;
     userId: string;
+    description: string;
 }
 
 interface HomePageCardProps {
@@ -22,16 +23,22 @@ function HomePageCard({ org }: HomePageCardProps) {
     return (
         <Link href={basePath}>
             <div className="group-card flex flex-col shadow-md mb-4 rounded-xl overflow-hidden bg-white dark:bg-gray-800 w-64 h-64 md:w-96 md:h-96 hover:translate-y-[-4px] transition-transform duration-300">
-                <div className="bg-[#6F61EF] p-4">
-                    <h1 className="text-2xl font-semibold text-white mb-1">
+                <div className="bg-[#6F61EF] p-4 text-white flex flex-col gap-2">
+                    <h1 className="text-2xl font-semibold">
                         {data?.title}
                     </h1>
-                    <p className="text-white text-sm">{org.orgId}</p>
+                    
+                    <div className='gap-1'>
+                        <p className="text-sm">{org.orgId}</p>
+                        <h3 className="dark:text-gray-100 text-sm">
+                            Admin: {data?.admins[0]}
+                        </h3>
+                    </div>
+
                 </div>
                 <div className="flex-grow bg-white dark:bg-gray-800 p-4">
-                    <h3 className="text-gray-900 dark:text-gray-100 text-sm">
-                        Admin: {data?.admins[0]}
-                    </h3>
+
+                    <h3>Description: {data?.description} </h3>
                 </div>
             </div>
         </Link>
