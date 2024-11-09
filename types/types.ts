@@ -37,6 +37,7 @@ export type Organization = {
 // this structure describes the subcollection 'org' document under each user
 // orgId and userId are not repetitive and are needed for quick query when deleting organizations
 export interface UserOrgData extends DocumentData {
+    createdAt: string;
     role: string;
     orgId: string;
     userId: string;

@@ -7,16 +7,10 @@ import { db } from '@/firebase';
 import { useCollection  } from 'react-firebase-hooks/firestore';
 import { useUser } from '@clerk/nextjs';
 import HomePageCard from './HomePageCard';
-
-interface Orgs {
-    createdAt: string;
-    role: string;
-    orgId: string;
-    userId: string;
-}
+import { UserOrgData } from '@/types/types';
 
 function SignedInLanding() {
-    const [orgs, setOrgs] = useState<Orgs[]>([]);
+    const [orgs, setOrgs] = useState<UserOrgData[]>([]);
     const { user } = useUser();
     const email = user?.primaryEmailAddress?.emailAddress || ''; // Ensure `email` is always a string
     console.log(email)
@@ -26,7 +20,7 @@ function SignedInLanding() {
 
     useEffect(() => {
         if (!orgsData) return;
-        const orgsList = orgsData.docs.map((doc) => (doc.data())) as Orgs[];
+        const orgsList = orgsData.docs.map((doc) => (doc.data())) as UserOrgData[];
         setOrgs(orgsList);
     }, [orgsData]);
 
@@ -45,12 +39,9 @@ function SignedInLanding() {
             {orgs.length > 0 ? (
                 <div className="flex flex-wrap gap-8 m-4 max-h-[400px] ">
                     {orgs.map((org) => (
-
                         <HomePageCard org={org} key={org.orgId} />
                     ))}
                 </div>
-
-
             )
                 : (
                     <div>
