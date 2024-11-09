@@ -1,9 +1,22 @@
 'use client';
 
 import Document from "@/components/Document";
+import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
+import { collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useCollection } from "react-firebase-hooks/firestore";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Stage } from "@/types/types";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function ProjectPage({ params: { id, projId } }: {
   params: {
@@ -22,12 +35,44 @@ function ProjectPage({ params: { id, projId } }: {
     console.log('projid', projId);
   }, []);
 
-  
+  const [stagesData, stagesLoading, stagesError] = useCollection(collection(db, 'projects', projId, 'stages'));
 
+  if (stagesLoading) {
+    return <Skeleton className="w-full h-96"/>;
+  }
+
+  if (stagesError) {
+    return <div>Error: {stagesError.message}</div>;
+  }
+
+  const stages: Stage[] = stagesData?.docs.map(doc => ({
+    ...(doc.data() as Stage)
+  })) || [];
 
   return (
-    <div className="flex flex-col flex-1">
-      {isSignedIn && <Document id={projId} />}
+    <div className="w-full h-full flex flex-col">
+      <Table className="w-full">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="text-xl font-bold text-black">Project Stages</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+            {stages.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={2} className="font-medium text-black">No stages</TableCell>
+            </TableRow>
+            ) : (
+            stages
+              .sort((a, b) => a.order - b.order)
+              .map((stage, index) => (
+              <TableRow key={index}>
+                <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell>
+              </TableRow>
+              ))
+            )}
+        </TableBody>
+      </Table>
     </div>
   )
 }

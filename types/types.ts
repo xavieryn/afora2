@@ -132,4 +132,9 @@ export interface Task {
     column: string
     assigned: Array<string>
     date: string
-  }
+}
+
+export type Stage = {
+    title: string;
+    order: number;
+}
