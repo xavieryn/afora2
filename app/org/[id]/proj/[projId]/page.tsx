@@ -1,6 +1,7 @@
 'use client';
 
-import Document from "@/components/Document";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
 import { collection } from "firebase/firestore";
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/table"
 import { Stage } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 function ProjectPage({ params: { id, projId } }: {
   params: {
@@ -38,7 +40,7 @@ function ProjectPage({ params: { id, projId } }: {
   const [stagesData, stagesLoading, stagesError] = useCollection(collection(db, 'projects', projId, 'stages'));
 
   if (stagesLoading) {
-    return <Skeleton className="w-full h-96"/>;
+    return <Skeleton className="w-full h-96" />;
   }
 
   if (stagesError) {
@@ -58,19 +60,34 @@ function ProjectPage({ params: { id, projId } }: {
           </TableRow>
         </TableHeader>
         <TableBody>
-            {stages.length === 0 ? (
+          {stages.length === 0 ? (
             <TableRow>
               <TableCell colSpan={2} className="font-medium text-black">No stages</TableCell>
             </TableRow>
-            ) : (
+          ) : (
             stages
               .sort((a, b) => a.order - b.order)
               .map((stage, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell>
-              </TableRow>
+
+                <TableRow key={index}>
+                  <Link href={`/org/${id}/proj/${projId}/stages/${stage.id}`}>
+                    {/* <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell> */}
+                    <TableCell>
+                        <Card className="w-full max-w-sm mx-auto shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
+                        <CardHeader className="p-0">
+                            <div
+                            className="bg-cover bg-center flex items-end justify-start p-4 w-96"
+                            >
+                            {stage.order} - {stage.title}
+                            </div>
+                        </CardHeader>
+                      </Card>
+                    </TableCell>
+                  </Link>
+                </TableRow>
+
               ))
-            )}
+          )}
         </TableBody>
       </Table>
     </div>

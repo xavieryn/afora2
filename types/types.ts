@@ -135,6 +135,7 @@ export interface Task {
 }
 
 export type Stage = {
+    id: string;
     title: string;
     order: number;
 }
