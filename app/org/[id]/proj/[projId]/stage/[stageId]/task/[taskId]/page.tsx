@@ -7,6 +7,11 @@ import { doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useDocument } from "react-firebase-hooks/firestore";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable"
 
 function Taskage({ params: { id, projId, stageId, taskId } }: {
   params: {
@@ -37,19 +42,34 @@ function Taskage({ params: { id, projId, stageId, taskId } }: {
   if (taskError) {
     return <div>Error: {taskError.message}</div>;
   }
-  
+
   const task = taskData?.data();
 
   return (
-    <div className="flex flex-col flex-1">
+    <div className="flex flex-col flex-1 h-screen">
       {isSignedIn &&
-        <div className="p-4">
-          <h1 className="text-4xl font-bold">{task?.title}</h1>
-          <div className="mt-4">
-            <p className="text-sm text-gray-600">Assigned to: {task?.assignedTo}</p>
-            <p className="text-sm text-gray-600">Deadline: {task?.deadline}</p>
-            <p className="text-lg mt-4">{task?.description}</p>
-          </div>
+        <div className="p-4 flex-1">
+          <ResizablePanelGroup direction="horizontal" className="h-full">
+            <ResizablePanel className="h-full" minSize={70}>
+              <ResizablePanelGroup direction={"vertical"} className="h-full">
+                <ResizablePanel className="h-full">
+                  <h1 className="text-4xl font-bold">{task?.title}</h1>
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-600">Assigned to: {task?.assignedTo}</p>
+                    <p className="text-sm text-gray-600">Deadline: {task?.deadline}</p>
+                    <p className="text-lg mt-4">{task?.description}</p>
+                  </div>
+                </ResizablePanel>
+                <ResizablePanel className="h-full">
+                  <h2 className="text-2xl font-semibold">Comments</h2>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel className="h-full px-2">
+              <h2 className="text-2xl font-semibold">Admin Feedback</h2>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </div>}
     </div>
   )
