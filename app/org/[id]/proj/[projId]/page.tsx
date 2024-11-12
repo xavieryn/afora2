@@ -6,7 +6,7 @@ import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
 import { collection } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
 import {
   Table,
@@ -20,7 +20,20 @@ import { Stage } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
-
+import { Button } from "@/components/ui/button";
+import { EditIcon } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@radix-ui/react-label";
+import { Input } from "@/components/ui/input";
 function ProjectPage({ params: { id, projId } }: {
   params: {
     id: string;
@@ -29,6 +42,7 @@ function ProjectPage({ params: { id, projId } }: {
 }) {
   console.log(id)
   const { isSignedIn, isLoaded } = useAuth(); // Get authentication state
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   useEffect(() => {
     // Redirect to login if the user is not authenticated
@@ -68,9 +82,73 @@ function ProjectPage({ params: { id, projId } }: {
         </TableHeader>
         <TableBody>
           {stages.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={2} className="font-medium text-black">No stages</TableCell>
-            </TableRow>
+            <>
+              <TableRow>
+                <TableCell colSpan={2} className="font-medium text-black">No stages</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+
+                  <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+                    <AlertDialogTrigger>
+                      <Button>
+                        <EditIcon />Team Charter
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-full max-w-4xl">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Project Team Charter</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Fill out this charter to kick off your project! 🚀
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <div className="overflow-y-auto max-h-96">
+                        <form className="space-y-4 p-2">
+                          <div>
+                            <Label htmlFor="projectName">Project Name</Label>
+                            <Input
+                              type="text"
+                              id="projectName"
+                              name="projectName"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="projectDescription">Project Description</Label>
+                            <Textarea
+                              id="projectDescription"
+                              name="projectDescription"
+                              rows={3}
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="teamMembers">Team Members</Label>
+                            <Input
+                              type="text"
+                              id="teamMembers"
+                              name="teamMembers"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="projectGoals">Project Goals</Label>
+                            <Textarea
+                              id="projectGoals"
+                              name="projectGoals"
+                              rows={3}
+                            />
+                          </div>
+                        </form>
+                      </div>
+
+
+                      <AlertDialogFooter>
+                        <Button onClick={() => setIsOpen(false)}>Cancel</Button>
+                        <Button onClick={() => console.log('Save clicked')}>Save</Button>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                </TableCell>
+              </TableRow>
+            </>
           ) : (
             stages
               .sort((a, b) => a.order - b.order)
