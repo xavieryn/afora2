@@ -12,6 +12,8 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 function Taskage({ params: { id, projId, stageId, taskId } }: {
   params: {
@@ -58,6 +60,10 @@ function Taskage({ params: { id, projId, stageId, taskId } }: {
                     <p className="text-sm text-gray-600">Assigned to: {task?.assignedTo}</p>
                     <p className="text-sm text-gray-600">Deadline: {task?.deadline}</p>
                     <p className="text-lg mt-4">{task?.description}</p>
+                    <Input id="upload" type="file" className="hidden" />
+                    <Label htmlFor="upload" className="cursor-pointer inline-block bg-black text-white py-3 px-4 rounded">
+                      Upload File
+                    </Label>
                   </div>
                 </ResizablePanel>
                 <ResizablePanel className="h-full">
@@ -65,8 +71,8 @@ function Taskage({ params: { id, projId, stageId, taskId } }: {
                 </ResizablePanel>
               </ResizablePanelGroup>
             </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel className="h-full px-2">
+
+            <ResizablePanel className="h-full">
               <h2 className="text-2xl font-semibold">Admin Feedback</h2>
             </ResizablePanel>
           </ResizablePanelGroup>
