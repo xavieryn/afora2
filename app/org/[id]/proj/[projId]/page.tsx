@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader } from "@/components/ui/card"
 
 import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
@@ -70,7 +70,7 @@ function ProjectPage({ params: { id, projId } }: {
               .map((stage, index) => (
 
                 <TableRow className="flex flex-1" key={index}>
-                  <Link className="flex flex-1" href={`/org/${id}/proj/${projId}/stages/${stage.id}`}>
+                  <Link className="flex flex-1" href={`/org/${id}/proj/${projId}/stage/${stage.id}`}>
                     {/* <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell> */}
                     <TableCell className="flex flex-1">
                         <Card className="w-full shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">

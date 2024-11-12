@@ -1,6 +1,6 @@
 'use client';
 
-import Stage from "@/components/Stage";
+import TaskList from "@/components/TaskList";
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -26,7 +26,7 @@ function StagePage({ params: { id, projId, stageId } }: {
 
   return (
     <div className="flex flex-col flex-1">
-      {isSignedIn && <Stage projId={projId} stageId={stageId} />}
+      {isSignedIn && <TaskList orgId={id} projId={projId} stageId={stageId} />}
     </div>
   )
 }
