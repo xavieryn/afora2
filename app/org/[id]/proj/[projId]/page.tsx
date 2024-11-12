@@ -19,6 +19,7 @@ import {
 import { Stage } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { Progress } from "@/components/ui/progress";
 
 function ProjectPage({ params: { id, projId } }: {
   params: {
@@ -58,6 +59,12 @@ function ProjectPage({ params: { id, projId } }: {
           <TableRow>
             <TableHead className="text-xl font-bold text-black">Project Stages</TableHead>
           </TableRow>
+          <TableRow>
+            <TableCell colSpan={2} className="px-4">
+              <h2 className="text-lg font-semibold py-2">Goal Progress: 33%</h2>
+              <Progress value={33} />
+            </TableCell>
+          </TableRow>
         </TableHeader>
         <TableBody>
           {stages.length === 0 ? (
@@ -73,13 +80,13 @@ function ProjectPage({ params: { id, projId } }: {
                   <Link className="flex flex-1" href={`/org/${id}/proj/${projId}/stage/${stage.id}`}>
                     {/* <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell> */}
                     <TableCell className="flex flex-1">
-                        <Card className="w-full shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
+                      <Card className="w-full shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
                         <CardHeader className="p-0">
-                            <div
+                          <div
                             className="bg-cover bg-center items-end justify-start p-4"
-                            >
+                          >
                             {stage.order} - {stage.title}
-                            </div>
+                          </div>
                         </CardHeader>
                       </Card>
                     </TableCell>

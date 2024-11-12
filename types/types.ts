@@ -143,6 +143,7 @@ export type Stage = {
 export type Task = {
     id: string;
     title: string;
+    description: string;
     assignedTo: string; // TODO: one person per task or could be multiple?
     deadline: string;
 }
