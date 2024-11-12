@@ -69,14 +69,14 @@ function ProjectPage({ params: { id, projId } }: {
               .sort((a, b) => a.order - b.order)
               .map((stage, index) => (
 
-                <TableRow key={index}>
-                  <Link href={`/org/${id}/proj/${projId}/stages/${stage.id}`}>
+                <TableRow className="flex flex-1" key={index}>
+                  <Link className="flex flex-1" href={`/org/${id}/proj/${projId}/stages/${stage.id}`}>
                     {/* <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell> */}
-                    <TableCell>
-                        <Card className="w-full max-w-sm mx-auto shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
+                    <TableCell className="flex flex-1">
+                        <Card className="w-full shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
                         <CardHeader className="p-0">
                             <div
-                            className="bg-cover bg-center flex items-end justify-start p-4 w-96"
+                            className="bg-cover bg-center items-end justify-start p-4"
                             >
                             {stage.order} - {stage.title}
                             </div>
