@@ -84,7 +84,7 @@ function ProjectPage({ params: { id, projId } }: {
           {stages.length === 0 ? (
             <>
               <TableRow>
-                <TableCell colSpan={2} className="font-medium text-black">No stages</TableCell>
+                <TableCell colSpan={2} className="font-medium text-black">No stages. Wait for the admin to generate stages.</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>
