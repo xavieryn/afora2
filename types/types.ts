@@ -132,3 +132,11 @@ export interface Task {
     assigned: Array<string>
     date: string
   }
+
+export interface Orgs {
+    createdAt: string;
+    role: string;
+    orgId: string;
+    userId: string;
+    description :string;
+}

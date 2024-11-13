@@ -6,6 +6,7 @@ import { collection, query, orderBy } from 'firebase/firestore'
 import { db } from '@/firebase'
 import Board from './Board'
 import { Task } from '@/types/types'
+import LoadingSpinner from './LoadingSpinner'
 
 
 
@@ -28,7 +29,7 @@ export default function Kanban({ id }: { id: string }) {
     setCards(tasksList)
   }, [tasks])
 
-  if (tasksLoading) return <div>Loading...</div>
+  if (tasksLoading) return <div className='flex items-center justify-center'><LoadingSpinner/></div>
   if (tasksError) return <div>Error loading tasks: {tasksError.message}</div>
   if (!tasks) return <div>No tasks found</div>
 
