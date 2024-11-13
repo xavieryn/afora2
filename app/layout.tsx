@@ -36,7 +36,7 @@ export default function RootLayout({
               {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
               <AppOnboarding />
             </SignedIn>
-            <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide">
+            <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide py-2">
               {children} {/* Home Page */}
             </div>
           </div>
