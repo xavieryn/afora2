@@ -23,7 +23,7 @@ function Taskage({ params: { id, projId, stageId, taskId } }: {
     taskId: string
   }
 }) {
-  console.log(id, projId, stageId, taskId);
+  console.log(id);
   const { isSignedIn, isLoaded } = useAuth(); // Get authentication state
   const router = useRouter();
   useEffect(() => {

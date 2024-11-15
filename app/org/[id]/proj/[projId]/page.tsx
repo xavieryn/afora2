@@ -4,10 +4,10 @@ import { Card, CardHeader } from "@/components/ui/card"
 
 import { db } from "@/firebase";
 import { useAuth } from "@clerk/nextjs";
-import { collection } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useCollection } from "react-firebase-hooks/firestore";
+import { useEffect, useState, useTransition } from "react";
+import { useCollection, useDocument, useDocumentOnce } from "react-firebase-hooks/firestore";
 import {
   Table,
   TableBody,
@@ -16,12 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Stage } from "@/types/types";
+import { Stage, teamCharterQuestions } from "@/types/types";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
-import { EditIcon } from "lucide-react";
+import { EditIcon, Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -33,17 +33,19 @@ import {
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
-import { Input } from "@/components/ui/input";
+import { setTeamCharter } from "@/actions/actions";
+import { toast } from "sonner";
 function ProjectPage({ params: { id, projId } }: {
   params: {
     id: string;
     projId: string;
   }
 }) {
-  console.log(id)
   const { isSignedIn, isLoaded } = useAuth(); // Get authentication state
+  const [responses, setResponses] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   useEffect(() => {
     // Redirect to login if the user is not authenticated
     if (isLoaded && !isSignedIn) {
@@ -53,11 +55,11 @@ function ProjectPage({ params: { id, projId } }: {
   }, []);
 
   const [stagesData, stagesLoading, stagesError] = useCollection(collection(db, 'projects', projId, 'stages'));
+  const [teamCharterData, loading, error] = useDocument(doc(db, 'projects', projId));
 
   if (stagesLoading) {
     return <Skeleton className="w-full h-96" />;
   }
-
   if (stagesError) {
     return <div>Error: {stagesError.message}</div>;
   }
@@ -65,6 +67,25 @@ function ProjectPage({ params: { id, projId } }: {
   const stages: Stage[] = stagesData?.docs.map(doc => ({
     ...(doc.data() as Stage)
   })) || [];
+
+
+  const handleOpenEditing = () => {
+    if (!teamCharterData || loading || error) return;
+    // fetch the latest team charter data
+    const res = (teamCharterData.data()?.teamCharterResponse as string[]) || [];
+    setResponses(res);
+  };
+
+  const handleSaving = () => startTransition(async () => {
+    if (!teamCharterData || loading || error) return;
+    try {
+      await setTeamCharter(projId, responses);
+      toast.success('Team Charter saved successfully!');
+    } catch (error) {
+      toast.error('Failed to save Team Charter.');
+    }
+    setIsOpen(false);
+  });
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -88,10 +109,9 @@ function ProjectPage({ params: { id, projId } }: {
               </TableRow>
               <TableRow>
                 <TableCell>
-
                   <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                     <AlertDialogTrigger>
-                      <Button>
+                      <Button onClick={handleOpenEditing}>
                         <EditIcon />Team Charter
                       </Button>
                     </AlertDialogTrigger>
@@ -104,45 +124,28 @@ function ProjectPage({ params: { id, projId } }: {
                       </AlertDialogHeader>
                       <div className="overflow-y-auto max-h-96">
                         <form className="space-y-4 p-2">
-                          <div>
-                            <Label htmlFor="projectName">Project Name</Label>
-                            <Input
-                              type="text"
-                              id="projectName"
-                              name="projectName"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="projectDescription">Project Description</Label>
-                            <Textarea
-                              id="projectDescription"
-                              name="projectDescription"
-                              rows={3}
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="teamMembers">Team Members</Label>
-                            <Input
-                              type="text"
-                              id="teamMembers"
-                              name="teamMembers"
-                            />
-                          </div>
-                          <div>
-                            <Label htmlFor="projectGoals">Project Goals</Label>
-                            <Textarea
-                              id="projectGoals"
-                              name="projectGoals"
-                              rows={3}
-                            />
-                          </div>
+                          {teamCharterQuestions.map((question, index) => (
+                            <div key={index}>
+                              <Label htmlFor={`question-${index}`}>{question}</Label>
+                              <Textarea
+                                id={`question-${index}`}
+                                name={`question-${index}`}
+                                value={responses[index] || ''}
+                                onChange={(e) => {
+                                  const newResponses = [...responses];
+                                  newResponses[index] = e.target.value;
+                                  setResponses(newResponses);
+                                }}
+                              />
+                            </div>
+                          ))}
                         </form>
                       </div>
-
-
                       <AlertDialogFooter>
                         <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-                        <Button onClick={() => console.log('Save clicked')}>Save</Button>
+                        <Button onClick={handleSaving} disabled={isPending}>
+                          {isPending ? <><Loader2 className="animate-spin" /> Loading</> : 'Save'}
+                        </Button>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>

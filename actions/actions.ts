@@ -318,7 +318,6 @@ export async function setProjOnboardingSurvey(orgId: string, responses: string[]
 export async function updateGroups(orgId: string, groups: string[][]) {
     auth().protect();
 
-    // TODO: add the proj to the users' proj subcollection too
     try {
         groups.map(async (group, index) => {
             const projectRef = await adminDb.collection('projects')
@@ -340,6 +339,26 @@ export async function updateGroups(orgId: string, groups: string[][]) {
                 }, { merge: true });
             })
         })
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+}
+
+export async function setTeamCharter(projId: string, teamCharterResponse: string[]) {
+    auth().protect();
+
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
+    try {
+        if (!teamCharterResponse) {
+            throw new Error('Team charter cannot be empty!');
+        }
+
+        await adminDb.collection('projects').doc(projId).update({
+            teamCharterResponse: teamCharterResponse
+        });
+        return { success: true };
     } catch (error) {
         console.error(error);
         return { success: false, message: (error as Error).message };
