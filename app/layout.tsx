@@ -20,22 +20,29 @@ export default function RootLayout({
     // Switch to Google Auth if users become >10,000
     <ClerkProvider>
       <html lang="en">
-        <body>sdf
-           <Header /> {/* Always show the header */}
+        <head>
+          <link
+            rel="icon"
+            href="/icon.svg"
+            type="image/svg"
+            sizes="any"
+          />
+        </head>
+        <body>
+          <Header /> {/* Always show the header */}
           <div className="flex min-h-screen pt-[74px]">
             <SignedIn> {/* Only show side bar of organizations if user is signed in */}
               <Sidebar />
               {/* put the onboarding survey here to make sure no bypassing by going to another url page */}
               <AppOnboarding />
             </SignedIn>
-            <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide">
-            {children} {/* Home Page */}
+            <div className="flex-1 bg-gray-100 overflow-y-auto scrollbar-hide py-2">
+              {children} {/* Home Page */}
             </div>
           </div>
           <Toaster position="top-center" />
         </body>
       </html>
     </ClerkProvider>
-
   );
 }

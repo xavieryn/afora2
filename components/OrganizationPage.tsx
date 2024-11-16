@@ -49,7 +49,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
     <div className="overflow-x-hidden">
       <div className="flex items-center justify-between mb-5">
         <ProjOnboarding orgId={id} />
-        <h1 className="text-4xl font-bold m-8">
+        <h1 className="text-4xl font-bold m-4">
           {orgData && orgData.title}
         </h1>
       </div>

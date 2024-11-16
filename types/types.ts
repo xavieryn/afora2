@@ -21,9 +21,10 @@ export type User = {
 
 export type Project = {
     projId: string;
+    orgId: string;
     title: string;
-    admins: string[];
     members: string[];
+    teamCharterResponse: string[];
     // Add other fields as necessary
 }
 
@@ -37,6 +38,7 @@ export type Organization = {
 // this structure describes the subcollection 'org' document under each user
 // orgId and userId are not repetitive and are needed for quick query when deleting organizations
 export interface UserOrgData extends DocumentData {
+    createdAt: string;
     role: string;
     orgId: string;
     userId: string;
@@ -124,19 +126,39 @@ export const appTags = [
 export const projHeader = ['Hard Skills', 'Communication Style', 'Project Preferences', 'Extreme Preferences', 'Time Availability']
 export const projQuestions = ['What are your top three technical or professional skills? Which tools, frameworks, or technologies are you proficient in?', 'What is your preferred method of communication for this project? (e.g., Slack, Email, Video calls) How often do you prefer to receive updates or engage with teammates? (e.g., daily, weekly)', 'What kind of project structure do you prefer? (e.g., rigid with clear processes, or flexible with more autonomy) What industry or type of project excites you most for this specific collaboration?', 'Anyone you definitely want to work with for this project? Someone you definitely do not want to work with for this project?', 'What days and times are you available to work on this project? (Please share a preferred weekly schedule or select available times like in When2Meet)'];
 
+//TODO: make this customizable
+export const teamCharterQuestions = ['Project Purpose', 'Key Project Stakeholders', 'Product Objectives']
 
-export interface Task {
-    id: string
-    title: string
-    column: string
-    assigned: Array<string>
-    date: string
-  }
+// export interface Task {
+//     id: string
+//     title: string
+//     column: string
+//     assigned: Array<string>
+//     date: string
+// }
 
-export interface Orgs {
-    createdAt: string;
-    role: string;
-    orgId: string;
-    userId: string;
-    description :string;
+export type Stage = {
+    id: string;
+    title: string;
+    order: number;
 }
+
+export type Task = {
+    id: string;
+    title: string;
+    description: string;
+    assignedTo: string; // TODO: one person per task or could be multiple?
+    deadline: string;
+}
+
+export type GeneratedTasks = {
+    stages: {
+        order: number;
+        stage_name: string; // The name of the stage
+        tasks: {
+            order: number;
+            task_name: string; // The name of the task
+            assigned_user: string; // The user to whom the task is assigned
+        }[];
+    }[];
+};

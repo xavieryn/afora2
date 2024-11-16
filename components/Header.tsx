@@ -11,10 +11,11 @@ function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-10 shadow-md  bg-[#6F61EF]	">
-      <div className="flex items-center justify-between p-4 m-3 mx-4">
+      <div className="flex items-center justify-between m-3 mx-4">
         <h1 className="text-2xl font-bold text-white">
-          Afora
+          <img src="/logoFull.svg" alt="Logo" />
         </h1>
+
         {/* Breadcrumbs*/}
         <SignedIn>
           <Breadcrumbs />
@@ -24,14 +25,14 @@ function Header() {
           <FundUs />
           <ContactUs />
           <SignedOut>
-            <SignInButton/>
+            <SignInButton />
           </SignedOut>
 
           <SignedIn>
-              <Link href={'/setting'}>
-                <p className="truncate"><Settings className="text-white hover:translate-y-[-2px] transition-transform duration-300" /></p>
-              </Link>
-              <UserButton /> {/* Should not use UserButton, but rather use UserProfile from Clerk (IMPLEMENT IT INTO SETTINGS) */}
+            <Link href={'/setting'}>
+              <p className="truncate"><Settings className="text-white hover:translate-y-[-2px] transition-transform duration-300" /></p>
+            </Link>
+            <UserButton /> {/* Should not use UserButton, but rather use UserProfile from Clerk (IMPLEMENT IT INTO SETTINGS) */}
           </SignedIn>
         </div>
       </div>
