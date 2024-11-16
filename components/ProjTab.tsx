@@ -6,7 +6,7 @@ import React, { useEffect, useState, useTransition } from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore';
 import GenerateTeamsButton from './GenerateTeamsButton';
 import { Button } from './ui/button';
-import { updateGroups } from '@/actions/actions';
+import { updateProjects } from '@/actions/actions';
 import { toast } from 'sonner';
 import ProjectCard from './ProjectCard';
 import { Skeleton } from './ui/skeleton';
@@ -54,7 +54,7 @@ const ProjTab = ({ orgId, projectsData, loading, error, userRole, userId }: { us
     const handleAccept = () => {
         if (parsedOutput) {
             startTransition(() => {
-                updateGroups(orgId, parsedOutput.groups)
+                updateProjects(orgId, parsedOutput.groups)
                     .then(() => {
                         // Show success toast
                         toast.success('Groups updated successfully');

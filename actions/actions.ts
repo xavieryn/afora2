@@ -315,16 +315,18 @@ export async function setProjOnboardingSurvey(orgId: string, responses: string[]
     }
 }
 
-export async function updateGroups(orgId: string, groups: string[][]) {
+export async function updateProjects(orgId: string, groups: string[][]) {
     auth().protect();
-
+    const { sessionClaims } = await auth();
+    const userId = sessionClaims?.email!;
     try {
         groups.map(async (group, index) => {
             const projectRef = await adminDb.collection('projects')
                 .add({
                     orgId: orgId,
                     title: `Group ${index + 1}`,
-                    members: group
+                    members: group,
+                    admins: [userId]
                 });
 
             const projectId = projectRef.id;

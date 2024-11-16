@@ -3,7 +3,7 @@
 import { Card, CardHeader } from "@/components/ui/card"
 
 import { db } from "@/firebase";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import { collection, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -35,6 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@radix-ui/react-label";
 import { setTeamCharter } from "@/actions/actions";
 import { toast } from "sonner";
+import GenerateTasksButton from "@/components/GenerateTasksButton";
 function ProjectPage({ params: { id, projId } }: {
   params: {
     id: string;
@@ -105,9 +106,16 @@ function ProjectPage({ params: { id, projId } }: {
           {stages.length === 0 ? (
             <>
               <TableRow>
-                <TableCell colSpan={2} className="font-medium text-black">No stages. Wait for the admin to generate stages.</TableCell>
+                <TableCell colSpan={2} className="font-medium text-black">No stages. Try generate the stages and tasks.</TableCell>
               </TableRow>
               <TableRow>
+                <TableCell>
+                  <GenerateTasksButton
+                  orgId={id}
+                  projId={projId}
+                  teamCharterResponses={teamCharterData?.data()?.teamCharterResponse || []}
+                  />
+                </TableCell>
                 <TableCell>
                   <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
                     <AlertDialogTrigger>

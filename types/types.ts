@@ -21,9 +21,10 @@ export type User = {
 
 export type Project = {
     projId: string;
+    orgId: string;
     title: string;
-    admins: string[];
     members: string[];
+    teamCharterResponse: string[];
     // Add other fields as necessary
 }
 
