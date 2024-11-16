@@ -58,7 +58,7 @@ function Taskage({ params: { id, projId, stageId, taskId } }: {
                   <h1 className="text-4xl font-bold">{task?.title}</h1>
                   <div className="mt-4">
                     <p className="text-sm text-gray-600">Assigned to: {task?.assignedTo}</p>
-                    <p className="text-sm text-gray-600">Deadline: {task?.deadline}</p>
+                    {/* <p className="text-sm text-gray-600">Deadline: {task?.deadline}</p> */}
                     <p className="text-lg mt-4">{task?.description}</p>
                     <Input id="upload" type="file" className="hidden" />
                     <Label htmlFor="upload" className="cursor-pointer inline-block bg-black text-white py-3 px-4 rounded">

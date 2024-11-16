@@ -71,7 +71,7 @@ const TaskList = ({ orgId, projId, stageId }: { orgId: string, projId: string, s
                           <div
                             className="bg-cover bg-center items-end justify-start p-4"
                           >
-                            {index+1} - {task.title} assigned to: {task.assignedTo} due by {task.deadline}
+                            {index+1} - {task.title} assigned to: {task.assignedTo}
                           </div>
                         </CardHeader>
                       </Card>

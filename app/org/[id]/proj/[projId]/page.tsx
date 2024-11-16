@@ -174,7 +174,7 @@ function ProjectPage({ params: { id, projId } }: {
                           <div
                             className="bg-cover bg-center items-end justify-start p-4"
                           >
-                            {stage.order} - {stage.title}
+                           {index+1} - {stage.title}
                           </div>
                         </CardHeader>
                       </Card>

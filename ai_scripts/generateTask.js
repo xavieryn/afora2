@@ -17,6 +17,10 @@ const responseFormat = {
                     "items": {
                         "type": "object",
                         "properties": {
+                            "order": {
+                                "type": "number",
+                                "description": "The order of the stage."
+                            },
                             "stage_name": {
                                 "type": "string",
                                 "description": "The name of the stage."
@@ -27,6 +31,10 @@ const responseFormat = {
                                 "items": {
                                     "type": "object",
                                     "properties": {
+                                        "order": {
+                                            "type": "number",
+                                            "description": "The order of the stage."
+                                        },
                                         "task_name": {
                                             "type": "string",
                                             "description": "The name of the task."
@@ -37,6 +45,7 @@ const responseFormat = {
                                         }
                                     },
                                     "required": [
+                                        "order",
                                         "task_name",
                                         "assigned_user"
                                     ],
@@ -45,6 +54,7 @@ const responseFormat = {
                             }
                         },
                         "required": [
+                            "order",
                             "stage_name",
                             "tasks"
                         ],
@@ -63,7 +73,11 @@ const responseFormat = {
 
 
 export const generateTask = async (questions, userResponses, charterQuestions, teamCharterResponses) => {
-    const context = `Based on the team charter reponses about project products and goals, generate a list of general stages, each containing a list of actionable tasks. And assign each of the tasks to a member based on their relevant skills. Users' question surveys: ${questions}, and reponses: ${userResponses}`;
+    const context = `While knowing nothing else, try to come up with a project road map separated into various levels each assigned with an order number assigned (each levels is a sub-goal that adds up together to achieve the ultimate goal).
+
+Each levels should also have concrete actionable steps, as detailed as possible, to achieve the sub-goal for each level.
+
+Lastly, categorize similar actionable steps together based on the skills necessary to perform them and the kind of field they are in, and assign a user email to perform that specific category of tasks.`;
 
     if (!userResponses || userResponses.length === 0) {
         throw new Error('There are no users to assign tasks to.');
@@ -71,6 +85,6 @@ export const generateTask = async (questions, userResponses, charterQuestions, t
     if (!teamCharterResponses || teamCharterResponses.length === 0) {
         throw new Error('The team charter is empty.');
     }
-    const input = `Questions: ${charterQuestions}. Reponses: ${teamCharterResponses}`;
+    const input = `User onboarding project questions: ${questions}. Users' responses: ${userResponses}. Team Charter Questions: ${charterQuestions}. Team Charter Responses: ${teamCharterResponses}`;
     return await apiRequest({ context, responseFormat, input });
 }

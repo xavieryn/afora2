@@ -1,6 +1,7 @@
 'use server'
 import { db } from "@/firebase";
 import { adminDb } from "@/firebase-admin";
+import { GeneratedTasks } from "@/types/types";
 import { auth } from "@clerk/nextjs/server";
 import { query, collection, where, getDocs } from "firebase/firestore";
 
@@ -122,7 +123,6 @@ export async function removeUserFromDocument(roomId: string, email: string) {
             .doc(roomId)
             .delete();
 
-        return { success: true };
     } catch (error) {
         console.error(error);
         return { success: false };
@@ -360,6 +360,32 @@ export async function setTeamCharter(projId: string, teamCharterResponse: string
         await adminDb.collection('projects').doc(projId).update({
             teamCharterResponse: teamCharterResponse
         });
+        return { success: true };
+    } catch (error) {
+        console.error(error);
+        return { success: false, message: (error as Error).message };
+    }
+};
+
+export async function updateStagesTasks(projId: string, structure: GeneratedTasks): Promise<{ success: boolean; message?: string; }> {
+    auth().protect();
+
+    try {
+        if (!structure) {
+            throw new Error('Invalid stages and tasks structure!');
+        }
+
+        const batch = adminDb.batch();
+        structure.stages.forEach((stage) => {
+            const stageRef = adminDb.collection('projects').doc(projId).collection('stages').doc();
+            batch.set(stageRef, { title: stage.stage_name, id: stageRef.id });
+
+            stage.tasks.forEach((task) => {
+                const taskRef = stageRef.collection('tasks').doc();
+                batch.set(taskRef, { title: task.task_name, assignedTo: task.assigned_user, id: taskRef.id });
+            });
+        });
+        await batch.commit();
         return { success: true };
     } catch (error) {
         console.error(error);

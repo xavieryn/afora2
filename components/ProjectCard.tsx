@@ -35,7 +35,7 @@ const ProjectCard = ({
                         role="img"
                         aria-label={`Background image for ${projectName}`}
                     >
-                        <h2 className="text-xl font-bold text-white bg-black bg-opacity-75 p-1 rounded">
+                        <h2 className="text-xl font-bold text-white bg-[#6F61EF] p-1 rounded">
                             {projectName}
                         </h2>
                     </div>
