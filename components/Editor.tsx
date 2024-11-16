@@ -9,6 +9,7 @@ import { doc } from 'firebase/firestore';
 import { db } from '@/firebase'; // Adjust this import path
 import React from 'react';
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import LoadingSpinner from "./LoadingSpinner";
 
 
 function Editor({ id }: { id: string }) {
@@ -22,9 +23,8 @@ function Editor({ id }: { id: string }) {
     const [data, dataLoading, dataError] = useDocumentData(doc(db, "documents", id));
     console.log(data)
   
-      // FEED THESE TASKS INTO THE KANBAN!!!!!!!
     //console.log(tasks)
-    if (dataLoading) return <div>Loading...</div>;
+    if (dataLoading) return <div className='flex justify-center items-center'><LoadingSpinner/></div>;
     if (dataError) return <div>Error loading document: {dataError.message}</div>;
 
 
