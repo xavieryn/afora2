@@ -21,7 +21,7 @@ function HomePageCard({ org }: HomePageCardProps) {
                     <h1 className="text-2xl font-semibold">
                         {data?.title}
                     </h1>
-                    
+
                     <div className='gap-1'>
                         {/* <p className="text-sm">{org.orgId}</p> */}
                         <h3 className="dark:text-gray-100 text-sm">
