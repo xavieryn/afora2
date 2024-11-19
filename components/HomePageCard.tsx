@@ -23,7 +23,7 @@ function HomePageCard({ org }: HomePageCardProps) {
                     </h1>
                     
                     <div className='gap-1'>
-                        <p className="text-sm">{org.orgId}</p>
+                        {/* <p className="text-sm">{org.orgId}</p> */}
                         <h3 className="dark:text-gray-100 text-sm">
                             Admin: {data?.admins[0]}
                         </h3>
