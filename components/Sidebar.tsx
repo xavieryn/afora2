@@ -59,9 +59,9 @@ function Sidebar() {
         ) : (
           <>
             <h2 className="font-bold text-md">
-              My Organizations
+              Organizations
             </h2>
-            <div className="-space-y-5">
+            <div className="font-semibold pt-1">
               {orgs.map((org) => (
                 <SidebarOption key={org.orgId} id={org.orgId} />
               ))}

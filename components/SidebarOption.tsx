@@ -21,8 +21,8 @@ function SidebarOption({ id }: {
   const basePath = `/org/${id}`;
 
   return (
-    <div>
-      <Accordion type="single" collapsible>
+    <div className="py-3 pl-2 hover:bg-gray-300 rounded-xl">
+      {/* <Accordion type="single" collapsible>
         <AccordionItem value="item-1" className="truncate">
           <AccordionTrigger>
             {data?.title}
@@ -33,7 +33,11 @@ function SidebarOption({ id }: {
             </Link>
           </AccordionContent>
         </AccordionItem>
-      </Accordion>
+      </Accordion> */}
+
+      <Link href={basePath}>
+        <p className="truncate  border-e-indigo-50">{data?.title}</p>
+      </Link>
     </div>
   )
 }
