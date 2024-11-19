@@ -47,31 +47,29 @@ const OrganizationPage = ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden p-1">
       <div className="flex items-center justify-between">
         <ProjOnboarding orgId={id} />
         <h1 className="text-4xl font-bold m-4">
           {orgData && orgData.title}
         </h1>
       </div>
-      <div className="inline-block m-2 p-3 shadow-md rounded-lg bg-white">
-        <h2 className="text-m font-semibold">
-          {userOrgData &&
-            <>
-              Access Code:
-              <br />
-              {userOrgData.orgId}
-              <Copy
-                className="inline-block ml-2 cursor-pointer hover:bg-gray-200 rounded-md p-0.5"
-                onClick={() => {
-                  navigator.clipboard.writeText(userOrgData.orgId);
-                  toast.success('Access code copied to clipboard!');
-                }}
-              />
-            </>
-          }
-        </h2>
-      </div>
+      {userOrgData && userOrgData.role === 'admin' &&
+        <div className="inline-block m-2 p-3 shadow-md rounded-lg bg-white">
+          <h2 className="text-m font-semibold">
+            Access Code:
+            <br />
+            {userOrgData.orgId}
+            <Copy
+              className="inline-block ml-2 cursor-pointer hover:bg-gray-200 rounded-md p-0.5"
+              onClick={() => {
+                navigator.clipboard.writeText(userOrgData.orgId);
+                toast.success('Access code copied to clipboard!');
+              }}
+            />
+          </h2>
+        </div>
+      }
       <Tabs defaultValue="projects" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="projects">Projects</TabsTrigger>
