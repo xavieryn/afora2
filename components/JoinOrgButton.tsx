@@ -45,7 +45,7 @@ function JoinOrgButton() { // Updated component name
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button disabled={isPending} className="bg-[#6F61EF]">
+        <Button disabled={isPending} className="bg-[#6F61EF] flex flex-1 hover:bg-[#5646e4]">
           {isPending ? "Loading..." : "Join Organization"} {/* Updated button text */}
         </Button>
       </DialogTrigger>

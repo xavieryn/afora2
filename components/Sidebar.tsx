@@ -41,15 +41,13 @@ function Sidebar() {
   const menuOptions = (
     <>
       <div className="flex py-4 flex-col md:max-w-36">
-        <div className="space-y-3 flex py-4 flex-col md:max-w-36">
+        {/* <div className="space-y-3 flex py-4 flex-col md:max-w-36">
           <NewOrgButton />
           <JoinOrgButton />
         </div>
-        {/* <JoinDocumentButton /> */}
-
         <div>
         <div className="h-px bg-gray-700 my-4 mx-2" />
-      </div>
+      </div> */}
 
         {/* My Organization */}
         {orgs.length === 0 ? (
