@@ -3,12 +3,22 @@
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Breadcrumbs from "./Breadcrumbs";
 import Link from "next/link";
-import { Settings } from "lucide-react";
+import { PlusIcon, Settings } from "lucide-react";
 import FundUs from "./FundUs";
 import ContactUs from "./ContactUs";
+import { Button } from "./ui/button";
+import { startTransition, useState, useTransition } from "react";
+import { createNewOrganization } from "@/actions/actions";
+import { toast } from "sonner";
+import { useRouter } from "next/router";
+import NewOrgButton from "./NewOrgButton";
 
 function Header() {
-
+  const [isPending, startTransition] = useTransition();
+  const [isOpen, setIsOpen] = useState(false);
+  const [orgName, setOrgName] = useState('');
+  const [orgDescription, setOrgDescription] = useState('');
+  
   return (
     <header className="fixed top-0 left-0 right-0 z-10 shadow-md  bg-[#6F61EF]	">
       <div className="flex items-center justify-between m-3 mx-4">
@@ -24,6 +34,13 @@ function Header() {
         </SignedIn>
 
         <div className="flex gap-6 items-center text-white">
+          <SignedIn>
+            {/* <button className="bg-[#6F61EF] hover:bg-inherit	hover:translate-y-[-2px] transition-transform duration-300"
+            type="submit" onClick={handleCreateNewOrganization} disabled={isPending}>
+              <PlusIcon  />
+            </button> */}
+            <NewOrgButton/>
+          </SignedIn>
           <FundUs />
           <ContactUs />
           <SignedOut>

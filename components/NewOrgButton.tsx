@@ -17,6 +17,7 @@ import {
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
 import { Textarea } from "@/components/ui/textarea"
+import { PlusIcon } from "lucide-react";
 
 function NewOrgButton() {
   const [isPending, startTransition] = useTransition();
@@ -42,9 +43,10 @@ function NewOrgButton() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button disabled={isPending} className="bg-[#6F61EF]">
-          {isPending ? "Loading..." : "New Organization"}
-        </Button>
+        <button disabled={isPending} className="bg-[#6F61EF] hover:bg-inherit	hover:translate-y-[-2px] transition-transform duration-300">
+          {isPending ? "Loading..." : <PlusIcon/>
+          }
+        </button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
