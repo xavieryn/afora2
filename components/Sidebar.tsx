@@ -59,7 +59,7 @@ function Sidebar() {
         ) : (
           <>
             <h2 className="font-bold text-md">
-              My Organizations
+              Organizations
             </h2>
             <div className="-space-y-5">
               {orgs.map((org) => (
