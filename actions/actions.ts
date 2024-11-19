@@ -324,7 +324,7 @@ export async function updateProjects(orgId: string, groups: string[][]) {
             const projectRef = await adminDb.collection('projects')
                 .add({
                     orgId: orgId,
-                    title: `Group ${index + 1}`,
+                    title: `Project ${index + 1}`,
                     members: group,
                     admins: [userId]
                 });

@@ -8,7 +8,6 @@ import { useCollection  } from 'react-firebase-hooks/firestore';
 import { useUser } from '@clerk/nextjs';
 import HomePageCard from './HomePageCard';
 import LoadingSpinner from './LoadingSpinner';
-import { Orgs } from '@/types/types';
 
 import { UserOrgData } from '@/types/types';
 
