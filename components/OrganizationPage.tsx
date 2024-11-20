@@ -74,14 +74,14 @@ const OrganizationPage = ({ id }: { id: string }) => {
         </div>
       }
       <Tabs defaultValue="projects" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="members">Members</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+          {/* <TabsTrigger value="settings">Settings</TabsTrigger> */}
         </TabsList>
         <TabsContent value="projects">{user && user.primaryEmailAddress && userOrgData && <ProjTab userRole={userOrgData.role} userId={user.primaryEmailAddress.toString()} orgId={id} projectsData={projectsData} loading={projLoading} error={projError} />}</TabsContent>
         <TabsContent value="members">{orgData && userOrgData && <MemberList userRole={userOrgData.role} admins={orgData.admins} members={orgData.members} />}</TabsContent>
-        <TabsContent value="settings">Organization settings and preferences.</TabsContent>
+        {/* <TabsContent value="settings">Organization settings and preferences.</TabsContent> */}
       </Tabs>
     </div>
   )
