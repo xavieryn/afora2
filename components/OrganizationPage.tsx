@@ -47,15 +47,18 @@ const OrganizationPage = ({ id }: { id: string }) => {
   }
 
   return (
-    <div className="overflow-x-hidden p-1">
-      <div className="flex items-center justify-between">
+    <div className="overflow-x-hidden p-4">
+      <div
+        className="flex items-center justify-between bg-cover bg-center p-4 h-64 rounded-lg"
+        style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/036/226/872/non_2x/ai-generated-nature-landscapes-background-free-photo.jpg')" }}
+      >
         <ProjOnboarding orgId={id} />
-        <h1 className="text-4xl font-bold m-4">
+        <h1 className="text-4xl font-bold m-4 text-white">
           {orgData && orgData.title}
         </h1>
       </div>
       {userOrgData && userOrgData.role === 'admin' &&
-        <div className="inline-block m-2 p-3 shadow-md rounded-lg bg-white">
+        <div className="inline-block my-2 p-3 shadow-md rounded-lg bg-white">
           <h2 className="text-m font-semibold">
             Access Code:
             <br />
