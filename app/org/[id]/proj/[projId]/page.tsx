@@ -93,7 +93,15 @@ function ProjectPage({ params: { id, projId } }: {
       <Table className="w-full">
         <TableHeader>
           <TableRow>
-            <TableHead className="text-xl font-bold text-black">Project Stages</TableHead>
+            {/* <TableHead className="text-xl font-bold text-black">Project Stages</TableHead> */}
+            <div
+              className="flex items-center justify-between bg-cover bg-center p-4 h-40"
+              style={{ backgroundImage: "url('https://png.pngtree.com/thumb_back/fh260/background/20230408/pngtree-rainbow-curves-abstract-colorful-background-image_2164067.jpg')" }}
+            >
+              <h1 className="text-4xl font-bold m-4 text-white">
+                Project Stages
+              </h1>
+            </div>
           </TableRow>
           <TableRow>
             <TableCell colSpan={2} className="px-4">
@@ -111,9 +119,9 @@ function ProjectPage({ params: { id, projId } }: {
               <TableRow>
                 <TableCell>
                   <GenerateTasksButton
-                  orgId={id}
-                  projId={projId}
-                  teamCharterResponses={teamCharterData?.data()?.teamCharterResponse || []}
+                    orgId={id}
+                    projId={projId}
+                    teamCharterResponses={teamCharterData?.data()?.teamCharterResponse || []}
                   />
                 </TableCell>
                 <TableCell>
@@ -174,7 +182,7 @@ function ProjectPage({ params: { id, projId } }: {
                           <div
                             className="bg-cover bg-center items-end justify-start p-4"
                           >
-                           {index+1} - {stage.title}
+                            {index + 1} - {stage.title}
                           </div>
                         </CardHeader>
                       </Card>
