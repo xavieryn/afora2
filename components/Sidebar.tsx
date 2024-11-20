@@ -1,6 +1,6 @@
 'use client';
 
-import { MenuIcon } from "lucide-react"
+import { HomeIcon, MenuIcon } from "lucide-react"
 import { useCollection } from "react-firebase-hooks/firestore"
 import {
   Sheet,
@@ -14,8 +14,7 @@ import { collection, DocumentData } from "firebase/firestore";
 import { db } from '@/firebase'
 import { useEffect, useState } from "react";
 import SidebarOption from "./SidebarOption";
-import NewOrgButton from "./NewOrgButton";
-import JoinOrgButton from "./JoinOrgButton";
+import Link from "next/link";
 
 interface OrgDocument extends DocumentData {
   createdAt: string;
@@ -56,9 +55,17 @@ function Sidebar() {
           </h2>
         ) : (
           <>
+            <Link href="/" className="flex items-center space-x-2 p-2 hover:bg-gray-300 rounded-lg">
+              <HomeIcon className="w-5 h-5" />
+              <span className="font-semibold">Home</span>
+            </Link>
+
+            <div className="h-px bg-gray-500 my-4 w-full" />
+
             <h2 className="font-bold text-md">
               Organizations
             </h2>
+            <div className="h-px bg-gray-500 my-4 w-full" />
             <div className="font-semibold pt-1">
               {orgs.map((org) => (
                 <SidebarOption key={org.orgId} id={org.orgId} />
