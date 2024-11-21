@@ -283,9 +283,9 @@ export async function setUserOnboardingSurvey(selectedTags: string[][]) {
             throw new Error('Please select at least one tag for each question!');
         }
 
-        await adminDb.collection('users').doc(userId).update({
+        await adminDb.collection('users').doc(userId).set({
             onboardingSurveyResponse: formatted
-        });
+        }, { merge: true });
         return { success: true };
     } catch (error) {
         console.error(error);
