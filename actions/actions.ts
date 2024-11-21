@@ -305,9 +305,9 @@ export async function setProjOnboardingSurvey(orgId: string, responses: string[]
             throw new Error('Please answer all questions!');
         }
 
-        await adminDb.collection('users').doc(userId).collection('orgs').doc(orgId).update({
+        await adminDb.collection('users').doc(userId).collection('orgs').doc(orgId).set({
             projOnboardingSurveyResponse: responses
-        });
+        }, { merge: true });
         return { success: true };
     } catch (error) {
         console.error(error);
@@ -357,9 +357,9 @@ export async function setTeamCharter(projId: string, teamCharterResponse: string
             throw new Error('Team charter cannot be empty!');
         }
 
-        await adminDb.collection('projects').doc(projId).update({
+        await adminDb.collection('projects').doc(projId).set({
             teamCharterResponse: teamCharterResponse
-        });
+        }, { merge: true });
         return { success: true };
     } catch (error) {
         console.error(error);
