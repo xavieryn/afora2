@@ -17,7 +17,6 @@ import { useCollection } from "react-firebase-hooks/firestore"
 import { db } from "@/firebase"
 import { Task } from "@/types/types"
 import { collection } from "firebase/firestore"
-import { Progress } from "@radix-ui/react-progress"
 
 const TaskList = ({ orgId, projId, stageId }: { orgId: string, projId: string, stageId: string }) => {
   const { isSignedIn, isLoaded } = useAuth(); // Get authentication state

@@ -3,16 +3,15 @@
 import { Card, CardHeader } from "@/components/ui/card"
 
 import { db } from "@/firebase";
-import { useAuth, useUser } from "@clerk/nextjs";
+import { useAuth } from "@clerk/nextjs";
 import { collection, doc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { useCollection, useDocument, useDocumentOnce } from "react-firebase-hooks/firestore";
+import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"

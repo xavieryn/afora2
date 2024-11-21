@@ -6,18 +6,11 @@ import Link from "next/link";
 import { PlusIcon, Settings } from "lucide-react";
 import FundUs from "./FundUs";
 import ContactUs from "./ContactUs";
-import { Button } from "./ui/button";
-import { startTransition, useState, useTransition } from "react";
-import { createNewOrganization } from "@/actions/actions";
-import { toast } from "sonner";
-import { useRouter } from "next/router";
 import NewOrgButton from "./NewOrgButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import JoinOrgButton from "./JoinOrgButton";

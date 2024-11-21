@@ -4,12 +4,6 @@ import { db } from "@/firebase";
 import { doc } from "firebase/firestore";
 import Link from "next/link";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
 
 function SidebarOption({ id }: {
   id: string;
