@@ -89,14 +89,13 @@ function ProjectPage({ params: { id, projId } }: {
   });
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <Table className="w-full">
+    <div className="w-screen h-full flex flex-col">
+      <Table className="w-screen">
         <TableHeader>
           <TableRow>
-            {/* <TableHead className="text-xl font-bold text-black">Project Stages</TableHead> */}
             <div
-              className="flex items-center justify-between bg-cover bg-center p-4 h-40"
-              style={{ backgroundImage: "url('https://png.pngtree.com/thumb_back/fh260/background/20230408/pngtree-rainbow-curves-abstract-colorful-background-image_2164067.jpg')" }}
+              className="flex flex-1 items-center justify-between bg-cover bg-center p-4 h-40 w-screen"
+              style={{ backgroundImage: "url('https://png.pngtree.com/thumb_back/fh260/background/20230408/pngtree-rainbow-curves-abstract-colorful-background-image_2164067.jpg')", backgroundSize: 'cover', height: '100%' }}
             >
               <h1 className="text-4xl font-bold m-4 text-white">
                 Project Stages
@@ -117,55 +116,56 @@ function ProjectPage({ params: { id, projId } }: {
                 <TableCell colSpan={2} className="font-medium text-black">No stages. Try generate the stages and tasks.</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>
+                <TableCell className="flex space-x-4">
                   <GenerateTasksButton
-                    orgId={id}
-                    projId={projId}
-                    teamCharterResponses={teamCharterData?.data()?.teamCharterResponse || []}
+                  orgId={id}
+                  projId={projId}
+                  teamCharterResponses={teamCharterData?.data()?.teamCharterResponse || []}
                   />
-                </TableCell>
-                <TableCell>
                   <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-                    <AlertDialogTrigger>
-                      <Button onClick={handleOpenEditing}>
-                        <EditIcon />Team Charter
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent className="w-full max-w-4xl">
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Project Team Charter</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Fill out this charter to kick off your project! 🚀
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <div className="overflow-y-auto max-h-96">
-                        <form className="space-y-4 p-2">
-                          {teamCharterQuestions.map((question, index) => (
-                            <div key={index}>
-                              <Label htmlFor={`question-${index}`}>{question}</Label>
-                              <Textarea
-                                id={`question-${index}`}
-                                name={`question-${index}`}
-                                value={responses[index] || ''}
-                                onChange={(e) => {
-                                  const newResponses = [...responses];
-                                  newResponses[index] = e.target.value;
-                                  setResponses(newResponses);
-                                }}
-                              />
-                            </div>
-                          ))}
-                        </form>
+                  <AlertDialogTrigger asChild>
+                    <Button onClick={handleOpenEditing}>
+                    <EditIcon className="mr-2" /> Team Charter
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="w-full max-w-4xl">
+                    <AlertDialogHeader>
+                    <AlertDialogTitle>Project Team Charter</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Fill out this charter to kick off your project! 🚀
+                    </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="overflow-y-auto max-h-96">
+                    <form className="space-y-4 p-2">
+                      {teamCharterQuestions.map((question, index) => (
+                      <div key={index}>
+                        <Label htmlFor={`question-${index}`}>{question}</Label>
+                        <Textarea
+                        id={`question-${index}`}
+                        name={`question-${index}`}
+                        value={responses[index] || ''}
+                        onChange={(e) => {
+                          const newResponses = [...responses];
+                          newResponses[index] = e.target.value;
+                          setResponses(newResponses);
+                        }}
+                        />
                       </div>
-                      <AlertDialogFooter>
-                        <Button onClick={() => setIsOpen(false)}>Cancel</Button>
-                        <Button onClick={handleSaving} disabled={isPending}>
-                          {isPending ? <><Loader2 className="animate-spin" /> Loading</> : 'Save'}
-                        </Button>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
+                      ))}
+                    </form>
+                    </div>
+                    <AlertDialogFooter>
+                    <Button onClick={() => setIsOpen(false)}>Cancel</Button>
+                    <Button onClick={handleSaving} disabled={isPending}>
+                      {isPending ? <><Loader2 className="animate-spin mr-2" /> Loading</> : 'Save'}
+                    </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
                   </AlertDialog>
                 </TableCell>
+                {/* <TableCell>
+                  
+                </TableCell> */}
               </TableRow>
             </>
           ) : (
@@ -175,7 +175,6 @@ function ProjectPage({ params: { id, projId } }: {
 
                 <TableRow className="flex flex-1" key={index}>
                   <Link className="flex flex-1" href={`/org/${id}/proj/${projId}/stage/${stage.id}`}>
-                    {/* <TableCell className="font-medium text-black whitespace-nowrap">{stage.order} - {stage.title}</TableCell> */}
                     <TableCell className="flex flex-1">
                       <Card className="w-full shadow-lg hover:shadow-3xl hover:translate-y-[-4px] transition-transform duration-300 h-auto">
                         <CardHeader className="p-0">
