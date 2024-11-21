@@ -10,7 +10,6 @@ import NewOrgButton from "./NewOrgButton";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import JoinOrgButton from "./JoinOrgButton";
@@ -34,10 +33,14 @@ function Header() {
         <div className="flex gap-6 items-center text-white">
           <SignedIn>
             <DropdownMenu>
-              <DropdownMenuTrigger className="hover:translate-y-[-2px] transition-transform duration-300"><PlusIcon/></DropdownMenuTrigger>
+              <DropdownMenuTrigger className="hover:translate-y-[-2px] transition-transform duration-300"><PlusIcon /></DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem><NewOrgButton/></DropdownMenuItem>
-                <DropdownMenuItem><JoinOrgButton/></DropdownMenuItem>
+                {/* <DropdownMenuItem><NewOrgButton/></DropdownMenuItem>
+                <DropdownMenuItem><JoinOrgButton/></DropdownMenuItem> */}
+                <div className="space-y-2 flex flex-col m-1 my-2">
+                  <NewOrgButton />
+                  <JoinOrgButton />
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
 
