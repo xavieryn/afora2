@@ -73,7 +73,7 @@ const responseFormat = {
 
 
 export const generateTask = async (questions, userResponses, charterQuestions, teamCharterResponses) => {
-    const context = `While knowing nothing else, try to come up with a project road map separated into various levels each assigned with an order number assigned (each levels is a sub-goal that adds up together to achieve the ultimate goal).
+    const context = `While knowing nothing else, try to come up with a project road map separated into various levels each assigned with an order number assigned (each levels is a sub-goal that adds up together to achieve the ultimate goal: building a reusable rocket ship).
 
 Each levels should also have concrete actionable steps, as detailed as possible, to achieve the sub-goal for each level.
 
