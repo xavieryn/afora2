@@ -81,7 +81,8 @@ function ProjectPage({ params: { id, projId } }: {
     try {
       await setTeamCharter(projId, responses);
       toast.success('Team Charter saved successfully!');
-    } catch (error) {
+    } catch (e) {
+      console.log(e);
       toast.error('Failed to save Team Charter.');
     }
     setIsOpen(false);

@@ -2,7 +2,7 @@
 
     // import { useState } from "react";
 // import { MoonIcon, SunIcon } from "lucide-react";
-import Kanban from "./Kanban";
+// import Kanban from "./Kanban";
 import DeleteDocument from "./DeleteDocument";
 import InviteUser from "./InviteUser";
 import { doc } from 'firebase/firestore';
@@ -44,7 +44,7 @@ function Editor({ id }: { id: string }) {
 
             </div>
 
-            <Kanban id = {id}/>
+            {/* <Kanban id = {id}/> */}
 
         </div>
     )
