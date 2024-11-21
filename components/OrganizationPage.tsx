@@ -50,7 +50,7 @@ const OrganizationPage = ({ id }: { id: string }) => {
     <div className="overflow-x-hidden p-4">
       <div
         className="flex items-center justify-between bg-cover bg-center p-4 h-64 rounded-lg"
-        style={{ backgroundImage: "url('https://static.vecteezy.com/system/resources/previews/036/226/872/non_2x/ai-generated-nature-landscapes-background-free-photo.jpg')" }}
+        style={{ backgroundImage: "url('https://media.discordapp.net/attachments/1295223753198010421/1309212572976676904/vector-collaboration-related-banner-design-in-trendy-linear-style-line-art-style-abstract-380112445.jpg?ex=6740c2b9&is=673f7139&hm=f0ae51ff74117d7fbf7b0ee8f6b1431156c794754535e7968eac47d1f38fdce4&=&format=webp')", backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <ProjOnboarding orgId={id} />
         <h1 className="text-4xl font-bold m-4 text-white">
